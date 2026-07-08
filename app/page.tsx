@@ -70,8 +70,9 @@ const BasicLayout = () => {
                 </>
               }
             />
-            <TransactionModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSign={() => { }} />
           </div>
+          <TransactionModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSign={() => { }} />
+
         </PageContainer>
       </ProLayout>
     </div>

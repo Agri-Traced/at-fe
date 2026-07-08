@@ -1,3 +1,5 @@
+'use client';
+
 import { ConnectButton, Connector } from '@ant-design/web3';
 import {
   EthersWeb3ConfigProvider,
