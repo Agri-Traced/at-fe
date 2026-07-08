@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, Button, Typography, Row, Col, Space, Tag } from 'antd';
+import { Card, Button, Typography, Row, Col, Space } from 'antd';
 import {
   CheckCircleFilled,
   SearchOutlined,
@@ -12,7 +12,7 @@ import {
   LinkOutlined
 } from '@ant-design/icons';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 // Định nghĩa kiểu dữ liệu cho từng bước trong chuỗi
 interface StepData {
@@ -162,7 +162,7 @@ export default function ProvenanceTimeline() {
         }} className="hidden-mobile" />
 
         <Row gutter={[16, 28]}>
-          {steps.map((item, index) => {
+          {steps.map((item) => {
             // Xác định vị trí lệch Trái / Phải hoặc kéo dài đối với phần tử cuối
             const isFullWidth = item.step === 5;
             const isLeft = item.step % 2 !== 0 && !isFullWidth;
