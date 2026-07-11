@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -51,23 +51,43 @@ model FarmInfo {
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
 // Đây là bảng cốt lõi, liên kết trực tiếp với dữ liệu On-chain qua chuỗi định danh Batch ID.
 enum BatchStatus {
-  HARVESTED    // Đã thu hoạch (Tại trang trại)
+  PLANTED      // Đã gieo trồng
+  HARVESTED    // Đã thu hoạch
   IN_TRANSIT   // Đang trong quá trình vận chuyển
   RETAILING    // Đã đến nhà bán lẻ / Đang trên kệ hàng
   SOLD         // Đã bán cho người tiêu dùng
 }
+
+enum Category {
+  VEGETABLE
+  FRUIT
+  GRAIN
+  BEAN
+  HERB
+  OTHER
+}
+
+model ActivityLog {
+  id              String   @id @default(uuid())
+  batchId         String
+  batch           Batch    @relation(fields: [batchId], references: [id])
+  description     String   // "Bón phân đợt 1"
+  timestamp       DateTime @default(now())
+}
+
 
 model Batch {
   id              String      @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
   blockchainId    BigInt?     @unique              // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
   txHash          String?                          // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
   productName     String
-  category        String                           // Loại nông sản (Rau củ, Trái cây, Gạo...)
+  category        Category    @default(VEGETABLE)
   quantity        Float                            // Khối lượng / Số lượng lô hàng
   unit            String                           // Đơn vị tính (KG, Tấn, Thùng...)
   ipfsHash        String                           // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
-  status          BatchStatus @default(HARVESTED)
+  status          BatchStatus @default(PLANTED)
   qrCodeUrl       String?                          // Đường dẫn ảnh QR Code sinh ra để dán lên bao bì
+  activities      ActivityLog[] // Lưu lịch sử canh tác
   
   // Quan hệ tác nhân gieo trồng
   farmerId        String

@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export async function GET(req, { params }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
 
@@ -19,15 +20,15 @@ export async function GET(req, { params }) {
       }
     });
 
-    if (!batch) return Response.json({ success: false, error: "Không tìm thấy lô hàng" }, { status: 404 });
+    if (!batch) return NextResponse.json({ success: false, error: "Cannot find batch" }, { status: 404 });
 
     // Hàm đệ quy nhỏ để chuyển đổi mọi BigInt (nếu có) thành String
     const serializeData = JSON.parse(
       JSON.stringify(batch, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
     );
 
-    return Response.json({ success: true, data: serializeData }, { status: 200 });
-  } catch (error) {
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true, data: serializeData }, { status: 200 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });
   }
 }
