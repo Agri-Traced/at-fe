@@ -3,19 +3,19 @@ import api from '@/lib/axios';
 import type { User } from '../generated/prisma/client';
 
 const fetchUser = async (id: string) => {
-  const { data } = await api.get(`/users/${id}`);
+  const { data } = await api.get(`/user/${id}`);
   return data;
 }
 
 export const useUser = (id: string) => {
   return useQuery({
-    queryKey: ['users', id],
+    queryKey: ['user', id],
     queryFn: () => fetchUser(id),
   });
 };
 
 const postUser = async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => {
-  const { data } = await api.post('/users', userData);
+  const { data } = await api.post('/user', userData);
   return data;
 }
 
@@ -26,7 +26,7 @@ export const usePostUser = () => {
 }
 
 const putUser = async (userData: User) => {
-  const { data } = await api.put(`/users/${userData.id}`, userData);
+  const { data } = await api.put(`/user/${userData.id}`, userData);
   return data;
 }
 

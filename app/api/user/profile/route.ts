@@ -1,35 +1,51 @@
-import { verifyMessage } from 'ethers';
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
+import jwt from 'jsonwebtoken';
 
-export async function POST(req: Request) {
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_fallback_key';
+
+export async function GET(req: Request) {
   try {
-    const { address, message, signature } = await req.json();
-
-    // 1. Xác thực chữ ký ngay lập tức
-    const recoveredAddress = verifyMessage(message, signature);
-    const isValid = recoveredAddress.toLowerCase() === address.toLowerCase();
-
-    if (!isValid) {
+    // 1. Lấy token từ Header Authorization (Định dạng chuẩn: Bearer <token>)
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: { message: 'Signature is invalid or unauthorized', code: 'UNAUTHORIZED' } },
+        { error: { message: 'Missing token', code: 'TOKEN_REQUIRED' } },
         { status: 401 }
       );
     }
 
-    // 2. Chữ ký đúng -> Chọc vào Database lấy thông tin dựa trên address
+    const token = authHeader.split(' ')[1];
+
+    // 2. Xác thực và giải mã token gỡ lấy thông tin ví (address)
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      return NextResponse.json(
+        { error: { message: 'Token is invalid or expired', code: 'INVALID_TOKEN' } },
+        { status: 401 }
+      );
+    }
+
+    // 3. Dùng thông tin address đã giải mã từ Token để truy vấn DB
     const user = await prisma.user.findUnique({
-      where: { walletAddress: address.toLowerCase() }
+      where: {
+        walletAddress: decoded.address, // Điều kiện lọc
+      },
+      include: {
+        company: true // Lấy thêm thông tin company đi kèm
+      }
     });
 
     if (!user) {
       return NextResponse.json(
-        { error: { message: 'User has not registered information', code: 'USER_NOT_FOUND' } },
+        { error: { message: 'User not found', code: 'USER_NOT_FOUND' } },
         { status: 404 }
       );
     }
 
-    // 3. Trả dữ liệu về cho Client
+    // 4. Trả dữ liệu User về cho Client hoàn toàn bảo mật
     return NextResponse.json(user);
 
   } catch (error: any) {

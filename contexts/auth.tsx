@@ -2,11 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '../generated/zod';
-import { useSignMessage, useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import api from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import { Loading } from '@/app/components/Loading';
-import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null | undefined;
@@ -17,38 +16,48 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { address, isConnected } = useAccount();
-  const { signMessageAsync } = useSignMessage();
   const { disconnect } = useDisconnect();
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['auth-user', address],
     queryFn: async () => {
+      const token = localStorage.getItem(`token_${address?.toLowerCase()}`);
+
+      // Nếu chưa có token, không chạy tiếp (Thực ra nhờ điều kiện enabled ở dưới kiểm soát rồi)
+      if (!token) return null;
+
       try {
-        const message = `Xác thực quyền truy cập dữ liệu cho ví: ${address?.toLowerCase()}`;
-        const signature = await signMessageAsync({ message });
-        const res = await api.post<User>('/api/user/profile', {
-          address,
-          message,
-          signature
+        const res = await api.get<User>('/user/profile', {
+          headers: {
+            // Gửi token kèm theo request
+            Authorization: `Bearer ${token}`
+          }
         });
         return res.data;
       } catch (error: any) {
+        if (error?.status === 401 || error?.status === 403) {
+          // Token hết hạn hoặc sai -> Xóa token cũ
+          localStorage.removeItem(`token_${address?.toLowerCase()}`);
+        }
         if (error?.status === 404) {
-          return null; // User chưa đăng ký thông tin, không cần throw error
+          return null;
         }
         disconnect();
         throw error;
       }
     },
-    enabled: isConnected && !!address,
-    retry: false,
+    // ĐIỀU KIỆN CHẠY: Chỉ chạy khi đã kết nối ví VÀ trong localStorage ĐÃ CÓ token từ bước ký trước đó
+    enabled: isConnected && !!address && !!localStorage.getItem(`token_${address?.toLowerCase()}`),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
   });
+
+  useEffect(() => {
+    if (!isConnected && address) {
+      localStorage.removeItem(`token_${address.toLowerCase()}`);
+    }
+  }, [isConnected, address]);
 
   useEffect(() => {
     setMounted(true);

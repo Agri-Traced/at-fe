@@ -1,25 +1,18 @@
 import { usePostUser } from "@/hooks/users";
-import { Button, Form, Input } from "antd"
+import { Button, Form, FormInstance, Input } from "antd"
 import { User } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
 
-export const FormAccount = ({ onNext }: { onNext: () => void }) => {
+export const FormAccount = ({ onNext, form }: { onNext: () => void, form: FormInstance<User> }) => {
   const { t } = useTranslation();
-  const [form] = Form.useForm<User>();
-  const onFinish = (values: User) => {
-    // usePostUser().mutate(values, {
-    //   onSuccess: (data) => {
-    //     console.log('User created successfully:', data);
-    onNext();
-    //   }
-    // });
+  const handleNext = async () => {
+    try {
+      await form.validateFields(['fullName', 'email', 'phone']);
+      onNext();
+    } catch (error) {}
   };
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={onFinish}
-    >
+    <>
       <Form.Item
         label={t('Full Name')}
         name="fullName"
@@ -54,10 +47,10 @@ export const FormAccount = ({ onNext }: { onNext: () => void }) => {
 
 
       < Form.Item className="flex justify-center" >
-        <Button type="primary" htmlType="submit" >
+        <Button type="primary" onClick={handleNext} >
           {t('Next')}
         </Button>
       </Form.Item>
-    </Form>
+    </>
   )
 }

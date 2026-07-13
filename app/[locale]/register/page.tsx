@@ -2,31 +2,27 @@
 
 import { useAuth } from '@/contexts/auth';
 import { useTranslation } from 'react-i18next';
-import { Card, Steps, Result, Image } from 'antd';
+import { Card, Steps, Result, Form, Modal, notification, Spin, Button, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 import { Container } from '@/app/components';
 import { FormAccount } from './components/FormAccount';
 import { FormRole } from './components/FormRole';
 import ConnectWalletButton from '@/app/components/ConnectWalletButton';
-
-const FormStep = ({ step, onNext }: { step: number; onNext: () => void }) => {
-  const { t } = useTranslation();
-  switch (step) {
-    case 0:
-      return <FormAccount onNext={onNext} />;
-    case 1:
-      return <FormRole onNext={onNext} />;
-    case 2:
-      return <Result status="success" title={t('Registration Complete')} subTitle={t('You have successfully registered.')} />;
-    default:
-      return null;
-  }
-};
+import Image from 'next/image';
+import { User } from '@/generated/zod';
+import { usePostUser } from '@/hooks/users';
+import { Loading } from '@/app/components/Loading';
+import { useAccount } from 'wagmi';
 
 export default function RegisterPage() {
   const { t } = useTranslation()
   const { user } = useAuth()
   const [step, setStep] = useState(0);
+  const [form] = Form.useForm<User>();
+  const [term, setTerm] = useState(false);
+  const { mutate, isError, isPending, isSuccess } = usePostUser();
+  const { address } = useAccount();
+  if (!address) return;
 
   useEffect(() => {
     if (user) {
@@ -38,6 +34,14 @@ export default function RegisterPage() {
       }
     }
   }, [user]);
+
+  const onFinish = (values: User) => {
+    setStep(step + 1)
+    mutate({
+      ...values,
+      walletAddress: address
+    });
+  }
 
   const items = [
     {
@@ -58,7 +62,34 @@ export default function RegisterPage() {
         <ConnectWalletButton />
         <Steps current={step} titlePlacement="vertical" items={items} />
         <Card>
-          <FormStep step={step} onNext={() => setStep(step + 1)} />
+          <Form form={form} onFinish={onFinish} layout="vertical">
+            <div className={step === 0 ? 'block' : 'hidden'}><FormAccount onNext={() => setStep(step + 1)} form={form} /></div>
+            <div className={step === 1 ? 'block' : 'hidden'}><FormRole onBack={() => setStep(step - 1)} onNext={() => setStep(step + 1)} form={form} /></div>
+            <div className={step === 2 ? 'block' : 'hidden'}>
+              <div className="flex flex-col items-center justify-center">
+                <Form.Item>
+                  <Radio onChange={(e) => setTerm(e.target.checked)}>
+                    {t('I agree to the terms and conditions')}
+                  </Radio>
+                </Form.Item>
+                <Form.Item className="flex justify-center gap-3" >
+                  <Button size="large" onClick={() => setStep(step - 1)}>
+                    {t('Back')}
+                  </Button>
+                  <Button disabled={!term} type="primary" size="large" htmlType="submit" >
+                    {t('Register')}
+                  </Button>
+                </Form.Item>
+              </div>
+            </div>
+            {isError ? (
+              <Result status="error" title={t('Registration Failed')} subTitle={t('Registration failed.')} />
+            ) : isPending ? (
+              <Loading message={t('Processing registration...')} />
+            ) : isSuccess ? (
+              <Result status="success" title={t('Registration Complete')} subTitle={t('You have successfully registered.')} />
+            ) : null}
+          </Form>
         </Card>
       </div>
     </Container>

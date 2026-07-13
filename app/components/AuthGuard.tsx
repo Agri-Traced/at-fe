@@ -5,20 +5,30 @@ import { useAccount } from 'wagmi';
 import { usePathname, useRouter } from "next/navigation";
 import { Loading } from "./Loading";
 import { useEffect, useState } from "react";
+import { useLogin } from "@/hooks/login";
 
 export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth(); // hook lấy state của bạn
-  const { isConnected, status } = useAccount()
+  const { isConnected, address } = useAccount()
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const { mutate: login, isPending } = useLogin();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (isConnected && address) {
+      const existingToken = localStorage.getItem(`token_${address.toLowerCase()}`);
+      if (!existingToken) {
+        login(address);
+      }
+    }
+  }, [isConnected, address]);
 
-  if (!mounted || isLoading) {
+  if (!mounted || isLoading || isPending) {
     return <Loading />;
   }
   // 1. Nếu chưa kết nối mà vào trang không phải /login
@@ -27,7 +37,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     return <Loading />;
   }
   // 2. Nếu đã kết nối nhưng chưa có user (cần đăng ký)
-  else if (isConnected && !user && !pathname.includes('/register')) {
+  else if (isConnected && !user && !isPending && !pathname.includes('/register')) {
     router.replace('/register');
     return <Loading />;
   }

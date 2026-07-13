@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { EthersWeb3ConfigProvider, MetaMask } from "@ant-design/web3-ethers";
 import { I18nProvider } from "@/contexts/i18n";
 import { AuthGuard } from "./components/AuthGuard";
+import { App } from "antd";
 
 const queryClient = new QueryClient();
 
@@ -42,11 +43,13 @@ export default function RootLayout({
             >
               <QueryClientProvider client={queryClient}>
                 <ReactQueryProvider>
-                  <AuthProvider>
-                    <AuthGuard>
-                      {children}
-                    </AuthGuard>
-                  </AuthProvider>
+                  <App>
+                    <AuthProvider>
+                      <AuthGuard>
+                        {children}
+                      </AuthGuard>
+                    </AuthProvider>
+                  </App>
                 </ReactQueryProvider>
               </QueryClientProvider>
             </EthersWeb3ConfigProvider>
