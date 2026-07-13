@@ -47,10 +47,10 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model FarmInfo
+ * Model Company
  * 
  */
-export type FarmInfo = Prisma.FarmInfoModel
+export type Company = Prisma.CompanyModel
 /**
  * Model ActivityLog
  * 

@@ -37,7 +37,7 @@
     "**/*.mts",
     "lib/prisma.ts",
     "app/api/batchs/route.ts",
-    "lib/axios.js",
+    "lib/axios.ts",
     "lib/reactQueryProvider.js"
   ],
   "exclude": [

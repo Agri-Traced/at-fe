@@ -52,7 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  FarmInfo: 'FarmInfo',
+  Company: 'Company',
   ActivityLog: 'ActivityLog',
   Batch: 'Batch',
   StepTransit: 'StepTransit',
@@ -82,6 +82,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   role: 'role',
+  companyId: 'companyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -89,15 +90,15 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const FarmInfoScalarFieldEnum = {
+export const CompanyScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  farmName: 'farmName',
+  type: 'type',
+  companyName: 'companyName',
   location: 'location',
-  certificate: 'certificate'
+  protectedKey: 'protectedKey'
 } as const
 
-export type FarmInfoScalarFieldEnum = (typeof FarmInfoScalarFieldEnum)[keyof typeof FarmInfoScalarFieldEnum]
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
 
 
 export const ActivityLogScalarFieldEnum = {

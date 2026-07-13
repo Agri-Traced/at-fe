@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> } // params phải là Promise
+) {
   try {
-    const { id } = params;
-
+    const { id } = await params;
     const batch = await prisma.batch.findUnique({
       where: { id: id },
       include: {
-        farmer: { include: { farmInfo: true } },
+        farmer: { include: { company: true } },
         transits: {
           include: { shipper: true },
           orderBy: { departureTime: 'asc' } // Sắp xếp theo chặng từ cũ đến mới

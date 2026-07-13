@@ -14,6 +14,18 @@ export const useBatches = () => {
   });
 };
 
+const fetchBatch = async (id: string) => {
+  const { data } = await api.get(`/batches/${id}`);
+  return data;
+};
+
+export const useBatch = (id: string) => {
+  return useQuery({
+    queryKey: ['batches', id],
+    queryFn: () => fetchBatch(id),
+  });
+}
+
 const postBatch = async (batchData: Omit<Batch, 'id' | 'createdAt' | 'updatedAt'>) => {
   const { data } = await api.post('/batches', batchData);
   return data;

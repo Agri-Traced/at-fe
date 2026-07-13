@@ -3,6 +3,14 @@
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
+generator zod {
+  provider                 = "zod-prisma-types"
+  output                   = "../generated/zod" // Hoặc nơi bạn muốn xuất ra
+  
+  // 1. CHÌA KHÓA ĐỂ LẤY TÊN Y HỆT: Bỏ hậu tố Schema mặc định
+  modelSuffix              = "" 
+}
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -28,7 +36,8 @@ model User {
   email         String?  @unique
   phone         String?
   role          Role     @default(CONSUMER)
-  farmInfo      FarmInfo? // Mối quan hệ 1-1 nếu là Nông dân
+  companyId     String?
+  company       Company?  @relation(fields: [companyId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -38,14 +47,19 @@ model User {
   inspections    StepQuality[]  @relation("RetailerInspections")
 }
 
-// Thông tin bổ sung dành riêng cho nông trại (Chỉ hiển thị công khai khi người dùng quét mã QR)
-model FarmInfo {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  farmName    String
-  location    String   // Địa chỉ tọa độ / Vị trí địa lý trang trại
-  certificate String?  // Chuỗi link chứa chứng nhận VietGAP / GlobalGAP (nếu có)
+enum OrganizationType {
+  FARM
+  LOGISTICS
+  RETAILER
+}
+
+model Company {
+  id           String   @id @default(uuid())
+  type         OrganizationType // Dùng Enum thay cho Boolean
+  companyName  String
+  location     String
+  protectedKey String   // Dùng để gia nhập
+  members      User[]
 }
 
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)

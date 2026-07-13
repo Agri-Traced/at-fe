@@ -2,8 +2,6 @@
 
 import { ConnectButton, Connector } from '@ant-design/web3';
 import {
-  EthersWeb3ConfigProvider,
-  MetaMask,
   useEthersProvider,
   useEthersSigner,
 } from '@ant-design/web3-ethers';
@@ -24,15 +22,12 @@ const AddressPreviewer = () => {
 
 const ConnectWalletButton = () => {
   return (
-    <EthersWeb3ConfigProvider
-      walletConnect={{ projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID! }}
-      wallets={[MetaMask()]}
-    >
+    <div className="flex flex-col gap-4 items-center justify-center">
       <Connector>
         <ConnectButton />
       </Connector>
       <AddressPreviewer />
-    </EthersWeb3ConfigProvider>
+    </div >
   );
 };
 

@@ -9,9 +9,7 @@ const userSchema = z.object({
   email: z.email("Email không hợp lệ").optional().or(z.literal("")),
   phone: z.string().optional(),
   role: z.enum(["FARMER", "SHIPPER", "RETAILER", "CONSUMER"]),
-  // Dữ liệu Farm (chỉ bắt buộc nếu role là FARMER)
-  farmName: z.string().optional(),
-  location: z.string().optional(),
+  companyId: z.string().optional(),
   certificate: z.string().optional()
 });
 
@@ -24,13 +22,6 @@ export async function POST(req: Request) {
     }
 
     const data = validation.data;
-    const isFarmer = data.role === "FARMER";
-    const farmInfoData = isFarmer && data.farmName ? {
-      farmName: data.farmName,
-      location: data.location ?? "",
-      certificate: data.certificate ?? ""
-    } : null;
-
     // Cập nhật hoặc tạo mới User (Upsert)
     const user = await prisma.user.upsert({
       where: { walletAddress: data.walletAddress },
@@ -39,14 +30,7 @@ export async function POST(req: Request) {
         email: data.email || null,
         phone: data.phone || null,
         role: data.role,
-        ...(farmInfoData ? {
-          farmInfo: {
-            upsert: {
-              create: farmInfoData,
-              update: farmInfoData
-            }
-          }
-        } : {})
+        companyId: data.companyId || null
       },
       create: {
         walletAddress: data.walletAddress,
@@ -54,13 +38,8 @@ export async function POST(req: Request) {
         email: data.email || null,
         phone: data.phone || null,
         role: data.role,
-        ...(farmInfoData ? {
-          farmInfo: {
-            create: farmInfoData
-          }
-        } : {})
       },
-      include: { farmInfo: true } // Trả về kèm thông tin Farm
+      include: { company: true } // Trả về kèm thông tin Farm
     });
 
     return NextResponse.json({ success: true, data: user }, { status: 201 });
