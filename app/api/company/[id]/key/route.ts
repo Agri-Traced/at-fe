@@ -3,12 +3,12 @@ import { prisma } from '@/lib/prisma';
 import z from 'zod'
 
 const ProtectedKeySchema = z.object({
-  protectedKey: z.string().min(6, "Protected Key must be at least 6 characters long")
+  key: z.string().min(6, "Protected Key must be at least 6 characters long")
 });
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ id: string, companyId: string }> } // params phải là Promise
+  { params }: { params: Promise<{ id: string }> } // params phải là Promise
 ) {
   try {
     const { id } = await params;
@@ -22,7 +22,7 @@ export async function POST(
       return NextResponse.json({ success: false, errors: z.treeifyError(validation.error) }, { status: 400 });
     }
 
-    if (!company || company.protectedKey !== validation.data.protectedKey) {
+    if (!company || company.protectedKey !== validation.data.key) {
       return NextResponse.json({ success: false, error: "Invalid protected key" }, { status: 400 });
     }
 

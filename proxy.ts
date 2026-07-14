@@ -1,26 +1,37 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { i18n } from './app/i18n-config';
+
+const protectedRoutes = ['/batch', '/company', '/user', '/dashboard', '/profile', '/settings'];
+
+const protectedApiRoutes = ['/api/batch'];
+
+const guestRoutes = ['/login'];
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const token = request.cookies.get('auth_token')?.value;
 
-  // Let public assets and other file requests pass through unchanged.
-  if (/\.[^/]+$/.test(pathname)) {
-    return NextResponse.next();
+  if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
+    console.log('caused by', pathname);
+    const url = new URL('/login', request.url);
+    const searchQuery = request.nextUrl.search;
+    const callbackUrl = searchQuery ? pathname + searchQuery : pathname;
+    url.searchParams.set('callbackUrl', callbackUrl);
+    return NextResponse.redirect(url);
   }
 
-  // Kiểm tra xem URL đã có tiền tố ngôn ngữ chưa
-  const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
+  if (token && guestRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
-  // Nếu chưa có, tự động chuyển hướng sang ngôn ngữ mặc định
-  if (pathnameIsMissingLocale) {
-    return NextResponse.redirect(
-      new URL(`/${i18n.defaultLocale}${pathname}`, request.url)
+  if (!token && protectedApiRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.json(
+      { error: { message: 'Unauthorized. Please login first.', code: 'UNAUTHORIZED' } },
+      { status: 401 }
     );
   }
+
+  return NextResponse.next();
 }
 
 export const config = {

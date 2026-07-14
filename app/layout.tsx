@@ -5,12 +5,11 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ReactQueryProvider from "@/lib/reactQueryProvider";
 import { AuthProvider } from "@/contexts/auth";
-import { Sepolia } from '@ant-design/web3-assets';
+import { WagmiWeb3ConfigProvider, Sepolia, MetaMask, TokenPocket, OkxWallet } from '@ant-design/web3-wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { EthersWeb3ConfigProvider, MetaMask } from "@ant-design/web3-ethers";
+import { http } from 'wagmi';
 import { I18nProvider } from "@/contexts/i18n";
-import { AuthGuard } from "./components/AuthGuard";
-import { App } from "antd";
+import { App, ConfigProvider } from "antd";
 
 const queryClient = new QueryClient();
 
@@ -36,24 +35,44 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AntdRegistry>
-          <I18nProvider>
-            <EthersWeb3ConfigProvider
-              chains={[Sepolia]}
-              wallets={[MetaMask()]}
-            >
-              <QueryClientProvider client={queryClient}>
-                <ReactQueryProvider>
-                  <App>
-                    <AuthProvider>
-                      <AuthGuard>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#1dad55',
+              },
+            }}
+          >
+            <I18nProvider>
+              <WagmiWeb3ConfigProvider
+                eip6963={{
+                  autoAddInjectedWallets: true,
+                }}
+                ens
+                transports={{
+                  [Sepolia.id]: http(),
+                }}
+                chains={[Sepolia]}
+                wallets={[
+                  MetaMask(),
+                  TokenPocket({
+                    group: 'Popular',
+                  }),
+                  OkxWallet(),
+                ]}
+                queryClient={queryClient}
+              >
+                <QueryClientProvider client={queryClient}>
+                  <ReactQueryProvider>
+                    <App>
+                      <AuthProvider>
                         {children}
-                      </AuthGuard>
-                    </AuthProvider>
-                  </App>
-                </ReactQueryProvider>
-              </QueryClientProvider>
-            </EthersWeb3ConfigProvider>
-          </I18nProvider>
+                      </AuthProvider>
+                    </App>
+                  </ReactQueryProvider>
+                </QueryClientProvider>
+              </WagmiWeb3ConfigProvider>
+            </I18nProvider>
+          </ConfigProvider>
         </AntdRegistry>
       </body>
     </html >

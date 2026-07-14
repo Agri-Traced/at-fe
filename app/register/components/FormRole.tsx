@@ -50,8 +50,9 @@ export const FormRole = ({ onBack, onNext, form }: { onBack: () => void, onNext:
   const handleNext = async () => {
     try {
       await form.validateFields(['companyId', 'protectedKey']);
+      const companyId = form.getFieldValue('companyId');
       postCompanyKey({
-        id: form.getFieldValue('companyId'),
+        id: companyId,
         key: protectedKey
       }, {
         onSuccess: () => {
@@ -92,14 +93,16 @@ export const FormRole = ({ onBack, onNext, form }: { onBack: () => void, onNext:
       >
         <Input onChange={(e) => setProtectedKey(e.target.value)} placeholder={t('Enter your protected key')} />
       </Form.Item>
-      <Form.Item className="flex justify-center gap-5" >
+      <div className="flex justify-between">
         <Button size="large" onClick={onBack}>
           {t('Back')}
         </Button>
-        <Button type="primary" size="large" onClick={handleNext} loading={isPending}> 
-          {t('Next')}
-        </Button>
-      </Form.Item>
+        <Form.Item >
+          <Button type="primary" size="large" onClick={handleNext} loading={isPending}>
+            {t('Next')}
+          </Button>
+        </Form.Item>
+      </div>
     </div>
   )
 }

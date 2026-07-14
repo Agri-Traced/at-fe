@@ -6,6 +6,8 @@ import { useAccount, useDisconnect } from 'wagmi';
 import api from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import { Loading } from '@/app/components/Loading';
+import { useLogin } from '@/hooks/login';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null | undefined;
@@ -18,50 +20,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const [mounted, setMounted] = useState(false);
+  const { mutate: login } = useLogin();
+  const pathname = usePathname();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['auth-user', address],
     queryFn: async () => {
-      const token = localStorage.getItem(`token_${address?.toLowerCase()}`);
-
-      // Nếu chưa có token, không chạy tiếp (Thực ra nhờ điều kiện enabled ở dưới kiểm soát rồi)
-      if (!token) return null;
-
       try {
-        const res = await api.get<User>('/user/profile', {
-          headers: {
-            // Gửi token kèm theo request
-            Authorization: `Bearer ${token}`
-          }
-        });
+        // KHÔNG cần đọc localStorage hay set Header Authorization nữa!
+        // axios với `withCredentials: true` sẽ tự động đính kèm Cookie 'auth_token'.
+        const res = await api.get<User>('/user/profile');
         return res.data;
       } catch (error: any) {
-        if (error?.status === 401 || error?.status === 403) {
-          // Token hết hạn hoặc sai -> Xóa token cũ
-          localStorage.removeItem(`token_${address?.toLowerCase()}`);
+        const statusCode = error?.response?.status;
+
+        // 1. Nếu Token hết hạn hoặc không hợp lệ (401/403)
+        if (statusCode === 401 || statusCode === 403) {
+          throw error;
         }
-        if (error?.status === 404) {
-          return null;
+
+        // 2. Nếu User chưa đăng ký thông tin trong hệ thống (404)
+        if (statusCode === 404) {
+          return null; // Trả về null để UI biết đường điều hướng sang trang Đăng ký (Register)
         }
+
+        // 3. Các lỗi hệ thống khác (500, rớt mạng...)
         disconnect();
         throw error;
       }
     },
-    // ĐIỀU KIỆN CHẠY: Chỉ chạy khi đã kết nối ví VÀ trong localStorage ĐÃ CÓ token từ bước ký trước đó
-    enabled: isConnected && !!address && !!localStorage.getItem(`token_${address?.toLowerCase()}`),
+
+    enabled: isConnected && !!address, // Chỉ chạy query khi đã kết nối ví
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    if (!isConnected && address) {
-      localStorage.removeItem(`token_${address.toLowerCase()}`);
-    }
-  }, [isConnected, address]);
-
-  useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isConnected && address && !user && pathname !== '/register') {
+      login(address);
+    }
+  }, [isConnected, address, login]);
 
   if (!mounted) {
     return <Loading />;

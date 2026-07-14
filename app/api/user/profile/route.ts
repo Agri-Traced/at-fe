@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { prisma } from "@/lib/prisma";
 import jwt from 'jsonwebtoken';
 
@@ -6,16 +7,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_fallback_key';
 
 export async function GET(req: Request) {
   try {
-    // 1. Lấy token từ Header Authorization (Định dạng chuẩn: Bearer <token>)
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: { message: 'Missing token', code: 'TOKEN_REQUIRED' } },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value; // Lấy token từ cookie
 
-    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return NextResponse.json({ error: { message: 'Unauthorized' } }, { status: 401 });
+    }
 
     // 2. Xác thực và giải mã token gỡ lấy thông tin ví (address)
     let decoded: any;
@@ -44,8 +41,26 @@ export async function GET(req: Request) {
         { status: 404 }
       );
     }
+    const newToken = jwt.sign(
+      {
+        id: user.id,
+        address: user.walletAddress,
+        role: user.role
+      },
+      JWT_SECRET,
+      { expiresIn: '3d' } // Gia hạn thêm 3 ngày tính từ giây phút này
+    );
 
-    // 4. Trả dữ liệu User về cho Client hoàn toàn bảo mật
+    // Ghi đè cookie cũ bằng cookie mới có thời hạn kéo dài thêm 3 ngày
+    cookieStore.set('auth_token', newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 3, // 3 ngày
+    });
+
+    // 5. Trả dữ liệu user về bình thường
     return NextResponse.json(user);
 
   } catch (error: any) {

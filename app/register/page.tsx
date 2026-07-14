@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/auth';
 import { useTranslation } from 'react-i18next';
-import { Card, Steps, Result, Form, Modal, notification, Spin, Button, Radio } from 'antd';
+import { Card, Steps, Result, Form, Button, Radio, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { Container } from '@/app/components';
 import { FormAccount } from './components/FormAccount';
@@ -13,6 +13,7 @@ import { User } from '@/generated/zod';
 import { usePostUser } from '@/hooks/users';
 import { Loading } from '@/app/components/Loading';
 import { useAccount } from 'wagmi';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const { t } = useTranslation()
@@ -21,8 +22,15 @@ export default function RegisterPage() {
   const [form] = Form.useForm<User>();
   const [term, setTerm] = useState(false);
   const { mutate, isError, isPending, isSuccess } = usePostUser();
-  const { address } = useAccount();
-  if (!address) return;
+  const { address, isConnected } = useAccount();
+  const router = useRouter();
+
+  if (!isConnected) {
+    router.replace('/login');
+    return <Loading />
+  }
+
+  if (!address) return <Loading message={t('Connecting to wallet...')} />;
 
   useEffect(() => {
     if (user) {
@@ -58,7 +66,12 @@ export default function RegisterPage() {
   return (
     <Container>
       <div className="flex flex-col gap-4">
-        <Image src="/logo.png" alt="Logo" width={200} height={200} className="mx-auto mb-8" />
+        <div className="flex flex-col">
+          <Image src="/logo.png" alt="Logo" width={200} height={200} className="mx-auto mb-8" />
+          <Typography.Title level={3} className="text-center mb-8">
+            {t('Welcome new user! Please register your account')}
+          </Typography.Title>
+        </div>
         <ConnectWalletButton />
         <Steps current={step} titlePlacement="vertical" items={items} />
         <Card>
