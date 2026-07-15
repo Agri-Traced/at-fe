@@ -98,7 +98,7 @@ model Batch {
   category        Category    @default(VEGETABLE)
   quantity        Float                            // Khối lượng / Số lượng lô hàng
   unit            String                           // Đơn vị tính (KG, Tấn, Thùng...)
-  ipfsHash        String                           // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
+  ipfsHash        String?                          // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
   status          BatchStatus @default(PLANTED)
   qrCodeUrl       String?                          // Đường dẫn ảnh QR Code sinh ra để dán lên bao bì
   activities      ActivityLog[] // Lưu lịch sử canh tác
@@ -108,7 +108,7 @@ model Batch {
   farmer          User        @relation("FarmerBatches", fields: [farmerId], references: [id])
   
   // Lịch sử thời gian
-  harvestDate     DateTime    @default(now())      // Ngày thu hoạch thực tế
+  harvestDate     DateTime?                        // Ngày thu hoạch dự kiến
   expiryDate      DateTime?                        // Hạn sử dụng dự kiến
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt

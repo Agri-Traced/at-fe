@@ -251,7 +251,7 @@ export type BatchGroupByOutputType = {
   category: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash: string | null
   status: $Enums.BatchStatus
   qrCodeUrl: string | null
   farmerId: string
@@ -292,7 +292,7 @@ export type BatchWhereInput = {
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
+  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
@@ -314,7 +314,7 @@ export type BatchOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
+  ipfsHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   farmerId?: Prisma.SortOrder
@@ -339,7 +339,7 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
+  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
@@ -361,7 +361,7 @@ export type BatchOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
+  ipfsHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   farmerId?: Prisma.SortOrder
@@ -387,7 +387,7 @@ export type BatchScalarWhereWithAggregatesInput = {
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   unit?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringWithAggregatesFilter<"Batch"> | string
+  ipfsHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   status?: Prisma.EnumBatchStatusWithAggregatesFilter<"Batch"> | $Enums.BatchStatus
   qrCodeUrl?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   farmerId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
@@ -405,7 +405,7 @@ export type BatchCreateInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -426,7 +426,7 @@ export type BatchUncheckedCreateInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   farmerId: string
@@ -447,7 +447,7 @@ export type BatchUpdateInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -468,7 +468,7 @@ export type BatchUncheckedUpdateInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -489,7 +489,7 @@ export type BatchCreateManyInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   farmerId: string
@@ -507,7 +507,7 @@ export type BatchUpdateManyMutationInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,7 +524,7 @@ export type BatchUncheckedUpdateManyInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -733,7 +733,7 @@ export type BatchCreateWithoutFarmerInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -753,7 +753,7 @@ export type BatchUncheckedCreateWithoutFarmerInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -802,7 +802,7 @@ export type BatchScalarWhereInput = {
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
+  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
@@ -820,7 +820,7 @@ export type BatchCreateWithoutActivitiesInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -840,7 +840,7 @@ export type BatchUncheckedCreateWithoutActivitiesInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   farmerId: string
@@ -876,7 +876,7 @@ export type BatchUpdateWithoutActivitiesInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -896,7 +896,7 @@ export type BatchUncheckedUpdateWithoutActivitiesInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -916,7 +916,7 @@ export type BatchCreateWithoutTransitsInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -936,7 +936,7 @@ export type BatchUncheckedCreateWithoutTransitsInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   farmerId: string
@@ -972,7 +972,7 @@ export type BatchUpdateWithoutTransitsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -992,7 +992,7 @@ export type BatchUncheckedUpdateWithoutTransitsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1012,7 +1012,7 @@ export type BatchCreateWithoutQualityChecksInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -1032,7 +1032,7 @@ export type BatchUncheckedCreateWithoutQualityChecksInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   farmerId: string
@@ -1068,7 +1068,7 @@ export type BatchUpdateWithoutQualityChecksInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1088,7 +1088,7 @@ export type BatchUncheckedUpdateWithoutQualityChecksInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1108,7 +1108,7 @@ export type BatchCreateManyFarmerInput = {
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string
+  ipfsHash?: string | null
   status?: $Enums.BatchStatus
   qrCodeUrl?: string | null
   harvestDate?: Date | string
@@ -1125,7 +1125,7 @@ export type BatchUpdateWithoutFarmerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1145,7 +1145,7 @@ export type BatchUncheckedUpdateWithoutFarmerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1165,7 +1165,7 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1333,7 +1333,7 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     category: $Enums.Category
     quantity: number
     unit: string
-    ipfsHash: string
+    ipfsHash: string | null
     status: $Enums.BatchStatus
     qrCodeUrl: string | null
     farmerId: string
