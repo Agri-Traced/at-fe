@@ -14,6 +14,18 @@ export const useBatches = () => {
   });
 };
 
+const fetchBatchByUserId = async (id: string) => {
+  const { data } = await api.get<Batch[]>(`/batches/user/${id}`);
+  return data;
+}
+
+export const useBatchesByUserId = (id: string) => {
+  return useQuery({
+    queryKey: ['batches', 'user', id],
+    queryFn: () => fetchBatchByUserId(id),
+  });
+}
+
 const fetchBatch = async (id: string) => {
   const { data } = await api.get(`/batches/${id}`);
   return data;

@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 export const Loading = ({ message }: { message?: string }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <Image src="/logo.png" alt="Logo" width={200} height={200} className="mx-auto mb-8" />
+    <div className="flex flex-col items-center justify-center gap-4 h-full">
       <Spin size="large" description={message || t('Loading')} />
+      <Image src="/logo.png" alt="Logo" width={200} height={200} className="h-auto" priority />
     </div>
   )
 }

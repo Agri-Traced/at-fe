@@ -12,25 +12,21 @@ import Image from 'next/image';
 import { User } from '@/generated/zod';
 import { usePostUser } from '@/hooks/users';
 import { Loading } from '@/app/components/Loading';
-import { useAccount } from 'wagmi';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, account } = useAuth()
   const [step, setStep] = useState(0);
   const [form] = Form.useForm<User>();
   const [term, setTerm] = useState(false);
   const { mutate, isError, isPending, isSuccess } = usePostUser();
-  const { address, isConnected } = useAccount();
   const router = useRouter();
 
-  if (!isConnected) {
+  if (!account) {
     router.replace('/login');
     return <Loading />
   }
-
-  if (!address) return <Loading message={t('Connecting to wallet...')} />;
 
   useEffect(() => {
     if (user) {
@@ -47,7 +43,7 @@ export default function RegisterPage() {
     setStep(step + 1)
     mutate({
       ...values,
-      walletAddress: address
+      walletAddress: account.address
     });
   }
 
@@ -67,7 +63,7 @@ export default function RegisterPage() {
     <Container>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col">
-          <Image src="/logo.png" alt="Logo" width={200} height={200} className="mx-auto mb-8" />
+          <Image src="/logo.png" alt="Logo" width={200} height={200} priority className='h-auto' />
           <Typography.Title level={3} className="text-center mb-8">
             {t('Welcome new user! Please register your account')}
           </Typography.Title>

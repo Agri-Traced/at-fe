@@ -12,7 +12,6 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
-    console.log('caused by', pathname);
     const url = new URL('/login', request.url);
     const searchQuery = request.nextUrl.search;
     const callbackUrl = searchQuery ? pathname + searchQuery : pathname;

@@ -29,7 +29,7 @@ const BasicLayout = () => {
     <div style={{ height: '100vh' }}>
       <ProLayout
         title="Agri-Trace Blockchain"
-        logo='/logo.svg'
+        logo='/logo.png'
         location={{ pathname }}
         route={{
           path: '/',

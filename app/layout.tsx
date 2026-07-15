@@ -5,11 +5,13 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ReactQueryProvider from "@/lib/reactQueryProvider";
 import { AuthProvider } from "@/contexts/auth";
-import { WagmiWeb3ConfigProvider, Sepolia, MetaMask, TokenPocket, OkxWallet } from '@ant-design/web3-wagmi';
+import { EthWeb3jsConfigProvider, MetaMask, OkxWallet, TokenPocket } from '@ant-design/web3-eth-web3js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from 'wagmi';
 import { I18nProvider } from "@/contexts/i18n";
 import { App, ConfigProvider } from "antd";
+import { useEffect, useState } from "react";
+import { Sepolia } from "@ant-design/web3-assets";
+import { Web3ConfigProvider } from '@ant-design/web3';
 
 const queryClient = new QueryClient();
 
@@ -28,11 +30,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (<html><body></body></html>);
+  }
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <link rel="icon" href="/icon.png" sizes="any" />
+      <link rel="apple-touch-icon" href="/icon.png" />
       <body className="min-h-full flex flex-col">
         <AntdRegistry>
           <ConfigProvider
@@ -43,13 +57,9 @@ export default function RootLayout({
             }}
           >
             <I18nProvider>
-              <WagmiWeb3ConfigProvider
+              <EthWeb3jsConfigProvider
                 eip6963={{
                   autoAddInjectedWallets: true,
-                }}
-                ens
-                transports={{
-                  [Sepolia.id]: http(),
                 }}
                 chains={[Sepolia]}
                 wallets={[
@@ -65,12 +75,14 @@ export default function RootLayout({
                   <ReactQueryProvider>
                     <App>
                       <AuthProvider>
-                        {children}
+                        <div className="h-screen">
+                          {children}
+                        </div>
                       </AuthProvider>
                     </App>
                   </ReactQueryProvider>
                 </QueryClientProvider>
-              </WagmiWeb3ConfigProvider>
+              </EthWeb3jsConfigProvider>
             </I18nProvider>
           </ConfigProvider>
         </AntdRegistry>

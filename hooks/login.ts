@@ -1,22 +1,24 @@
 import api from '@/lib/axios';
-import { useDisconnect, useSignMessage } from '@ant-design/web3-ethers/wagmi';
+import { useWeb3js } from '@ant-design/web3-eth-web3js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { App } from 'antd'
 import { useRouter } from 'next/navigation';
+import { useConnection } from '@ant-design/web3';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
-  const { signMessageAsync } = useSignMessage(); // Thư viện wagmi của bạn
-  const { disconnect } = useDisconnect();
+  const web3 = useWeb3js();
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const router = useRouter();
+  const { disconnect } = useConnection();
 
   return useMutation({
     mutationFn: async (address: string) => {
-      const message = `${t('Verify access for your wallet to login')}: ${address}`;
-      const signature = await signMessageAsync({ message });
+      if (!web3) return
+      const message = `${t('Verify access for your wallet to login')}`;
+      const signature = await web3.eth.personal.sign(web3.utils.utf8ToHex(message), address, '');
 
       // Gọi API đăng nhập để lấy JWT Token
       const res = await api.post<{ token: string }>('/user/login', {
@@ -24,7 +26,11 @@ export const useLogin = () => {
         message,
         signature
       });
-
+      notification.success({
+        title: t('Welcome to Agri-Trace.'),
+        showProgress: true,
+        placement: 'bottomRight'
+      })
       return res.data; // Trả về { token: 'ey...' }
     },
     onSuccess: (address) => {
@@ -35,7 +41,7 @@ export const useLogin = () => {
         router.replace('/register');
         return;
       }
-      disconnect()
+      if (disconnect) disconnect();
       notification.error({
         title: t('Login failed.'),
         showProgress: true,
