@@ -9,6 +9,7 @@ import { useLogin } from '@/hooks/login';
 import { usePathname } from 'next/navigation';
 import { Loading } from '@/app/components/Loading';
 import { useTranslation } from 'react-i18next';
+import { useLogout } from '@/hooks/logout';
 
 interface AuthContextType {
   user: User | null | undefined;
@@ -21,6 +22,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { account } = useAccount();
   const { mutate: login, isPending } = useLogin();
+  const { mutate: logout } = useLogout();
   const pathname = usePathname();
   const { t } = useTranslation();
 
@@ -51,10 +53,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [account, error, pathname, login]);
 
   useEffect(() => {
-    if (!account && user) {
-      api.post('/user/logout');
+    if (!account) {
+      logout();
     }
-  }, [account, user !== undefined]);
+  }, [account]);
 
   if (isLoading || isPending) {
     return <Loading message={t('Connecting to your wallet...')} />

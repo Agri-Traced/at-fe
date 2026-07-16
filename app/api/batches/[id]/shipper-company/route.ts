@@ -14,7 +14,7 @@ interface RouteParams {
 
 export const PATCH = withRole(Role.RETAILER, async (req, user, context) => {
   try {
-    const { id: batchId } = context.params;
+    const { id } = await context.params;
     const body = await req.json();
     const validation = shipperSchema.safeParse(body);
 
@@ -26,7 +26,7 @@ export const PATCH = withRole(Role.RETAILER, async (req, user, context) => {
 
     const updatedBatch = await prisma.$transaction(async (tx) => {
       // 1. Check Batch tồn tại
-      const batch = await tx.batch.findUnique({ where: { id: batchId } });
+      const batch = await tx.batch.findUnique({ where: { id } });
       if (!batch) throw new Error("Không tìm thấy lô hàng tương ứng!");
 
       // 2. Check Company tồn tại
@@ -35,7 +35,7 @@ export const PATCH = withRole(Role.RETAILER, async (req, user, context) => {
 
       // 3. Cập nhật và chuyển trạng thái sang IN_TRANSIT (nếu cần thiết)
       return await tx.batch.update({
-        where: { id: batchId },
+        where: { id },
         data: {
           shipperCompanyId,
           status: "IN_TRANSIT" // Tự động đổi trạng thái khi đã bàn giao cho bên vận chuyển

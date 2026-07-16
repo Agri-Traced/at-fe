@@ -5,8 +5,12 @@ import { IUserJWT } from '@/types/user';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export function withAuth(handler: (req: NextRequest, user: IUserJWT, context: any) => Promise<Response>) {
-  return async (req: NextRequest, context: any) => {
+export interface RouteContext {
+  params: Promise<Record<string, string>>;
+}
+
+export function withAuth(handler: (req: NextRequest, user: IUserJWT, context: RouteContext) => Promise<Response>) {
+  return async (req: NextRequest, context: RouteContext) => {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth_token')?.value;
 
@@ -23,7 +27,7 @@ export function withAuth(handler: (req: NextRequest, user: IUserJWT, context: an
   };
 }
 
-export function withRole(role: string, handler: (req: NextRequest, user: IUserJWT, context: any) => Promise<Response>) {
+export function withRole(role: string, handler: (req: NextRequest, user: IUserJWT, context: RouteContext) => Promise<Response>) {
   return withAuth(async (req, user, context) => {
     if (user.role !== role && user.role !== 'OWNER') {
       return NextResponse.json(

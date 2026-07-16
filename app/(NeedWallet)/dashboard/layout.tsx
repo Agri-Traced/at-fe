@@ -2,7 +2,6 @@
 
 import ProLayout, { PageContainer } from "@ant-design/pro-layout";
 import { useState } from "react";
-import { HomeOutlined, InboxOutlined } from "@ant-design/icons";
 import ConnectWalletButton from "@/app/components/ConnectWalletButton";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -11,7 +10,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
   return (
     <div style={{ height: '100vh' }}>
       <ProLayout
-        title="gri-Trace Blockchain"
+        title="Agri-Trace Blockchain"
         logo='/icon.png'
         location={{ pathname }}
       >
@@ -26,7 +25,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
             ]
           }}
         >
-          <div className="bg-white p-4 rounded-lg shadow-md h-[80vh]">
+          <div className="bg-white p-4 rounded-lg shadow-md h-[85vh]">
             {children}
           </div>
         </PageContainer>

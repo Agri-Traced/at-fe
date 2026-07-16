@@ -17,7 +17,7 @@ const batchCreate = z.object({
   retailerId: z.string().min(1, "Missing Retailer ID"),
 });
 
-export const POST = withRole('FARMER', async (req, user) => {
+export const POST = withRole('FARMER', async (req, user, context) => {
   try {
     const body = await req.json();
     const validation = batchCreate.safeParse(body);

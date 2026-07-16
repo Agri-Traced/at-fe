@@ -29,19 +29,9 @@ export default function BatchPage() {
 
   const action = (data: Batch): MenuProps['items'] => [
     {
-      label: t('Edit chart'),
-      key: 'edit',
-      icon: <EditOutlined />,
-    },
-    {
-      label: t('Duplicate chart'),
+      label: t('Add activity log'),
       key: 'duplicate',
       icon: <CopyOutlined />,
-    },
-    {
-      label: t('Delete chart'),
-      key: 'delete',
-      icon: <DeleteOutlined />,
     },
   ];
 
@@ -52,17 +42,6 @@ export default function BatchPage() {
       key: 'key',
       width: '5%',
       render: (_, record, index) => index + 1,
-    },
-    {
-      title: t('ID'),
-      dataIndex: 'id',
-      key: 'id',
-      width: 120,
-      render: (id: string) => (
-        <Typography.Text copyable className="font-mono text-xs">
-          {id.slice(0, 8)}...
-        </Typography.Text>
-      ),
     },
     {
       title: t('Product Name'),
@@ -116,25 +95,6 @@ export default function BatchPage() {
       },
     },
     {
-      title: t('Tx Hash'),
-      dataIndex: 'txHash',
-      key: 'txHash',
-      render: (txHash: string | null) => {
-        if (!txHash) return <span className="text-neutral-300">-</span>;
-        return (
-          <Tooltip title={txHash}>
-            <Typography.Link
-              href={`https://etherscan.io/tx/${txHash}`} // Thay thế bằng explorer của mạng blockchain bạn dùng
-              target="_blank"
-              className="font-mono text-xs"
-            >
-              {txHash.slice(0, 6)}...{txHash.slice(-4)}
-            </Typography.Link>
-          </Tooltip>
-        );
-      },
-    },
-    {
       title: t('Harvest Date'),
       dataIndex: 'harvestDate',
       key: 'harvestDate',
@@ -163,10 +123,9 @@ export default function BatchPage() {
       <Flex justify='space-between' className='mb-3!' gap={10}>
         <Space>
           <Input
-            placeholder={t('Input chart name')}
+            placeholder={t('Input batch name')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            style={{ width: '300px' }}
           />
           <Button
             shape='circle'

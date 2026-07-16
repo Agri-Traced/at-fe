@@ -27,22 +27,17 @@ export default function RegisterPage() {
     if (!account) {
       router.replace('/login');
     }
-  }, [user, router]);
-
-  if (!account) {
-    return <Loading message={t('Connecting to wallet...')} />;
-  }
+  }, [account]);
 
   useEffect(() => {
     if (user) {
-      if (user.email) {
-        setStep(1);
-      }
-      if (user.role) {
-        setStep(2);
-      }
+      router.replace('/dashboard');
     }
-  }, [user]);
+  }, [user])
+
+  if (!account || user) {
+    return <Loading message={t('Connecting to wallet...')} />;
+  }
 
   const onFinish = (values: User) => {
     setStep(step + 1)
@@ -86,7 +81,7 @@ export default function RegisterPage() {
                     {t('I agree to the terms and conditions')}
                   </Radio>
                 </Form.Item>
-                <Form.Item className="flex justify-center gap-3" >
+                <Form.Item className="flex justify-between" >
                   <Button size="large" onClick={() => setStep(step - 1)}>
                     {t('Back')}
                   </Button>

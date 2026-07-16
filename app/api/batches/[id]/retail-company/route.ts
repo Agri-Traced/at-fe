@@ -10,7 +10,7 @@ const retailerSchema = z.object({
 
 export const PATCH = withRole(Role.FARMER, async (req, user, context) => {
   try {
-    const { id: batchId } = context.params;
+    const { id } = await context.params;
     const body = await req.json();
     const validation = retailerSchema.safeParse(body);
 
@@ -22,7 +22,7 @@ export const PATCH = withRole(Role.FARMER, async (req, user, context) => {
 
     const updatedBatch = await prisma.$transaction(async (tx) => {
       // 1. Check Batch tồn tại
-      const batch = await tx.batch.findUnique({ where: { id: batchId } });
+      const batch = await tx.batch.findUnique({ where: { id } });
       if (!batch) throw new Error("Không tìm thấy lô hàng tương ứng!");
 
       // 2. Check Company tồn tại
@@ -31,7 +31,7 @@ export const PATCH = withRole(Role.FARMER, async (req, user, context) => {
 
       // 3. Cập nhật thông tin siêu thị nhận hàng
       return await tx.batch.update({
-        where: { id: batchId },
+        where: { id },
         data: { retailCompanyId },
         include: { retailCompany: true }
       });

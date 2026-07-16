@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { BatchStatus } from '@/generated/prisma/enums';
+import { BatchStatus, Role } from '@/generated/prisma/enums';
+import { withRole } from '@/lib/auth';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const activitySchema = z.object({
@@ -9,16 +10,10 @@ const activitySchema = z.object({
   txHash: z.string().min(1, "Thiếu mã giao dịch Blockchain (txHash)")
 });
 
-interface RouteParams {
-  params: {
-    id: string; // Đây chính là [id] của Batch từ URL
-  };
-}
-
-export async function POST(req: Request, { params }: RouteParams) {
+export const POST = withRole(Role.FARMER, async (req, user, context) => {
   try {
     // A. Lấy batchId từ URL params
-    const { id: batchId } = params;
+    const { id } = await context.params;
 
     // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
@@ -38,7 +33,7 @@ export async function POST(req: Request, { params }: RouteParams) {
 
       // Bước 1: Kiểm tra xem lô hàng (Batch) này có tồn tại hay không
       const batch = await tx.batch.findUnique({
-        where: { id: batchId }
+        where: { id }
       });
 
       if (!batch) {
@@ -53,7 +48,7 @@ export async function POST(req: Request, { params }: RouteParams) {
       // Bước 3: Tạo mới bản ghi ActivityLog gắn liền với Batch ID lấy từ URL
       const newActivity = await tx.activityLog.create({
         data: {
-          batchId,
+          batchId: id,
           description,
           txHash
         }
@@ -81,4 +76,4 @@ export async function POST(req: Request, { params }: RouteParams) {
       { status: 500 }
     );
   }
-}
+})

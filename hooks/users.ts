@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import type { User } from '../generated/prisma/client';
 
@@ -20,8 +20,12 @@ const postUser = async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) 
 }
 
 export const usePostUser = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
+    }
   });
 }
 

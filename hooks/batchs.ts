@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { Batch, User, StepTransit, ActivityLog, QualityTest } from '@/generated/zod';
 
@@ -42,7 +42,7 @@ const fetchBatchByUserId = async (id: string) => {
 
 export const useBatchesByUserId = (id: string) => {
   return useQuery({
-    queryKey: ['batches', 'user', id],
+    queryKey: ['batches-user'],
     queryFn: () => fetchBatchByUserId(id),
   });
 }
@@ -65,7 +65,13 @@ const postBatch = async (batchData: Omit<Batch, 'id' | 'createdAt' | 'updatedAt'
 }
 
 export const usePostBatch = () => {
+  const queryClient = useQueryClient(); // Đúng quy tắc React Hook!
   return useMutation({
     mutationFn: postBatch,
+    onSuccess: () => {
+      // Tự động xoá cache cũ để re-fetch danh sách mới ngay khi tạo Batch thành công
+      queryClient.invalidateQueries({ queryKey: ['batches-user'] });
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
   });
 }

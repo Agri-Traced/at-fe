@@ -24,12 +24,7 @@ export async function GET(
 
     if (!batch) return NextResponse.json({ success: false, error: "Cannot find batch" }, { status: 404 });
 
-    // Hàm đệ quy nhỏ để chuyển đổi mọi BigInt (nếu có) thành String
-    const serializeData = JSON.parse(
-      JSON.stringify(batch, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
-    );
-
-    return NextResponse.json({ success: true, data: serializeData }, { status: 200 });
+    return NextResponse.json({ success: true, data: batch }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });
   }

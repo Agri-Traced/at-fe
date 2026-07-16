@@ -1,4 +1,5 @@
-import { usePostUser } from "@/hooks/users";
+'use client';
+
 import { Button, Form, FormInstance, Input } from "antd"
 import { User } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
@@ -9,7 +10,7 @@ export const FormAccount = ({ onNext, form }: { onNext: () => void, form: FormIn
     try {
       await form.validateFields(['fullName', 'email', 'phone']);
       onNext();
-    } catch (error) {}
+    } catch (error) { }
   };
   return (
     <>

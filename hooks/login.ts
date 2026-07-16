@@ -1,3 +1,5 @@
+'use client';
+
 import api from '@/lib/axios';
 import { useWeb3js } from '@ant-design/web3-eth-web3js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -31,11 +33,11 @@ export const useLogin = () => {
       })
       return res.data; // Trả về { token: 'ey...' }
     },
-    onSuccess: (address) => {
-      queryClient.invalidateQueries({ queryKey: ['auth-user', address] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
     },
     onError: (error: any) => {
-      if (error.status === 404) {
+      if (error?.status === 404 || error.response?.status === 404) {
         router.replace('/register');
         return;
       }

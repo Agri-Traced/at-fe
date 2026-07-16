@@ -1,4 +1,6 @@
-import { Card, Col, Divider, Flex, Row, Skeleton } from "antd";
+'use client';
+
+import { Divider, Skeleton } from "antd";
 
 export default function DashboardSkeleton() {
   return (

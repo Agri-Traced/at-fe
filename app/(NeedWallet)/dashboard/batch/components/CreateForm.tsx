@@ -43,15 +43,15 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
     }
     const randomNumber = Math.floor(100 + Math.random() * 900);
     const blockchainId = `${Date.now()}${randomNumber}`;
-    // const txHash = await executeWrite(async (contract) => {
-    //   const tx = await contract.createBatch(
-    //     BigInt(blockchainId),
-    //     values.expiryDate ? Math.floor(new Date(values.expiryDate).getTime() / 1000) : 0,
-    //     values.harvestDate ? Math.floor(new Date(values.harvestDate).getTime() / 1000) : 0,
-    //     ipfsHash
-    //   );
-    //   return tx.hash
-    // });
+    const txHash = await executeWrite(async (contract) => {
+      const tx = await contract.createBatch(
+        BigInt(blockchainId),
+        values.expiryDate ? Math.floor(new Date(values.expiryDate).getTime() / 1000) : 0,
+        values.harvestDate ? Math.floor(new Date(values.harvestDate).getTime() / 1000) : 0,
+        ipfsHash
+      );
+      return tx.hash
+    });
     mutate({
       ...values,
       txHash: '123456',
