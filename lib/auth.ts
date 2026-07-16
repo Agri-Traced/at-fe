@@ -1,12 +1,12 @@
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { IUserJWT } from '@/types/user';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export async function withAuth(handler: (req: Request, user: IUserJWT) => Promise<Response>) {
-  return async (req: Request) => {
+export function withAuth(handler: (req: NextRequest, user: IUserJWT) => Promise<Response>) {
+  return async (req: NextRequest) => {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth_token')?.value;
 
@@ -23,7 +23,7 @@ export async function withAuth(handler: (req: Request, user: IUserJWT) => Promis
   };
 }
 
-export function withRole(role: string, handler: (req: Request, user: IUserJWT) => Promise<Response>) {
+export function withRole(role: string, handler: (req: NextRequest, user: IUserJWT) => Promise<Response>) {
   return withAuth(async (req, user) => {
     if (user.role !== role) {
       return NextResponse.json(

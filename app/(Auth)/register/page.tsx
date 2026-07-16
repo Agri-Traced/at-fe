@@ -23,9 +23,14 @@ export default function RegisterPage() {
   const { mutate, isError, isPending, isSuccess } = usePostUser();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!account) {
+      router.replace('/login');
+    }
+  }, [user, router]);
+
   if (!account) {
-    router.replace('/login');
-    return <Loading />
+    return <Loading message={t('Connecting to wallet...')} />;
   }
 
   useEffect(() => {

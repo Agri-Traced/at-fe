@@ -20,7 +20,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { account } = useAccount();
-  const { mutate: login } = useLogin();
+  const { mutate: login, isPending } = useLogin();
   const pathname = usePathname();
   const { t } = useTranslation();
 
@@ -50,7 +50,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [account, error, pathname, login]);
 
-  if(isLoading) {
+  useEffect(() => {
+    if (!account) {
+      api.post('/user/logout');
+    }
+  }, [account]);
+
+  if (isLoading || isPending) {
     return <Loading message={t('Connecting to your wallet...')} />
   }
 

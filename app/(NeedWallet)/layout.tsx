@@ -32,9 +32,8 @@ function Web3ModalTracker() {
 
 export default function NeedWalletLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="min-h-screen">
-      <Web3ModalTracker />
+    <>
       {children}
-    </div>
+    </>
   )
 }

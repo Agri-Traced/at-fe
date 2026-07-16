@@ -19,8 +19,6 @@ export const useLogin = () => {
       if (!web3) return
       const message = `${t('Verify access for your wallet to login')}`;
       const signature = await web3.eth.personal.sign(web3.utils.utf8ToHex(message), address, '');
-
-      // Gọi API đăng nhập để lấy JWT Token
       const res = await api.post<{ token: string }>('/user/login', {
         address,
         message,
