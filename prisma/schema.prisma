@@ -60,6 +60,8 @@ model Company {
   location     String
   protectedKey String   // Dùng để gia nhập
   members      User[]
+  shippedBatches  Batch[]       @relation("ShipperBatches")  // Danh sách các lô hàng công ty này đi giao
+  retailedBatches Batch[]       @relation("RetailerBatches") // Danh sách các lô hàng siêu thị này bày bán
 }
 
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
@@ -68,6 +70,7 @@ enum BatchStatus {
   PLANTED      // Đã gieo trồng
   HARVESTED    // Đã thu hoạch
   IN_TRANSIT   // Đang trong quá trình vận chuyển
+  TESTING      // Đang kiểm tra
   RETAILING    // Đã đến nhà bán lẻ / Đang trên kệ hàng
   SOLD         // Đã bán cho người tiêu dùng
   ABORTED      // Đã hủy
@@ -113,6 +116,11 @@ model Batch {
   expiryDate      DateTime?                        // Hạn sử dụng dự kiến
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  retailCompanyId  String?
+  retailCompany   Company?    @relation("RetailerBatches", fields: [retailCompanyId], references: [id])  
+
+  shipperCompanyId String?
+  shipperCompany  Company?    @relation("ShipperBatches", fields: [shipperCompanyId], references: [id])
 
   // Mối quan hệ các chặng hành trình
   transits        StepTransit[]

@@ -49,6 +49,8 @@ export type BatchMinAggregateOutputType = {
   expiryDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  retailCompanyId: string | null
+  shipperCompanyId: string | null
 }
 
 export type BatchMaxAggregateOutputType = {
@@ -66,6 +68,8 @@ export type BatchMaxAggregateOutputType = {
   expiryDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  retailCompanyId: string | null
+  shipperCompanyId: string | null
 }
 
 export type BatchCountAggregateOutputType = {
@@ -83,6 +87,8 @@ export type BatchCountAggregateOutputType = {
   expiryDate: number
   createdAt: number
   updatedAt: number
+  retailCompanyId: number
+  shipperCompanyId: number
   _all: number
 }
 
@@ -110,6 +116,8 @@ export type BatchMinAggregateInputType = {
   expiryDate?: true
   createdAt?: true
   updatedAt?: true
+  retailCompanyId?: true
+  shipperCompanyId?: true
 }
 
 export type BatchMaxAggregateInputType = {
@@ -127,6 +135,8 @@ export type BatchMaxAggregateInputType = {
   expiryDate?: true
   createdAt?: true
   updatedAt?: true
+  retailCompanyId?: true
+  shipperCompanyId?: true
 }
 
 export type BatchCountAggregateInputType = {
@@ -144,6 +154,8 @@ export type BatchCountAggregateInputType = {
   expiryDate?: true
   createdAt?: true
   updatedAt?: true
+  retailCompanyId?: true
+  shipperCompanyId?: true
   _all?: true
 }
 
@@ -248,6 +260,8 @@ export type BatchGroupByOutputType = {
   expiryDate: Date | null
   createdAt: Date
   updatedAt: Date
+  retailCompanyId: string | null
+  shipperCompanyId: string | null
   _count: BatchCountAggregateOutputType | null
   _avg: BatchAvgAggregateOutputType | null
   _sum: BatchSumAggregateOutputType | null
@@ -288,8 +302,12 @@ export type BatchWhereInput = {
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  retailCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  shipperCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   activities?: Prisma.ActivityLogListRelationFilter
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  retailCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
+  shipperCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   transits?: Prisma.StepTransitListRelationFilter
   qualityTest?: Prisma.XOR<Prisma.QualityTestNullableScalarRelationFilter, Prisma.QualityTestWhereInput> | null
 }
@@ -309,8 +327,12 @@ export type BatchOrderByWithRelationInput = {
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  retailCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  shipperCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   activities?: Prisma.ActivityLogOrderByRelationAggregateInput
   farmer?: Prisma.UserOrderByWithRelationInput
+  retailCompany?: Prisma.CompanyOrderByWithRelationInput
+  shipperCompany?: Prisma.CompanyOrderByWithRelationInput
   transits?: Prisma.StepTransitOrderByRelationAggregateInput
   qualityTest?: Prisma.QualityTestOrderByWithRelationInput
 }
@@ -333,8 +355,12 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  retailCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  shipperCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   activities?: Prisma.ActivityLogListRelationFilter
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  retailCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
+  shipperCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   transits?: Prisma.StepTransitListRelationFilter
   qualityTest?: Prisma.XOR<Prisma.QualityTestNullableScalarRelationFilter, Prisma.QualityTestWhereInput> | null
 }, "id" | "blockchainId">
@@ -354,6 +380,8 @@ export type BatchOrderByWithAggregationInput = {
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  retailCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  shipperCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.BatchCountOrderByAggregateInput
   _avg?: Prisma.BatchAvgOrderByAggregateInput
   _max?: Prisma.BatchMaxOrderByAggregateInput
@@ -379,6 +407,8 @@ export type BatchScalarWhereWithAggregatesInput = {
   expiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Batch"> | Date | string
+  retailCompanyId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  shipperCompanyId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
 }
 
 export type BatchCreateInput = {
@@ -397,6 +427,8 @@ export type BatchCreateInput = {
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
@@ -416,6 +448,8 @@ export type BatchUncheckedCreateInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
@@ -437,6 +471,8 @@ export type BatchUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
@@ -456,6 +492,8 @@ export type BatchUncheckedUpdateInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
@@ -476,6 +514,8 @@ export type BatchCreateManyInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
 }
 
 export type BatchUpdateManyMutationInput = {
@@ -509,6 +549,8 @@ export type BatchUncheckedUpdateManyInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BatchListRelationFilter = {
@@ -541,6 +583,8 @@ export type BatchCountOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  retailCompanyId?: Prisma.SortOrder
+  shipperCompanyId?: Prisma.SortOrder
 }
 
 export type BatchAvgOrderByAggregateInput = {
@@ -562,6 +606,8 @@ export type BatchMaxOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  retailCompanyId?: Prisma.SortOrder
+  shipperCompanyId?: Prisma.SortOrder
 }
 
 export type BatchMinOrderByAggregateInput = {
@@ -579,6 +625,8 @@ export type BatchMinOrderByAggregateInput = {
   expiryDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  retailCompanyId?: Prisma.SortOrder
+  shipperCompanyId?: Prisma.SortOrder
 }
 
 export type BatchSumOrderByAggregateInput = {
@@ -624,6 +672,90 @@ export type BatchUncheckedUpdateManyWithoutFarmerNestedInput = {
   connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   update?: Prisma.BatchUpdateWithWhereUniqueWithoutFarmerInput | Prisma.BatchUpdateWithWhereUniqueWithoutFarmerInput[]
   updateMany?: Prisma.BatchUpdateManyWithWhereWithoutFarmerInput | Prisma.BatchUpdateManyWithWhereWithoutFarmerInput[]
+  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
+}
+
+export type BatchCreateNestedManyWithoutShipperCompanyInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput> | Prisma.BatchCreateWithoutShipperCompanyInput[] | Prisma.BatchUncheckedCreateWithoutShipperCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperCompanyInput | Prisma.BatchCreateOrConnectWithoutShipperCompanyInput[]
+  createMany?: Prisma.BatchCreateManyShipperCompanyInputEnvelope
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+}
+
+export type BatchCreateNestedManyWithoutRetailCompanyInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput> | Prisma.BatchCreateWithoutRetailCompanyInput[] | Prisma.BatchUncheckedCreateWithoutRetailCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailCompanyInput | Prisma.BatchCreateOrConnectWithoutRetailCompanyInput[]
+  createMany?: Prisma.BatchCreateManyRetailCompanyInputEnvelope
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+}
+
+export type BatchUncheckedCreateNestedManyWithoutShipperCompanyInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput> | Prisma.BatchCreateWithoutShipperCompanyInput[] | Prisma.BatchUncheckedCreateWithoutShipperCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperCompanyInput | Prisma.BatchCreateOrConnectWithoutShipperCompanyInput[]
+  createMany?: Prisma.BatchCreateManyShipperCompanyInputEnvelope
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+}
+
+export type BatchUncheckedCreateNestedManyWithoutRetailCompanyInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput> | Prisma.BatchCreateWithoutRetailCompanyInput[] | Prisma.BatchUncheckedCreateWithoutRetailCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailCompanyInput | Prisma.BatchCreateOrConnectWithoutRetailCompanyInput[]
+  createMany?: Prisma.BatchCreateManyRetailCompanyInputEnvelope
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+}
+
+export type BatchUpdateManyWithoutShipperCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput> | Prisma.BatchCreateWithoutShipperCompanyInput[] | Prisma.BatchUncheckedCreateWithoutShipperCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperCompanyInput | Prisma.BatchCreateOrConnectWithoutShipperCompanyInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutShipperCompanyInput | Prisma.BatchUpsertWithWhereUniqueWithoutShipperCompanyInput[]
+  createMany?: Prisma.BatchCreateManyShipperCompanyInputEnvelope
+  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutShipperCompanyInput | Prisma.BatchUpdateWithWhereUniqueWithoutShipperCompanyInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutShipperCompanyInput | Prisma.BatchUpdateManyWithWhereWithoutShipperCompanyInput[]
+  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
+}
+
+export type BatchUpdateManyWithoutRetailCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput> | Prisma.BatchCreateWithoutRetailCompanyInput[] | Prisma.BatchUncheckedCreateWithoutRetailCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailCompanyInput | Prisma.BatchCreateOrConnectWithoutRetailCompanyInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutRetailCompanyInput | Prisma.BatchUpsertWithWhereUniqueWithoutRetailCompanyInput[]
+  createMany?: Prisma.BatchCreateManyRetailCompanyInputEnvelope
+  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutRetailCompanyInput | Prisma.BatchUpdateWithWhereUniqueWithoutRetailCompanyInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutRetailCompanyInput | Prisma.BatchUpdateManyWithWhereWithoutRetailCompanyInput[]
+  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
+}
+
+export type BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput> | Prisma.BatchCreateWithoutShipperCompanyInput[] | Prisma.BatchUncheckedCreateWithoutShipperCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperCompanyInput | Prisma.BatchCreateOrConnectWithoutShipperCompanyInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutShipperCompanyInput | Prisma.BatchUpsertWithWhereUniqueWithoutShipperCompanyInput[]
+  createMany?: Prisma.BatchCreateManyShipperCompanyInputEnvelope
+  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutShipperCompanyInput | Prisma.BatchUpdateWithWhereUniqueWithoutShipperCompanyInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutShipperCompanyInput | Prisma.BatchUpdateManyWithWhereWithoutShipperCompanyInput[]
+  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
+}
+
+export type BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput> | Prisma.BatchCreateWithoutRetailCompanyInput[] | Prisma.BatchUncheckedCreateWithoutRetailCompanyInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailCompanyInput | Prisma.BatchCreateOrConnectWithoutRetailCompanyInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutRetailCompanyInput | Prisma.BatchUpsertWithWhereUniqueWithoutRetailCompanyInput[]
+  createMany?: Prisma.BatchCreateManyRetailCompanyInputEnvelope
+  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutRetailCompanyInput | Prisma.BatchUpdateWithWhereUniqueWithoutRetailCompanyInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutRetailCompanyInput | Prisma.BatchUpdateManyWithWhereWithoutRetailCompanyInput[]
   deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
 }
 
@@ -704,6 +836,8 @@ export type BatchCreateWithoutFarmerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
@@ -722,6 +856,8 @@ export type BatchUncheckedCreateWithoutFarmerInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
@@ -771,6 +907,144 @@ export type BatchScalarWhereInput = {
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  retailCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  shipperCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
+}
+
+export type BatchCreateWithoutShipperCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
+  farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
+}
+
+export type BatchUncheckedCreateWithoutShipperCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  farmerId: string
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  retailCompanyId?: string | null
+  activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
+  transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
+}
+
+export type BatchCreateOrConnectWithoutShipperCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput>
+}
+
+export type BatchCreateManyShipperCompanyInputEnvelope = {
+  data: Prisma.BatchCreateManyShipperCompanyInput | Prisma.BatchCreateManyShipperCompanyInput[]
+  skipDuplicates?: boolean
+}
+
+export type BatchCreateWithoutRetailCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
+  farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
+  transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
+}
+
+export type BatchUncheckedCreateWithoutRetailCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  farmerId: string
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  shipperCompanyId?: string | null
+  activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
+  transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
+}
+
+export type BatchCreateOrConnectWithoutRetailCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput>
+}
+
+export type BatchCreateManyRetailCompanyInputEnvelope = {
+  data: Prisma.BatchCreateManyRetailCompanyInput | Prisma.BatchCreateManyRetailCompanyInput[]
+  skipDuplicates?: boolean
+}
+
+export type BatchUpsertWithWhereUniqueWithoutShipperCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  update: Prisma.XOR<Prisma.BatchUpdateWithoutShipperCompanyInput, Prisma.BatchUncheckedUpdateWithoutShipperCompanyInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutShipperCompanyInput, Prisma.BatchUncheckedCreateWithoutShipperCompanyInput>
+}
+
+export type BatchUpdateWithWhereUniqueWithoutShipperCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  data: Prisma.XOR<Prisma.BatchUpdateWithoutShipperCompanyInput, Prisma.BatchUncheckedUpdateWithoutShipperCompanyInput>
+}
+
+export type BatchUpdateManyWithWhereWithoutShipperCompanyInput = {
+  where: Prisma.BatchScalarWhereInput
+  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyInput>
+}
+
+export type BatchUpsertWithWhereUniqueWithoutRetailCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  update: Prisma.XOR<Prisma.BatchUpdateWithoutRetailCompanyInput, Prisma.BatchUncheckedUpdateWithoutRetailCompanyInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutRetailCompanyInput, Prisma.BatchUncheckedCreateWithoutRetailCompanyInput>
+}
+
+export type BatchUpdateWithWhereUniqueWithoutRetailCompanyInput = {
+  where: Prisma.BatchWhereUniqueInput
+  data: Prisma.XOR<Prisma.BatchUpdateWithoutRetailCompanyInput, Prisma.BatchUncheckedUpdateWithoutRetailCompanyInput>
+}
+
+export type BatchUpdateManyWithWhereWithoutRetailCompanyInput = {
+  where: Prisma.BatchScalarWhereInput
+  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyInput>
 }
 
 export type BatchCreateWithoutActivitiesInput = {
@@ -788,6 +1062,8 @@ export type BatchCreateWithoutActivitiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
@@ -807,6 +1083,8 @@ export type BatchUncheckedCreateWithoutActivitiesInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
@@ -842,6 +1120,8 @@ export type BatchUpdateWithoutActivitiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
@@ -861,6 +1141,8 @@ export type BatchUncheckedUpdateWithoutActivitiesInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
@@ -881,6 +1163,8 @@ export type BatchCreateWithoutTransitsInput = {
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
@@ -899,6 +1183,8 @@ export type BatchUncheckedCreateWithoutTransitsInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
@@ -935,6 +1221,8 @@ export type BatchUpdateWithoutTransitsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
@@ -953,6 +1241,8 @@ export type BatchUncheckedUpdateWithoutTransitsInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
@@ -973,6 +1263,8 @@ export type BatchCreateWithoutQualityTestInput = {
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
+  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
+  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
 }
 
@@ -991,6 +1283,8 @@ export type BatchUncheckedCreateWithoutQualityTestInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
 }
@@ -1027,6 +1321,8 @@ export type BatchUpdateWithoutQualityTestInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
 }
 
@@ -1045,6 +1341,8 @@ export type BatchUncheckedUpdateWithoutQualityTestInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
 }
@@ -1063,6 +1361,8 @@ export type BatchCreateManyFarmerInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  retailCompanyId?: string | null
+  shipperCompanyId?: string | null
 }
 
 export type BatchUpdateWithoutFarmerInput = {
@@ -1080,6 +1380,8 @@ export type BatchUpdateWithoutFarmerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
@@ -1098,6 +1400,8 @@ export type BatchUncheckedUpdateWithoutFarmerInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
   qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
@@ -1117,6 +1421,164 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type BatchCreateManyShipperCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  farmerId: string
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  retailCompanyId?: string | null
+}
+
+export type BatchCreateManyRetailCompanyInput = {
+  id?: string
+  blockchainId: string
+  txHash: string
+  productName: string
+  category?: $Enums.Category
+  quantity: number
+  unit: string
+  ipfsHash: string
+  status?: $Enums.BatchStatus
+  farmerId: string
+  harvestDate?: Date | string | null
+  expiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  shipperCompanyId?: string | null
+}
+
+export type BatchUpdateWithoutShipperCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
+  farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
+  transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
+}
+
+export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
+  transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
+}
+
+export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type BatchUpdateWithoutRetailCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
+  farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
+  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
+  transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
+}
+
+export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
+  transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
+}
+
+export type BatchUncheckedUpdateManyWithoutRetailCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  productName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1174,8 +1636,12 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   expiryDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  retailCompanyId?: boolean
+  shipperCompanyId?: boolean
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
   transits?: boolean | Prisma.Batch$transitsArgs<ExtArgs>
   qualityTest?: boolean | Prisma.Batch$qualityTestArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
@@ -1196,7 +1662,11 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   expiryDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  retailCompanyId?: boolean
+  shipperCompanyId?: boolean
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
 }, ExtArgs["result"]["batch"]>
 
 export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1214,7 +1684,11 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   expiryDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  retailCompanyId?: boolean
+  shipperCompanyId?: boolean
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
 }, ExtArgs["result"]["batch"]>
 
 export type BatchSelectScalar = {
@@ -1232,21 +1706,29 @@ export type BatchSelectScalar = {
   expiryDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  retailCompanyId?: boolean
+  shipperCompanyId?: boolean
 }
 
-export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "ipfsHash" | "status" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt", ExtArgs["result"]["batch"]>
+export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "ipfsHash" | "status" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
 export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
   transits?: boolean | Prisma.Batch$transitsArgs<ExtArgs>
   qualityTest?: boolean | Prisma.Batch$qualityTestArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
 }
 export type BatchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
+  shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
 }
 
 export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1254,6 +1736,8 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     activities: Prisma.$ActivityLogPayload<ExtArgs>[]
     farmer: Prisma.$UserPayload<ExtArgs>
+    retailCompany: Prisma.$CompanyPayload<ExtArgs> | null
+    shipperCompany: Prisma.$CompanyPayload<ExtArgs> | null
     transits: Prisma.$StepTransitPayload<ExtArgs>[]
     qualityTest: Prisma.$QualityTestPayload<ExtArgs> | null
   }
@@ -1272,6 +1756,8 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     expiryDate: Date | null
     createdAt: Date
     updatedAt: Date
+    retailCompanyId: string | null
+    shipperCompanyId: string | null
   }, ExtArgs["result"]["batch"]>
   composites: {}
 }
@@ -1668,6 +2154,8 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   activities<T extends Prisma.Batch$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   farmer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  retailCompany<T extends Prisma.Batch$retailCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$retailCompanyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  shipperCompany<T extends Prisma.Batch$shipperCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$shipperCompanyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   transits<T extends Prisma.Batch$transitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$transitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepTransitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qualityTest<T extends Prisma.Batch$qualityTestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$qualityTestArgs<ExtArgs>>): Prisma.Prisma__QualityTestClient<runtime.Types.Result.GetResult<Prisma.$QualityTestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1713,6 +2201,8 @@ export interface BatchFieldRefs {
   readonly expiryDate: Prisma.FieldRef<"Batch", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Batch", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Batch", 'DateTime'>
+  readonly retailCompanyId: Prisma.FieldRef<"Batch", 'String'>
+  readonly shipperCompanyId: Prisma.FieldRef<"Batch", 'String'>
 }
     
 
@@ -2135,6 +2625,44 @@ export type Batch$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
+}
+
+/**
+ * Batch.retailCompany
+ */
+export type Batch$retailCompanyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Company
+   */
+  select?: Prisma.CompanySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Company
+   */
+  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyInclude<ExtArgs> | null
+  where?: Prisma.CompanyWhereInput
+}
+
+/**
+ * Batch.shipperCompany
+ */
+export type Batch$shipperCompanyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Company
+   */
+  select?: Prisma.CompanySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Company
+   */
+  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyInclude<ExtArgs> | null
+  where?: Prisma.CompanyWhereInput
 }
 
 /**

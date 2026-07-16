@@ -943,7 +943,9 @@ export const BatchScalarFieldEnum = {
   harvestDate: 'harvestDate',
   expiryDate: 'expiryDate',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  retailCompanyId: 'retailCompanyId',
+  shipperCompanyId: 'shipperCompanyId'
 } as const
 
 export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]

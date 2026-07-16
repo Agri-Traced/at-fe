@@ -18,7 +18,7 @@ export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','l
 
 export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp','txHash']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','txHash','productName','category','quantity','unit','ipfsHash','status','farmerId','harvestDate','expiryDate','createdAt','updatedAt']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','txHash','productName','category','quantity','unit','ipfsHash','status','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','statusDetails','departureTime','arrivalTime']);
 
@@ -38,7 +38,7 @@ export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
 
 export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
 
-export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','RETAILING','SOLD','ABORTED']);
+export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','TESTING','RETAILING','SOLD','ABORTED']);
 
 export type BatchStatusType = `${z.infer<typeof BatchStatusSchema>}`
 
@@ -115,6 +115,8 @@ export const BatchSchema = z.object({
   expiryDate: z.coerce.date().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  retailCompanyId: z.string().nullable(),
+  shipperCompanyId: z.string().nullable(),
 })
 
 export type Batch = z.infer<typeof BatchSchema>
@@ -208,6 +210,8 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
 
 export const CompanyIncludeSchema: z.ZodType<Prisma.CompanyInclude> = z.object({
   members: z.union([z.boolean(),z.lazy(() => UserFindManyArgsSchema)]).optional(),
+  shippedBatches: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
+  retailedBatches: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => CompanyCountOutputTypeArgsSchema)]).optional(),
 }).strict();
 
@@ -222,6 +226,8 @@ export const CompanyCountOutputTypeArgsSchema: z.ZodType<Prisma.CompanyCountOutp
 
 export const CompanyCountOutputTypeSelectSchema: z.ZodType<Prisma.CompanyCountOutputTypeSelect> = z.object({
   members: z.boolean().optional(),
+  shippedBatches: z.boolean().optional(),
+  retailedBatches: z.boolean().optional(),
 }).strict();
 
 export const CompanySelectSchema: z.ZodType<Prisma.CompanySelect> = z.object({
@@ -231,6 +237,8 @@ export const CompanySelectSchema: z.ZodType<Prisma.CompanySelect> = z.object({
   location: z.boolean().optional(),
   protectedKey: z.boolean().optional(),
   members: z.union([z.boolean(),z.lazy(() => UserFindManyArgsSchema)]).optional(),
+  shippedBatches: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
+  retailedBatches: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => CompanyCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -261,6 +269,8 @@ export const ActivityLogSelectSchema: z.ZodType<Prisma.ActivityLogSelect> = z.ob
 export const BatchIncludeSchema: z.ZodType<Prisma.BatchInclude> = z.object({
   activities: z.union([z.boolean(),z.lazy(() => ActivityLogFindManyArgsSchema)]).optional(),
   farmer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  retailCompany: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
+  shipperCompany: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
   transits: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
   qualityTest: z.union([z.boolean(),z.lazy(() => QualityTestArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BatchCountOutputTypeArgsSchema)]).optional(),
@@ -295,8 +305,12 @@ export const BatchSelectSchema: z.ZodType<Prisma.BatchSelect> = z.object({
   expiryDate: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
+  retailCompanyId: z.boolean().optional(),
+  shipperCompanyId: z.boolean().optional(),
   activities: z.union([z.boolean(),z.lazy(() => ActivityLogFindManyArgsSchema)]).optional(),
   farmer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  retailCompany: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
+  shipperCompany: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
   transits: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
   qualityTest: z.union([z.boolean(),z.lazy(() => QualityTestArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BatchCountOutputTypeArgsSchema)]).optional(),
@@ -484,6 +498,8 @@ export const CompanyWhereInputSchema: z.ZodType<Prisma.CompanyWhereInput> = z.st
   location: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   protectedKey: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   members: z.lazy(() => UserListRelationFilterSchema).optional(),
+  shippedBatches: z.lazy(() => BatchListRelationFilterSchema).optional(),
+  retailedBatches: z.lazy(() => BatchListRelationFilterSchema).optional(),
 });
 
 export const CompanyOrderByWithRelationInputSchema: z.ZodType<Prisma.CompanyOrderByWithRelationInput> = z.strictObject({
@@ -493,6 +509,8 @@ export const CompanyOrderByWithRelationInputSchema: z.ZodType<Prisma.CompanyOrde
   location: z.lazy(() => SortOrderSchema).optional(),
   protectedKey: z.lazy(() => SortOrderSchema).optional(),
   members: z.lazy(() => UserOrderByRelationAggregateInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchOrderByRelationAggregateInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchOrderByRelationAggregateInputSchema).optional(),
 });
 
 export const CompanyWhereUniqueInputSchema: z.ZodType<Prisma.CompanyWhereUniqueInput> = z.object({
@@ -508,6 +526,8 @@ export const CompanyWhereUniqueInputSchema: z.ZodType<Prisma.CompanyWhereUniqueI
   location: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   protectedKey: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   members: z.lazy(() => UserListRelationFilterSchema).optional(),
+  shippedBatches: z.lazy(() => BatchListRelationFilterSchema).optional(),
+  retailedBatches: z.lazy(() => BatchListRelationFilterSchema).optional(),
 }));
 
 export const CompanyOrderByWithAggregationInputSchema: z.ZodType<Prisma.CompanyOrderByWithAggregationInput> = z.strictObject({
@@ -608,8 +628,12 @@ export const BatchWhereInputSchema: z.ZodType<Prisma.BatchWhereInput> = z.strict
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  retailCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogListRelationFilterSchema).optional(),
   farmer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  retailCompany: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
+  shipperCompany: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
   transits: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
   qualityTest: z.union([ z.lazy(() => QualityTestNullableScalarRelationFilterSchema), z.lazy(() => QualityTestWhereInputSchema) ]).optional().nullable(),
 });
@@ -629,8 +653,12 @@ export const BatchOrderByWithRelationInputSchema: z.ZodType<Prisma.BatchOrderByW
   expiryDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  retailCompanyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  shipperCompanyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogOrderByRelationAggregateInputSchema).optional(),
   farmer: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyOrderByWithRelationInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyOrderByWithRelationInputSchema).optional(),
   transits: z.lazy(() => StepTransitOrderByRelationAggregateInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestOrderByWithRelationInputSchema).optional(),
 });
@@ -665,8 +693,12 @@ export const BatchWhereUniqueInputSchema: z.ZodType<Prisma.BatchWhereUniqueInput
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  retailCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogListRelationFilterSchema).optional(),
   farmer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  retailCompany: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
+  shipperCompany: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
   transits: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
   qualityTest: z.union([ z.lazy(() => QualityTestNullableScalarRelationFilterSchema), z.lazy(() => QualityTestWhereInputSchema) ]).optional().nullable(),
 }));
@@ -686,6 +718,8 @@ export const BatchOrderByWithAggregationInputSchema: z.ZodType<Prisma.BatchOrder
   expiryDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  retailCompanyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  shipperCompanyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => BatchCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => BatchAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => BatchMaxOrderByAggregateInputSchema).optional(),
@@ -711,6 +745,8 @@ export const BatchScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BatchSc
   expiryDate: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
+  retailCompanyId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
 });
 
 export const StepTransitWhereInputSchema: z.ZodType<Prisma.StepTransitWhereInput> = z.strictObject({
@@ -993,6 +1029,8 @@ export const CompanyCreateInputSchema: z.ZodType<Prisma.CompanyCreateInput> = z.
   location: z.string(),
   protectedKey: z.string(),
   members: z.lazy(() => UserCreateNestedManyWithoutCompanyInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
 });
 
 export const CompanyUncheckedCreateInputSchema: z.ZodType<Prisma.CompanyUncheckedCreateInput> = z.strictObject({
@@ -1002,6 +1040,8 @@ export const CompanyUncheckedCreateInputSchema: z.ZodType<Prisma.CompanyUnchecke
   location: z.string(),
   protectedKey: z.string(),
   members: z.lazy(() => UserUncheckedCreateNestedManyWithoutCompanyInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
 });
 
 export const CompanyUpdateInputSchema: z.ZodType<Prisma.CompanyUpdateInput> = z.strictObject({
@@ -1011,6 +1051,8 @@ export const CompanyUpdateInputSchema: z.ZodType<Prisma.CompanyUpdateInput> = z.
   location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   members: z.lazy(() => UserUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
 });
 
 export const CompanyUncheckedUpdateInputSchema: z.ZodType<Prisma.CompanyUncheckedUpdateInput> = z.strictObject({
@@ -1020,6 +1062,8 @@ export const CompanyUncheckedUpdateInputSchema: z.ZodType<Prisma.CompanyUnchecke
   location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   members: z.lazy(() => UserUncheckedUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
 });
 
 export const CompanyCreateManyInputSchema: z.ZodType<Prisma.CompanyCreateManyInput> = z.strictObject({
@@ -1117,6 +1161,8 @@ export const BatchCreateInputSchema: z.ZodType<Prisma.BatchCreateInput> = z.stri
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
@@ -1136,6 +1182,8 @@ export const BatchUncheckedCreateInputSchema: z.ZodType<Prisma.BatchUncheckedCre
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
@@ -1157,6 +1205,8 @@ export const BatchUpdateInputSchema: z.ZodType<Prisma.BatchUpdateInput> = z.stri
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
@@ -1176,6 +1226,8 @@ export const BatchUncheckedUpdateInputSchema: z.ZodType<Prisma.BatchUncheckedUpd
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
@@ -1196,6 +1248,8 @@ export const BatchCreateManyInputSchema: z.ZodType<Prisma.BatchCreateManyInput> 
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
 });
 
 export const BatchUpdateManyMutationInputSchema: z.ZodType<Prisma.BatchUpdateManyMutationInput> = z.strictObject({
@@ -1229,6 +1283,8 @@ export const BatchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BatchUnchecke
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
 
 export const StepTransitCreateInputSchema: z.ZodType<Prisma.StepTransitCreateInput> = z.strictObject({
@@ -1713,6 +1769,11 @@ export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelation
   isNot: z.lazy(() => UserWhereInputSchema).optional(),
 });
 
+export const CompanyNullableScalarRelationFilterSchema: z.ZodType<Prisma.CompanyNullableScalarRelationFilter> = z.strictObject({
+  is: z.lazy(() => CompanyWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => CompanyWhereInputSchema).optional().nullable(),
+});
+
 export const QualityTestNullableScalarRelationFilterSchema: z.ZodType<Prisma.QualityTestNullableScalarRelationFilter> = z.strictObject({
   is: z.lazy(() => QualityTestWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => QualityTestWhereInputSchema).optional().nullable(),
@@ -1737,6 +1798,8 @@ export const BatchCountOrderByAggregateInputSchema: z.ZodType<Prisma.BatchCountO
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  retailCompanyId: z.lazy(() => SortOrderSchema).optional(),
+  shipperCompanyId: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const BatchAvgOrderByAggregateInputSchema: z.ZodType<Prisma.BatchAvgOrderByAggregateInput> = z.strictObject({
@@ -1758,6 +1821,8 @@ export const BatchMaxOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMaxOrder
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  retailCompanyId: z.lazy(() => SortOrderSchema).optional(),
+  shipperCompanyId: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const BatchMinOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMinOrderByAggregateInput> = z.strictObject({
@@ -1775,6 +1840,8 @@ export const BatchMinOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMinOrder
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  retailCompanyId: z.lazy(() => SortOrderSchema).optional(),
+  shipperCompanyId: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const BatchSumOrderByAggregateInputSchema: z.ZodType<Prisma.BatchSumOrderByAggregateInput> = z.strictObject({
@@ -2119,11 +2186,39 @@ export const UserCreateNestedManyWithoutCompanyInputSchema: z.ZodType<Prisma.Use
   connect: z.union([ z.lazy(() => UserWhereUniqueInputSchema), z.lazy(() => UserWhereUniqueInputSchema).array() ]).optional(),
 });
 
+export const BatchCreateNestedManyWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchCreateNestedManyWithoutShipperCompanyInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyShipperCompanyInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+});
+
+export const BatchCreateNestedManyWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchCreateNestedManyWithoutRetailCompanyInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyRetailCompanyInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+});
+
 export const UserUncheckedCreateNestedManyWithoutCompanyInputSchema: z.ZodType<Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput> = z.strictObject({
   create: z.union([ z.lazy(() => UserCreateWithoutCompanyInputSchema), z.lazy(() => UserCreateWithoutCompanyInputSchema).array(), z.lazy(() => UserUncheckedCreateWithoutCompanyInputSchema), z.lazy(() => UserUncheckedCreateWithoutCompanyInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => UserCreateOrConnectWithoutCompanyInputSchema), z.lazy(() => UserCreateOrConnectWithoutCompanyInputSchema).array() ]).optional(),
   createMany: z.lazy(() => UserCreateManyCompanyInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => UserWhereUniqueInputSchema), z.lazy(() => UserWhereUniqueInputSchema).array() ]).optional(),
+});
+
+export const BatchUncheckedCreateNestedManyWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedCreateNestedManyWithoutShipperCompanyInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyShipperCompanyInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+});
+
+export const BatchUncheckedCreateNestedManyWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedCreateNestedManyWithoutRetailCompanyInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyRetailCompanyInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
 });
 
 export const EnumOrganizationTypeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumOrganizationTypeFieldUpdateOperationsInput> = z.strictObject({
@@ -2144,6 +2239,34 @@ export const UserUpdateManyWithoutCompanyNestedInputSchema: z.ZodType<Prisma.Use
   deleteMany: z.union([ z.lazy(() => UserScalarWhereInputSchema), z.lazy(() => UserScalarWhereInputSchema).array() ]).optional(),
 });
 
+export const BatchUpdateManyWithoutShipperCompanyNestedInputSchema: z.ZodType<Prisma.BatchUpdateManyWithoutShipperCompanyNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => BatchUpsertWithWhereUniqueWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpsertWithWhereUniqueWithoutShipperCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyShipperCompanyInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => BatchUpdateWithWhereUniqueWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpdateWithWhereUniqueWithoutShipperCompanyInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => BatchUpdateManyWithWhereWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpdateManyWithWhereWithoutShipperCompanyInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => BatchScalarWhereInputSchema), z.lazy(() => BatchScalarWhereInputSchema).array() ]).optional(),
+});
+
+export const BatchUpdateManyWithoutRetailCompanyNestedInputSchema: z.ZodType<Prisma.BatchUpdateManyWithoutRetailCompanyNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => BatchUpsertWithWhereUniqueWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpsertWithWhereUniqueWithoutRetailCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyRetailCompanyInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => BatchUpdateWithWhereUniqueWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpdateWithWhereUniqueWithoutRetailCompanyInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => BatchUpdateManyWithWhereWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpdateManyWithWhereWithoutRetailCompanyInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => BatchScalarWhereInputSchema), z.lazy(() => BatchScalarWhereInputSchema).array() ]).optional(),
+});
+
 export const UserUncheckedUpdateManyWithoutCompanyNestedInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput> = z.strictObject({
   create: z.union([ z.lazy(() => UserCreateWithoutCompanyInputSchema), z.lazy(() => UserCreateWithoutCompanyInputSchema).array(), z.lazy(() => UserUncheckedCreateWithoutCompanyInputSchema), z.lazy(() => UserUncheckedCreateWithoutCompanyInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => UserCreateOrConnectWithoutCompanyInputSchema), z.lazy(() => UserCreateOrConnectWithoutCompanyInputSchema).array() ]).optional(),
@@ -2156,6 +2279,34 @@ export const UserUncheckedUpdateManyWithoutCompanyNestedInputSchema: z.ZodType<P
   update: z.union([ z.lazy(() => UserUpdateWithWhereUniqueWithoutCompanyInputSchema), z.lazy(() => UserUpdateWithWhereUniqueWithoutCompanyInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => UserUpdateManyWithWhereWithoutCompanyInputSchema), z.lazy(() => UserUpdateManyWithWhereWithoutCompanyInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => UserScalarWhereInputSchema), z.lazy(() => UserScalarWhereInputSchema).array() ]).optional(),
+});
+
+export const BatchUncheckedUpdateManyWithoutShipperCompanyNestedInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutShipperCompanyInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => BatchUpsertWithWhereUniqueWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpsertWithWhereUniqueWithoutShipperCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyShipperCompanyInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => BatchUpdateWithWhereUniqueWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpdateWithWhereUniqueWithoutShipperCompanyInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => BatchUpdateManyWithWhereWithoutShipperCompanyInputSchema), z.lazy(() => BatchUpdateManyWithWhereWithoutShipperCompanyInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => BatchScalarWhereInputSchema), z.lazy(() => BatchScalarWhereInputSchema).array() ]).optional(),
+});
+
+export const BatchUncheckedUpdateManyWithoutRetailCompanyNestedInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema).array(), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema), z.lazy(() => BatchCreateOrConnectWithoutRetailCompanyInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => BatchUpsertWithWhereUniqueWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpsertWithWhereUniqueWithoutRetailCompanyInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => BatchCreateManyRetailCompanyInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => BatchWhereUniqueInputSchema), z.lazy(() => BatchWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => BatchUpdateWithWhereUniqueWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpdateWithWhereUniqueWithoutRetailCompanyInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => BatchUpdateManyWithWhereWithoutRetailCompanyInputSchema), z.lazy(() => BatchUpdateManyWithWhereWithoutRetailCompanyInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => BatchScalarWhereInputSchema), z.lazy(() => BatchScalarWhereInputSchema).array() ]).optional(),
 });
 
 export const BatchCreateNestedOneWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchCreateNestedOneWithoutActivitiesInput> = z.strictObject({
@@ -2183,6 +2334,18 @@ export const UserCreateNestedOneWithoutBatchesCreatedInputSchema: z.ZodType<Pris
   create: z.union([ z.lazy(() => UserCreateWithoutBatchesCreatedInputSchema), z.lazy(() => UserUncheckedCreateWithoutBatchesCreatedInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutBatchesCreatedInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
+});
+
+export const CompanyCreateNestedOneWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput> = z.strictObject({
+  create: z.union([ z.lazy(() => CompanyCreateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutRetailedBatchesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => CompanyCreateOrConnectWithoutRetailedBatchesInputSchema).optional(),
+  connect: z.lazy(() => CompanyWhereUniqueInputSchema).optional(),
+});
+
+export const CompanyCreateNestedOneWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput> = z.strictObject({
+  create: z.union([ z.lazy(() => CompanyCreateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutShippedBatchesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => CompanyCreateOrConnectWithoutShippedBatchesInputSchema).optional(),
+  connect: z.lazy(() => CompanyWhereUniqueInputSchema).optional(),
 });
 
 export const StepTransitCreateNestedManyWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitCreateNestedManyWithoutBatchInput> = z.strictObject({
@@ -2258,6 +2421,26 @@ export const UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema: z.ZodT
   upsert: z.lazy(() => UserUpsertWithoutBatchesCreatedInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutBatchesCreatedInputSchema), z.lazy(() => UserUpdateWithoutBatchesCreatedInputSchema), z.lazy(() => UserUncheckedUpdateWithoutBatchesCreatedInputSchema) ]).optional(),
+});
+
+export const CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema: z.ZodType<Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => CompanyCreateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutRetailedBatchesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => CompanyCreateOrConnectWithoutRetailedBatchesInputSchema).optional(),
+  upsert: z.lazy(() => CompanyUpsertWithoutRetailedBatchesInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => CompanyWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => CompanyUpdateToOneWithWhereWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUpdateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutRetailedBatchesInputSchema) ]).optional(),
+});
+
+export const CompanyUpdateOneWithoutShippedBatchesNestedInputSchema: z.ZodType<Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => CompanyCreateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutShippedBatchesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => CompanyCreateOrConnectWithoutShippedBatchesInputSchema).optional(),
+  upsert: z.lazy(() => CompanyUpsertWithoutShippedBatchesInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => CompanyWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => CompanyUpdateToOneWithWhereWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUpdateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutShippedBatchesInputSchema) ]).optional(),
 });
 
 export const StepTransitUpdateManyWithoutBatchNestedInputSchema: z.ZodType<Prisma.StepTransitUpdateManyWithoutBatchNestedInput> = z.strictObject({
@@ -2665,6 +2848,8 @@ export const CompanyCreateWithoutMembersInputSchema: z.ZodType<Prisma.CompanyCre
   companyName: z.string(),
   location: z.string(),
   protectedKey: z.string(),
+  shippedBatches: z.lazy(() => BatchCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
 });
 
 export const CompanyUncheckedCreateWithoutMembersInputSchema: z.ZodType<Prisma.CompanyUncheckedCreateWithoutMembersInput> = z.strictObject({
@@ -2673,6 +2858,8 @@ export const CompanyUncheckedCreateWithoutMembersInputSchema: z.ZodType<Prisma.C
   companyName: z.string(),
   location: z.string(),
   protectedKey: z.string(),
+  shippedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
 });
 
 export const CompanyCreateOrConnectWithoutMembersInputSchema: z.ZodType<Prisma.CompanyCreateOrConnectWithoutMembersInput> = z.strictObject({
@@ -2695,6 +2882,8 @@ export const BatchCreateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchCreateWi
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
@@ -2713,6 +2902,8 @@ export const BatchUncheckedCreateWithoutFarmerInputSchema: z.ZodType<Prisma.Batc
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
@@ -2811,6 +3002,8 @@ export const CompanyUpdateWithoutMembersInputSchema: z.ZodType<Prisma.CompanyUpd
   companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  shippedBatches: z.lazy(() => BatchUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
 });
 
 export const CompanyUncheckedUpdateWithoutMembersInputSchema: z.ZodType<Prisma.CompanyUncheckedUpdateWithoutMembersInput> = z.strictObject({
@@ -2819,6 +3012,8 @@ export const CompanyUncheckedUpdateWithoutMembersInputSchema: z.ZodType<Prisma.C
   companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  shippedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
 });
 
 export const BatchUpsertWithWhereUniqueWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUpsertWithWhereUniqueWithoutFarmerInput> = z.strictObject({
@@ -2855,6 +3050,8 @@ export const BatchScalarWhereInputSchema: z.ZodType<Prisma.BatchScalarWhereInput
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  retailCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
 });
 
 export const StepTransitUpsertWithWhereUniqueWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUpsertWithWhereUniqueWithoutShipperInput> = z.strictObject({
@@ -2958,6 +3155,110 @@ export const UserCreateManyCompanyInputEnvelopeSchema: z.ZodType<Prisma.UserCrea
   skipDuplicates: z.boolean().optional(),
 });
 
+export const BatchCreateWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchCreateWithoutShipperCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
+  farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
+});
+
+export const BatchUncheckedCreateWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutShipperCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  farmerId: z.string(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
+});
+
+export const BatchCreateOrConnectWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutShipperCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema) ]),
+});
+
+export const BatchCreateManyShipperCompanyInputEnvelopeSchema: z.ZodType<Prisma.BatchCreateManyShipperCompanyInputEnvelope> = z.strictObject({
+  data: z.union([ z.lazy(() => BatchCreateManyShipperCompanyInputSchema), z.lazy(() => BatchCreateManyShipperCompanyInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional(),
+});
+
+export const BatchCreateWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchCreateWithoutRetailCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
+  farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
+  transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
+});
+
+export const BatchUncheckedCreateWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutRetailCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  farmerId: z.string(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  shipperCompanyId: z.string().optional().nullable(),
+  activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
+});
+
+export const BatchCreateOrConnectWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutRetailCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema) ]),
+});
+
+export const BatchCreateManyRetailCompanyInputEnvelopeSchema: z.ZodType<Prisma.BatchCreateManyRetailCompanyInputEnvelope> = z.strictObject({
+  data: z.union([ z.lazy(() => BatchCreateManyRetailCompanyInputSchema), z.lazy(() => BatchCreateManyRetailCompanyInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional(),
+});
+
 export const UserUpsertWithWhereUniqueWithoutCompanyInputSchema: z.ZodType<Prisma.UserUpsertWithWhereUniqueWithoutCompanyInput> = z.strictObject({
   where: z.lazy(() => UserWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => UserUpdateWithoutCompanyInputSchema), z.lazy(() => UserUncheckedUpdateWithoutCompanyInputSchema) ]),
@@ -2989,6 +3290,38 @@ export const UserScalarWhereInputSchema: z.ZodType<Prisma.UserScalarWhereInput> 
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
 });
 
+export const BatchUpsertWithWhereUniqueWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUpsertWithWhereUniqueWithoutShipperCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => BatchUpdateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutShipperCompanyInputSchema) ]),
+  create: z.union([ z.lazy(() => BatchCreateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutShipperCompanyInputSchema) ]),
+});
+
+export const BatchUpdateWithWhereUniqueWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUpdateWithWhereUniqueWithoutShipperCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => BatchUpdateWithoutShipperCompanyInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutShipperCompanyInputSchema) ]),
+});
+
+export const BatchUpdateManyWithWhereWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUpdateManyWithWhereWithoutShipperCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => BatchUpdateManyMutationInputSchema), z.lazy(() => BatchUncheckedUpdateManyWithoutShipperCompanyInputSchema) ]),
+});
+
+export const BatchUpsertWithWhereUniqueWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUpsertWithWhereUniqueWithoutRetailCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => BatchUpdateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutRetailCompanyInputSchema) ]),
+  create: z.union([ z.lazy(() => BatchCreateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedCreateWithoutRetailCompanyInputSchema) ]),
+});
+
+export const BatchUpdateWithWhereUniqueWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUpdateWithWhereUniqueWithoutRetailCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => BatchUpdateWithoutRetailCompanyInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutRetailCompanyInputSchema) ]),
+});
+
+export const BatchUpdateManyWithWhereWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUpdateManyWithWhereWithoutRetailCompanyInput> = z.strictObject({
+  where: z.lazy(() => BatchScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => BatchUpdateManyMutationInputSchema), z.lazy(() => BatchUncheckedUpdateManyWithoutRetailCompanyInputSchema) ]),
+});
+
 export const BatchCreateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchCreateWithoutActivitiesInput> = z.strictObject({
   id: z.uuid().optional(),
   blockchainId: z.string(),
@@ -3004,6 +3337,8 @@ export const BatchCreateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchCrea
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
@@ -3023,6 +3358,8 @@ export const BatchUncheckedCreateWithoutActivitiesInputSchema: z.ZodType<Prisma.
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
@@ -3058,6 +3395,8 @@ export const BatchUpdateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchUpda
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
@@ -3077,6 +3416,8 @@ export const BatchUncheckedUpdateWithoutActivitiesInputSchema: z.ZodType<Prisma.
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
@@ -3136,6 +3477,56 @@ export const UserUncheckedCreateWithoutBatchesCreatedInputSchema: z.ZodType<Pris
 export const UserCreateOrConnectWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutBatchesCreatedInput> = z.strictObject({
   where: z.lazy(() => UserWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => UserCreateWithoutBatchesCreatedInputSchema), z.lazy(() => UserUncheckedCreateWithoutBatchesCreatedInputSchema) ]),
+});
+
+export const CompanyCreateWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateWithoutRetailedBatchesInput> = z.strictObject({
+  id: z.uuid().optional(),
+  type: z.lazy(() => OrganizationTypeSchema),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+  members: z.lazy(() => UserCreateNestedManyWithoutCompanyInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+});
+
+export const CompanyUncheckedCreateWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyUncheckedCreateWithoutRetailedBatchesInput> = z.strictObject({
+  id: z.uuid().optional(),
+  type: z.lazy(() => OrganizationTypeSchema),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+  members: z.lazy(() => UserUncheckedCreateNestedManyWithoutCompanyInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutShipperCompanyInputSchema).optional(),
+});
+
+export const CompanyCreateOrConnectWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateOrConnectWithoutRetailedBatchesInput> = z.strictObject({
+  where: z.lazy(() => CompanyWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => CompanyCreateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutRetailedBatchesInputSchema) ]),
+});
+
+export const CompanyCreateWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateWithoutShippedBatchesInput> = z.strictObject({
+  id: z.uuid().optional(),
+  type: z.lazy(() => OrganizationTypeSchema),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+  members: z.lazy(() => UserCreateNestedManyWithoutCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
+});
+
+export const CompanyUncheckedCreateWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyUncheckedCreateWithoutShippedBatchesInput> = z.strictObject({
+  id: z.uuid().optional(),
+  type: z.lazy(() => OrganizationTypeSchema),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+  members: z.lazy(() => UserUncheckedCreateNestedManyWithoutCompanyInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedCreateNestedManyWithoutRetailCompanyInputSchema).optional(),
+});
+
+export const CompanyCreateOrConnectWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyCreateOrConnectWithoutShippedBatchesInput> = z.strictObject({
+  where: z.lazy(() => CompanyWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => CompanyCreateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutShippedBatchesInputSchema) ]),
 });
 
 export const StepTransitCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitCreateWithoutBatchInput> = z.strictObject({
@@ -3265,6 +3656,68 @@ export const UserUncheckedUpdateWithoutBatchesCreatedInputSchema: z.ZodType<Pris
   qualityTests: z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
+export const CompanyUpsertWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyUpsertWithoutRetailedBatchesInput> = z.strictObject({
+  update: z.union([ z.lazy(() => CompanyUpdateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutRetailedBatchesInputSchema) ]),
+  create: z.union([ z.lazy(() => CompanyCreateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutRetailedBatchesInputSchema) ]),
+  where: z.lazy(() => CompanyWhereInputSchema).optional(),
+});
+
+export const CompanyUpdateToOneWithWhereWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyUpdateToOneWithWhereWithoutRetailedBatchesInput> = z.strictObject({
+  where: z.lazy(() => CompanyWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => CompanyUpdateWithoutRetailedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutRetailedBatchesInputSchema) ]),
+});
+
+export const CompanyUpdateWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyUpdateWithoutRetailedBatchesInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => OrganizationTypeSchema), z.lazy(() => EnumOrganizationTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  members: z.lazy(() => UserUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+});
+
+export const CompanyUncheckedUpdateWithoutRetailedBatchesInputSchema: z.ZodType<Prisma.CompanyUncheckedUpdateWithoutRetailedBatchesInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => OrganizationTypeSchema), z.lazy(() => EnumOrganizationTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  members: z.lazy(() => UserUncheckedUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  shippedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutShipperCompanyNestedInputSchema).optional(),
+});
+
+export const CompanyUpsertWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyUpsertWithoutShippedBatchesInput> = z.strictObject({
+  update: z.union([ z.lazy(() => CompanyUpdateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutShippedBatchesInputSchema) ]),
+  create: z.union([ z.lazy(() => CompanyCreateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutShippedBatchesInputSchema) ]),
+  where: z.lazy(() => CompanyWhereInputSchema).optional(),
+});
+
+export const CompanyUpdateToOneWithWhereWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyUpdateToOneWithWhereWithoutShippedBatchesInput> = z.strictObject({
+  where: z.lazy(() => CompanyWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => CompanyUpdateWithoutShippedBatchesInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutShippedBatchesInputSchema) ]),
+});
+
+export const CompanyUpdateWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyUpdateWithoutShippedBatchesInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => OrganizationTypeSchema), z.lazy(() => EnumOrganizationTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  members: z.lazy(() => UserUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
+});
+
+export const CompanyUncheckedUpdateWithoutShippedBatchesInputSchema: z.ZodType<Prisma.CompanyUncheckedUpdateWithoutShippedBatchesInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => OrganizationTypeSchema), z.lazy(() => EnumOrganizationTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  protectedKey: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  members: z.lazy(() => UserUncheckedUpdateManyWithoutCompanyNestedInputSchema).optional(),
+  retailedBatches: z.lazy(() => BatchUncheckedUpdateManyWithoutRetailCompanyNestedInputSchema).optional(),
+});
+
 export const StepTransitUpsertWithWhereUniqueWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUpsertWithWhereUniqueWithoutBatchInput> = z.strictObject({
   where: z.lazy(() => StepTransitWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => StepTransitUpdateWithoutBatchInputSchema), z.lazy(() => StepTransitUncheckedUpdateWithoutBatchInputSchema) ]),
@@ -3326,6 +3779,8 @@ export const BatchCreateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchCreate
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
@@ -3344,6 +3799,8 @@ export const BatchUncheckedCreateWithoutTransitsInputSchema: z.ZodType<Prisma.Ba
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
@@ -3413,6 +3870,8 @@ export const BatchUpdateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchUpdate
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
@@ -3431,6 +3890,8 @@ export const BatchUncheckedUpdateWithoutTransitsInputSchema: z.ZodType<Prisma.Ba
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
@@ -3490,6 +3951,8 @@ export const BatchCreateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchCre
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
+  retailCompany: z.lazy(() => CompanyCreateNestedOneWithoutRetailedBatchesInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyCreateNestedOneWithoutShippedBatchesInputSchema).optional(),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
 });
 
@@ -3508,6 +3971,8 @@ export const BatchUncheckedCreateWithoutQualityTestInputSchema: z.ZodType<Prisma
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
 });
@@ -3577,6 +4042,8 @@ export const BatchUpdateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUpd
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
 });
 
@@ -3595,6 +4062,8 @@ export const BatchUncheckedUpdateWithoutQualityTestInputSchema: z.ZodType<Prisma
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
 });
@@ -3652,6 +4121,8 @@ export const BatchCreateManyFarmerInputSchema: z.ZodType<Prisma.BatchCreateManyF
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+  shipperCompanyId: z.string().optional().nullable(),
 });
 
 export const StepTransitCreateManyShipperInputSchema: z.ZodType<Prisma.StepTransitCreateManyShipperInput> = z.strictObject({
@@ -3692,6 +4163,8 @@ export const BatchUpdateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUpdateWi
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
@@ -3710,6 +4183,8 @@ export const BatchUncheckedUpdateWithoutFarmerInputSchema: z.ZodType<Prisma.Batc
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
@@ -3729,6 +4204,8 @@ export const BatchUncheckedUpdateManyWithoutFarmerInputSchema: z.ZodType<Prisma.
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
 
 export const StepTransitUpdateWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUpdateWithoutShipperInput> = z.strictObject({
@@ -3811,6 +4288,42 @@ export const UserCreateManyCompanyInputSchema: z.ZodType<Prisma.UserCreateManyCo
   updatedAt: z.coerce.date().optional(),
 });
 
+export const BatchCreateManyShipperCompanyInputSchema: z.ZodType<Prisma.BatchCreateManyShipperCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  farmerId: z.string(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  retailCompanyId: z.string().optional().nullable(),
+});
+
+export const BatchCreateManyRetailCompanyInputSchema: z.ZodType<Prisma.BatchCreateManyRetailCompanyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  blockchainId: z.string(),
+  txHash: z.string(),
+  productName: z.string(),
+  category: z.lazy(() => CategorySchema).optional(),
+  quantity: z.number(),
+  unit: z.string(),
+  ipfsHash: z.string(),
+  status: z.lazy(() => BatchStatusSchema).optional(),
+  farmerId: z.string(),
+  harvestDate: z.coerce.date().optional().nullable(),
+  expiryDate: z.coerce.date().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  shipperCompanyId: z.string().optional().nullable(),
+});
+
 export const UserUpdateWithoutCompanyInputSchema: z.ZodType<Prisma.UserUpdateWithoutCompanyInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   walletAddress: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3848,6 +4361,126 @@ export const UserUncheckedUpdateManyWithoutCompanyInputSchema: z.ZodType<Prisma.
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const BatchUpdateWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUpdateWithoutShipperCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
+  farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  retailCompany: z.lazy(() => CompanyUpdateOneWithoutRetailedBatchesNestedInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
+});
+
+export const BatchUncheckedUpdateWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutShipperCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
+});
+
+export const BatchUncheckedUpdateManyWithoutShipperCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+});
+
+export const BatchUpdateWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUpdateWithoutRetailCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
+  farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
+  shipperCompany: z.lazy(() => CompanyUpdateOneWithoutShippedBatchesNestedInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
+});
+
+export const BatchUncheckedUpdateWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutRetailCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
+});
+
+export const BatchUncheckedUpdateManyWithoutRetailCompanyInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
+  quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  shipperCompanyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
 
 export const ActivityLogCreateManyBatchInputSchema: z.ZodType<Prisma.ActivityLogCreateManyBatchInput> = z.strictObject({
