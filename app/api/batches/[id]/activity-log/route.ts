@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { BatchStatus } from '@/generated/prisma/enums';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const activitySchema = z.object({
@@ -18,15 +19,6 @@ export async function POST(req: Request, { params }: RouteParams) {
   try {
     // A. Lấy batchId từ URL params
     const { id: batchId } = params;
-
-    // Kiểm tra định dạng UUID của batchId
-    const uuidValidation = z.string().uuid().safeParse(batchId);
-    if (!uuidValidation.success) {
-      return NextResponse.json(
-        { success: false, error: "Định dạng Batch ID không hợp lệ (Phải là UUID)" },
-        { status: 400 }
-      );
-    }
 
     // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
@@ -54,7 +46,7 @@ export async function POST(req: Request, { params }: RouteParams) {
       }
 
       // Bước 2: Chặn thêm nhật ký nếu lô hàng đã hoàn thành vòng đời (Đã đem đi bán lẻ hoặc bị hủy)
-      if (batch.status !== "PLANTED") {
+      if (batch.status !== BatchStatus.PLANTED) {
         throw new Error(`Lô hàng xuất đi: ${batch.status}. Không thể bổ sung nhật ký canh tác.`);
       }
 

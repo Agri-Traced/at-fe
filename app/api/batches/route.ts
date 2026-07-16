@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { withRole } from '@/lib/auth';
+import { BatchStatus } from '@/generated/prisma/client';
 
 const batchCreate = z.object({
   blockchainId: z.string().min(1, "Missing Blockchain ID"),
@@ -9,10 +10,11 @@ const batchCreate = z.object({
   category: z.enum(["VEGETABLE", "FRUIT", "GRAIN", "BEAN", "HERB", "OTHER"]),
   quantity: z.number().positive("Quantity must be a positive number"),
   unit: z.string().min(1, "Missing Unit"),
-  harvestDate: z.iso.datetime().optional(), // Định dạng ISO 8601
-  expiryDate: z.iso.datetime().optional(), // Định dạng ISO 8601
+  harvestDate: z.coerce.date().optional(), // Định dạng ISO 8601
+  expiryDate: z.coerce.date().optional(), // Định dạng ISO 8601
   txHash: z.string().min(1, "Missing Transaction Hash"),
   ipfsHash: z.string().min(1, "Missing IPFS Hash"),
+  retailerId: z.string().min(1, "Missing Retailer ID"),
 });
 
 export const POST = withRole('FARMER', async (req, user) => {
@@ -23,7 +25,7 @@ export const POST = withRole('FARMER', async (req, user) => {
       return NextResponse.json({ success: false, errors: z.treeifyError(validation.error) }, { status: 400 });
     }
 
-    const data = { ...validation.data, farmerId: user.id };
+    const data = { ...validation.data, farmerId: user.id, status: BatchStatus.PLANTED };
 
     const batch = await prisma.batch.create({ data });
 

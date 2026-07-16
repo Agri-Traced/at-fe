@@ -107,6 +107,7 @@ export default function BatchPage() {
           PLANTED: { color: 'processing', text: 'Đã gieo trồng' },
           HARVESTED: { color: 'warning', text: 'Đã thu hoạch' },
           IN_TRANSIT: { color: 'purple', text: 'Đang vận chuyển' },
+          TESTING: { color: 'orange', text: 'Đang kiểm định' },
           RETAILING: { color: 'geekblue', text: 'Đang bán lẻ' },
           SOLD: { color: 'success', text: 'Đã bán hết' },
           ABORTED: { color: 'error', text: 'Hết hạn sử dụng' },

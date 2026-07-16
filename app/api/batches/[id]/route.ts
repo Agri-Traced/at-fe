@@ -36,7 +36,15 @@ export async function GET(
 
     const { protectedKey, ...companyData } = batch.farmer.company;
 
-    return NextResponse.json({ success: true, data: batch }, { status: 200 });
+    const safeBatch = {
+      ...batch,
+      farmer: {
+        ...batch.farmer,
+        company: companyData // Chỉ chứa thông tin company đã lọc sạch
+      }
+    };
+
+    return NextResponse.json({ success: true, data: safeBatch }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });
   }
