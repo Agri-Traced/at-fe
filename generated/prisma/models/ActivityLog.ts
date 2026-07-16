@@ -29,6 +29,7 @@ export type ActivityLogMinAggregateOutputType = {
   batchId: string | null
   description: string | null
   timestamp: Date | null
+  txHash: string | null
 }
 
 export type ActivityLogMaxAggregateOutputType = {
@@ -36,6 +37,7 @@ export type ActivityLogMaxAggregateOutputType = {
   batchId: string | null
   description: string | null
   timestamp: Date | null
+  txHash: string | null
 }
 
 export type ActivityLogCountAggregateOutputType = {
@@ -43,6 +45,7 @@ export type ActivityLogCountAggregateOutputType = {
   batchId: number
   description: number
   timestamp: number
+  txHash: number
   _all: number
 }
 
@@ -52,6 +55,7 @@ export type ActivityLogMinAggregateInputType = {
   batchId?: true
   description?: true
   timestamp?: true
+  txHash?: true
 }
 
 export type ActivityLogMaxAggregateInputType = {
@@ -59,6 +63,7 @@ export type ActivityLogMaxAggregateInputType = {
   batchId?: true
   description?: true
   timestamp?: true
+  txHash?: true
 }
 
 export type ActivityLogCountAggregateInputType = {
@@ -66,6 +71,7 @@ export type ActivityLogCountAggregateInputType = {
   batchId?: true
   description?: true
   timestamp?: true
+  txHash?: true
   _all?: true
 }
 
@@ -146,6 +152,7 @@ export type ActivityLogGroupByOutputType = {
   batchId: string
   description: string
   timestamp: Date
+  txHash: string
   _count: ActivityLogCountAggregateOutputType | null
   _min: ActivityLogMinAggregateOutputType | null
   _max: ActivityLogMaxAggregateOutputType | null
@@ -174,6 +181,7 @@ export type ActivityLogWhereInput = {
   batchId?: Prisma.StringFilter<"ActivityLog"> | string
   description?: Prisma.StringFilter<"ActivityLog"> | string
   timestamp?: Prisma.DateTimeFilter<"ActivityLog"> | Date | string
+  txHash?: Prisma.StringFilter<"ActivityLog"> | string
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
 }
 
@@ -182,6 +190,7 @@ export type ActivityLogOrderByWithRelationInput = {
   batchId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   batch?: Prisma.BatchOrderByWithRelationInput
 }
 
@@ -193,6 +202,7 @@ export type ActivityLogWhereUniqueInput = Prisma.AtLeast<{
   batchId?: Prisma.StringFilter<"ActivityLog"> | string
   description?: Prisma.StringFilter<"ActivityLog"> | string
   timestamp?: Prisma.DateTimeFilter<"ActivityLog"> | Date | string
+  txHash?: Prisma.StringFilter<"ActivityLog"> | string
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
 }, "id">
 
@@ -201,6 +211,7 @@ export type ActivityLogOrderByWithAggregationInput = {
   batchId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   _count?: Prisma.ActivityLogCountOrderByAggregateInput
   _max?: Prisma.ActivityLogMaxOrderByAggregateInput
   _min?: Prisma.ActivityLogMinOrderByAggregateInput
@@ -214,12 +225,14 @@ export type ActivityLogScalarWhereWithAggregatesInput = {
   batchId?: Prisma.StringWithAggregatesFilter<"ActivityLog"> | string
   description?: Prisma.StringWithAggregatesFilter<"ActivityLog"> | string
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"ActivityLog"> | Date | string
+  txHash?: Prisma.StringWithAggregatesFilter<"ActivityLog"> | string
 }
 
 export type ActivityLogCreateInput = {
   id?: string
   description: string
   timestamp?: Date | string
+  txHash: string
   batch: Prisma.BatchCreateNestedOneWithoutActivitiesInput
 }
 
@@ -228,12 +241,14 @@ export type ActivityLogUncheckedCreateInput = {
   batchId: string
   description: string
   timestamp?: Date | string
+  txHash: string
 }
 
 export type ActivityLogUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.BatchUpdateOneRequiredWithoutActivitiesNestedInput
 }
 
@@ -242,6 +257,7 @@ export type ActivityLogUncheckedUpdateInput = {
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ActivityLogCreateManyInput = {
@@ -249,12 +265,14 @@ export type ActivityLogCreateManyInput = {
   batchId: string
   description: string
   timestamp?: Date | string
+  txHash: string
 }
 
 export type ActivityLogUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ActivityLogUncheckedUpdateManyInput = {
@@ -262,6 +280,7 @@ export type ActivityLogUncheckedUpdateManyInput = {
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ActivityLogCountOrderByAggregateInput = {
@@ -269,6 +288,7 @@ export type ActivityLogCountOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
 }
 
 export type ActivityLogMaxOrderByAggregateInput = {
@@ -276,6 +296,7 @@ export type ActivityLogMaxOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
 }
 
 export type ActivityLogMinOrderByAggregateInput = {
@@ -283,6 +304,7 @@ export type ActivityLogMinOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
 }
 
 export type ActivityLogListRelationFilter = {
@@ -341,12 +363,14 @@ export type ActivityLogCreateWithoutBatchInput = {
   id?: string
   description: string
   timestamp?: Date | string
+  txHash: string
 }
 
 export type ActivityLogUncheckedCreateWithoutBatchInput = {
   id?: string
   description: string
   timestamp?: Date | string
+  txHash: string
 }
 
 export type ActivityLogCreateOrConnectWithoutBatchInput = {
@@ -383,30 +407,35 @@ export type ActivityLogScalarWhereInput = {
   batchId?: Prisma.StringFilter<"ActivityLog"> | string
   description?: Prisma.StringFilter<"ActivityLog"> | string
   timestamp?: Prisma.DateTimeFilter<"ActivityLog"> | Date | string
+  txHash?: Prisma.StringFilter<"ActivityLog"> | string
 }
 
 export type ActivityLogCreateManyBatchInput = {
   id?: string
   description: string
   timestamp?: Date | string
+  txHash: string
 }
 
 export type ActivityLogUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ActivityLogUncheckedUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ActivityLogUncheckedUpdateManyWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -416,6 +445,7 @@ export type ActivityLogSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   batchId?: boolean
   description?: boolean
   timestamp?: boolean
+  txHash?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["activityLog"]>
 
@@ -424,6 +454,7 @@ export type ActivityLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   batchId?: boolean
   description?: boolean
   timestamp?: boolean
+  txHash?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["activityLog"]>
 
@@ -432,6 +463,7 @@ export type ActivityLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   batchId?: boolean
   description?: boolean
   timestamp?: boolean
+  txHash?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["activityLog"]>
 
@@ -440,9 +472,10 @@ export type ActivityLogSelectScalar = {
   batchId?: boolean
   description?: boolean
   timestamp?: boolean
+  txHash?: boolean
 }
 
-export type ActivityLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "batchId" | "description" | "timestamp", ExtArgs["result"]["activityLog"]>
+export type ActivityLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "batchId" | "description" | "timestamp" | "txHash", ExtArgs["result"]["activityLog"]>
 export type ActivityLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
 }
@@ -463,6 +496,7 @@ export type $ActivityLogPayload<ExtArgs extends runtime.Types.Extensions.Interna
     batchId: string
     description: string
     timestamp: Date
+    txHash: string
   }, ExtArgs["result"]["activityLog"]>
   composites: {}
 }
@@ -891,6 +925,7 @@ export interface ActivityLogFieldRefs {
   readonly batchId: Prisma.FieldRef<"ActivityLog", 'String'>
   readonly description: Prisma.FieldRef<"ActivityLog", 'String'>
   readonly timestamp: Prisma.FieldRef<"ActivityLog", 'DateTime'>
+  readonly txHash: Prisma.FieldRef<"ActivityLog", 'String'>
 }
     
 

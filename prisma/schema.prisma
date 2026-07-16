@@ -36,20 +36,20 @@ model User {
   email         String?  @unique
   phone         String?
   role          Role     @default(CONSUMER)
-  companyId     String?
-  company       Company?  @relation(fields: [companyId], references: [id])
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   // Mối quan hệ từ các bảng khác
   batchesCreated Batch[]        @relation("FarmerBatches")
   transports     StepTransit[]  @relation("ShipperTransports")
-  inspections    StepQuality[]  @relation("RetailerInspections")
+  qualityTests   QualityTest[] @relation("RetailerTests")
 }
 
 enum OrganizationType {
-  FARM
-  LOGISTICS
+  FARMER
+  SHIPPER
   RETAILER
 }
 
@@ -70,6 +70,7 @@ enum BatchStatus {
   IN_TRANSIT   // Đang trong quá trình vận chuyển
   RETAILING    // Đã đến nhà bán lẻ / Đang trên kệ hàng
   SOLD         // Đã bán cho người tiêu dùng
+  ABORTED      // Đã hủy
 }
 
 enum Category {
@@ -87,20 +88,20 @@ model ActivityLog {
   batch           Batch    @relation(fields: [batchId], references: [id])
   description     String   // "Bón phân đợt 1"
   timestamp       DateTime @default(now())
+  txHash          String
 }
 
 
 model Batch {
-  id              String      @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
-  blockchainId    BigInt?     @unique              // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
-  txHash          String?                          // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
+  id              String     @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
+  blockchainId    String     @unique              // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
+  txHash          String                          // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
   productName     String
   category        Category    @default(VEGETABLE)
   quantity        Float                            // Khối lượng / Số lượng lô hàng
   unit            String                           // Đơn vị tính (KG, Tấn, Thùng...)
-  ipfsHash        String?                          // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
+  ipfsHash        String                          // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
   status          BatchStatus @default(PLANTED)
-  qrCodeUrl       String?                          // Đường dẫn ảnh QR Code sinh ra để dán lên bao bì
   activities      ActivityLog[] // Lưu lịch sử canh tác
   
   // Quan hệ tác nhân gieo trồng
@@ -115,7 +116,7 @@ model Batch {
 
   // Mối quan hệ các chặng hành trình
   transits        StepTransit[]
-  qualityChecks   StepQuality[]
+  qualityTest     QualityTest?
 }
 
 // 3. CHI TIẾT HÀNH TRÌNH VẬN CHUYỂN (TRANSPORT LOGS)
@@ -128,31 +129,28 @@ model StepTransit {
   shipperId       String
   shipper         User     @relation("ShipperTransports", fields: [shipperId], references: [id])
   
-  txHash          String?  // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
+  txHash          String  // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
   fromLocation    String
   toLocation      String
   temperature     Float?   // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
   humidity        Float?   // Độ ẩm bảo quản
   vehicleNumber   String?  // Biển số xe vận chuyển
-  statusDetails   String   // Ghi chú chi tiết trạng thái (VD: "Đang bốc xếp", "Đã lưu kho trung chuyển")
+  statusDetails   String?   // Ghi chú chi tiết trạng thái (VD: "Đang bốc xếp", "Đã lưu kho trung chuyển")
   
   departureTime   DateTime @default(now())
   arrivalTime     DateTime?
 }
 
-// 4. KIỂM ĐỊNH CHẤT LƯỢNG & AN TOÀN THỰC PHẨM (QUALITY INSPECTIONS)
-// Dành cho Nhà bán lẻ hoặc Cơ quan kiểm định chất lượng trước khi đưa lên kệ sản phẩm.
-model StepQuality {
-  id              String   @id @default(uuid())
-  batchId         String
-  batch           Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+model QualityTest {
+  id           String    @id @default(uuid())
+  batchId      String    @unique // 1 lô hàng chỉ có 1 kết quả kiểm định chính thức
+  batch        Batch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
   
-  inspectorId     String
-  inspector       User     @relation("RetailerInspections", fields: [inspectorId], references: [id])
+  retailerId   String
+  retailer     User      @relation("RetailerTests", fields: [retailerId], references: [id])
   
-  txHash          String?  // Mã giao dịch xác thực kiểm định lên mạng Blockchain
-  isPassed        Boolean  @default(false) // Kết quả: Đạt hay Không Đạt an toàn thực phẩm
-  reportUrl       String?  // Đường dẫn link chứa file PDF kết quả kiểm nghiệm chi tiết
-  note            String?  // Đánh giá nhanh (VD: "Đạt chuẩn VietGAP, độ tươi tốt")
-  inspectedAt     DateTime @default(now())
+  txHash       String   // Transaction Hash kiểm định bất biến trên blockchain
+  isPassed     Boolean   @default(false)
+  note         String?   // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
+  testedAt     DateTime  @default(now())
 }

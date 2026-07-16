@@ -24,11 +24,11 @@ export async function POST(req: Request) {
       where: { id: validation.data.companyId }
     });
 
-    if(!company) {
+    if (!company) {
       return NextResponse.json({ success: false, error: "Company not found" }, { status: 404 });
     }
 
-    if(company.protectedKey !== validation.data.protectedKey) {
+    if (company.protectedKey !== validation.data.protectedKey) {
       return NextResponse.json({ success: false, error: "Invalid protected key" }, { status: 400 });
     }
 
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         email: data.email || null,
         phone: data.phone || null,
         role: data.role,
-        companyId: data.companyId || null
+        companyId: data.companyId
       },
     });
 

@@ -389,7 +389,7 @@ export const ModelName = {
   ActivityLog: 'ActivityLog',
   Batch: 'Batch',
   StepTransit: 'StepTransit',
-  StepQuality: 'StepQuality'
+  QualityTest: 'QualityTest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "company" | "activityLog" | "batch" | "stepTransit" | "stepQuality"
+    modelProps: "user" | "company" | "activityLog" | "batch" | "stepTransit" | "qualityTest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,77 +779,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    StepQuality: {
-      payload: Prisma.$StepQualityPayload<ExtArgs>
-      fields: Prisma.StepQualityFieldRefs
+    QualityTest: {
+      payload: Prisma.$QualityTestPayload<ExtArgs>
+      fields: Prisma.QualityTestFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.StepQualityFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload> | null
+          args: Prisma.QualityTestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.StepQualityFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         findFirst: {
-          args: Prisma.StepQualityFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload> | null
+          args: Prisma.QualityTestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.StepQualityFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         findMany: {
-          args: Prisma.StepQualityFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>[]
+          args: Prisma.QualityTestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>[]
         }
         create: {
-          args: Prisma.StepQualityCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         createMany: {
-          args: Prisma.StepQualityCreateManyArgs<ExtArgs>
+          args: Prisma.QualityTestCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.StepQualityCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>[]
+          args: Prisma.QualityTestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>[]
         }
         delete: {
-          args: Prisma.StepQualityDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         update: {
-          args: Prisma.StepQualityUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         deleteMany: {
-          args: Prisma.StepQualityDeleteManyArgs<ExtArgs>
+          args: Prisma.QualityTestDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.StepQualityUpdateManyArgs<ExtArgs>
+          args: Prisma.QualityTestUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.StepQualityUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>[]
+          args: Prisma.QualityTestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>[]
         }
         upsert: {
-          args: Prisma.StepQualityUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepQualityPayload>
+          args: Prisma.QualityTestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QualityTestPayload>
         }
         aggregate: {
-          args: Prisma.StepQualityAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateStepQuality>
+          args: Prisma.QualityTestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQualityTest>
         }
         groupBy: {
-          args: Prisma.StepQualityGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StepQualityGroupByOutputType>[]
+          args: Prisma.QualityTestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QualityTestGroupByOutputType>[]
         }
         count: {
-          args: Prisma.StepQualityCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StepQualityCountAggregateOutputType> | number
+          args: Prisma.QualityTestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QualityTestCountAggregateOutputType> | number
         }
       }
     }
@@ -922,7 +922,8 @@ export const ActivityLogScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
   description: 'description',
-  timestamp: 'timestamp'
+  timestamp: 'timestamp',
+  txHash: 'txHash'
 } as const
 
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
@@ -938,7 +939,6 @@ export const BatchScalarFieldEnum = {
   unit: 'unit',
   ipfsHash: 'ipfsHash',
   status: 'status',
-  qrCodeUrl: 'qrCodeUrl',
   farmerId: 'farmerId',
   harvestDate: 'harvestDate',
   expiryDate: 'expiryDate',
@@ -967,18 +967,17 @@ export const StepTransitScalarFieldEnum = {
 export type StepTransitScalarFieldEnum = (typeof StepTransitScalarFieldEnum)[keyof typeof StepTransitScalarFieldEnum]
 
 
-export const StepQualityScalarFieldEnum = {
+export const QualityTestScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
-  inspectorId: 'inspectorId',
+  retailerId: 'retailerId',
   txHash: 'txHash',
   isPassed: 'isPassed',
-  reportUrl: 'reportUrl',
   note: 'note',
-  inspectedAt: 'inspectedAt'
+  testedAt: 'testedAt'
 } as const
 
-export type StepQualityScalarFieldEnum = (typeof StepQualityScalarFieldEnum)[keyof typeof StepQualityScalarFieldEnum]
+export type QualityTestScalarFieldEnum = (typeof QualityTestScalarFieldEnum)[keyof typeof QualityTestScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1064,20 +1063,6 @@ export type EnumOrganizationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'OrganizationType[]'
  */
 export type ListEnumOrganizationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationType[]'>
-    
-
-
-/**
- * Reference to a field of type 'BigInt'
- */
-export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-    
-
-
-/**
- * Reference to a field of type 'BigInt[]'
- */
-export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 
@@ -1258,7 +1243,7 @@ export type GlobalOmitConfig = {
   activityLog?: Prisma.ActivityLogOmit
   batch?: Prisma.BatchOmit
   stepTransit?: Prisma.StepTransitOmit
-  stepQuality?: Prisma.StepQualityOmit
+  qualityTest?: Prisma.QualityTestOmit
 }
 
 /* Types for Logging */

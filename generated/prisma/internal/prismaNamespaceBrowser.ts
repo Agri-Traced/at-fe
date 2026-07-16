@@ -56,7 +56,7 @@ export const ModelName = {
   ActivityLog: 'ActivityLog',
   Batch: 'Batch',
   StepTransit: 'StepTransit',
-  StepQuality: 'StepQuality'
+  QualityTest: 'QualityTest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -105,7 +105,8 @@ export const ActivityLogScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
   description: 'description',
-  timestamp: 'timestamp'
+  timestamp: 'timestamp',
+  txHash: 'txHash'
 } as const
 
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
@@ -121,7 +122,6 @@ export const BatchScalarFieldEnum = {
   unit: 'unit',
   ipfsHash: 'ipfsHash',
   status: 'status',
-  qrCodeUrl: 'qrCodeUrl',
   farmerId: 'farmerId',
   harvestDate: 'harvestDate',
   expiryDate: 'expiryDate',
@@ -150,18 +150,17 @@ export const StepTransitScalarFieldEnum = {
 export type StepTransitScalarFieldEnum = (typeof StepTransitScalarFieldEnum)[keyof typeof StepTransitScalarFieldEnum]
 
 
-export const StepQualityScalarFieldEnum = {
+export const QualityTestScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
-  inspectorId: 'inspectorId',
+  retailerId: 'retailerId',
   txHash: 'txHash',
   isPassed: 'isPassed',
-  reportUrl: 'reportUrl',
   note: 'note',
-  inspectedAt: 'inspectedAt'
+  testedAt: 'testedAt'
 } as const
 
-export type StepQualityScalarFieldEnum = (typeof StepQualityScalarFieldEnum)[keyof typeof StepQualityScalarFieldEnum]
+export type QualityTestScalarFieldEnum = (typeof QualityTestScalarFieldEnum)[keyof typeof QualityTestScalarFieldEnum]
 
 
 export const SortOrder = {

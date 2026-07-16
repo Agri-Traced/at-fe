@@ -1,6 +1,27 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import type { Batch } from '../generated/prisma/client';
+import { Batch, User, StepTransit, ActivityLog, QualityTest } from '@/generated/zod';
+
+export type TransitsRelation = StepTransit & {
+  shipper: User;
+}
+
+export type QualityTestRelation = QualityTest & {
+  batch: Batch;
+  retailer: User;
+}
+
+export type ActivityLogRelation = ActivityLog & {
+  batch: Batch;
+  user: User;
+}
+
+export type BatchRelation = Batch & {
+  farmer: User;
+  transits: TransitsRelation[];
+  activities: ActivityLogRelation[];
+  qualityTest: QualityTestRelation | null;
+}
 
 const fetchBatches = async () => {
   const { data } = await api.get('/batches');
@@ -15,7 +36,7 @@ export const useBatches = () => {
 };
 
 const fetchBatchByUserId = async (id: string) => {
-  const { data } = await api.get<Batch[]>(`/batches/user/${id}`);
+  const { data } = await api.get<BatchRelation[]>(`/batches/user/${id}`);
   return data;
 }
 
@@ -27,7 +48,7 @@ export const useBatchesByUserId = (id: string) => {
 }
 
 const fetchBatch = async (id: string) => {
-  const { data } = await api.get(`/batches/${id}`);
+  const { data } = await api.get<BatchRelation>(`/batches/${id}`);
   return data;
 };
 

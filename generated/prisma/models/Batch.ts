@@ -27,18 +27,16 @@ export type AggregateBatch = {
 }
 
 export type BatchAvgAggregateOutputType = {
-  blockchainId: number | null
   quantity: number | null
 }
 
 export type BatchSumAggregateOutputType = {
-  blockchainId: bigint | null
   quantity: number | null
 }
 
 export type BatchMinAggregateOutputType = {
   id: string | null
-  blockchainId: bigint | null
+  blockchainId: string | null
   txHash: string | null
   productName: string | null
   category: $Enums.Category | null
@@ -46,7 +44,6 @@ export type BatchMinAggregateOutputType = {
   unit: string | null
   ipfsHash: string | null
   status: $Enums.BatchStatus | null
-  qrCodeUrl: string | null
   farmerId: string | null
   harvestDate: Date | null
   expiryDate: Date | null
@@ -56,7 +53,7 @@ export type BatchMinAggregateOutputType = {
 
 export type BatchMaxAggregateOutputType = {
   id: string | null
-  blockchainId: bigint | null
+  blockchainId: string | null
   txHash: string | null
   productName: string | null
   category: $Enums.Category | null
@@ -64,7 +61,6 @@ export type BatchMaxAggregateOutputType = {
   unit: string | null
   ipfsHash: string | null
   status: $Enums.BatchStatus | null
-  qrCodeUrl: string | null
   farmerId: string | null
   harvestDate: Date | null
   expiryDate: Date | null
@@ -82,7 +78,6 @@ export type BatchCountAggregateOutputType = {
   unit: number
   ipfsHash: number
   status: number
-  qrCodeUrl: number
   farmerId: number
   harvestDate: number
   expiryDate: number
@@ -93,12 +88,10 @@ export type BatchCountAggregateOutputType = {
 
 
 export type BatchAvgAggregateInputType = {
-  blockchainId?: true
   quantity?: true
 }
 
 export type BatchSumAggregateInputType = {
-  blockchainId?: true
   quantity?: true
 }
 
@@ -112,7 +105,6 @@ export type BatchMinAggregateInputType = {
   unit?: true
   ipfsHash?: true
   status?: true
-  qrCodeUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -130,7 +122,6 @@ export type BatchMaxAggregateInputType = {
   unit?: true
   ipfsHash?: true
   status?: true
-  qrCodeUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -148,7 +139,6 @@ export type BatchCountAggregateInputType = {
   unit?: true
   ipfsHash?: true
   status?: true
-  qrCodeUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -245,17 +235,16 @@ export type BatchGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type BatchGroupByOutputType = {
   id: string
-  blockchainId: bigint | null
-  txHash: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash: string | null
+  ipfsHash: string
   status: $Enums.BatchStatus
-  qrCodeUrl: string | null
   farmerId: string
-  harvestDate: Date
+  harvestDate: Date | null
   expiryDate: Date | null
   createdAt: Date
   updatedAt: Date
@@ -286,86 +275,82 @@ export type BatchWhereInput = {
   OR?: Prisma.BatchWhereInput[]
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
-  blockchainId?: Prisma.BigIntNullableFilter<"Batch"> | bigint | number | null
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  blockchainId?: Prisma.StringFilter<"Batch"> | string
+  txHash?: Prisma.StringFilter<"Batch"> | string
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
-  harvestDate?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   activities?: Prisma.ActivityLogListRelationFilter
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   transits?: Prisma.StepTransitListRelationFilter
-  qualityChecks?: Prisma.StepQualityListRelationFilter
+  qualityTest?: Prisma.XOR<Prisma.QualityTestNullableScalarRelationFilter, Prisma.QualityTestWhereInput> | null
 }
 
 export type BatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  blockchainId?: Prisma.SortOrderInput | Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  blockchainId?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   farmerId?: Prisma.SortOrder
-  harvestDate?: Prisma.SortOrder
+  harvestDate?: Prisma.SortOrderInput | Prisma.SortOrder
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   activities?: Prisma.ActivityLogOrderByRelationAggregateInput
   farmer?: Prisma.UserOrderByWithRelationInput
   transits?: Prisma.StepTransitOrderByRelationAggregateInput
-  qualityChecks?: Prisma.StepQualityOrderByRelationAggregateInput
+  qualityTest?: Prisma.QualityTestOrderByWithRelationInput
 }
 
 export type BatchWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  blockchainId?: bigint | number
+  blockchainId?: string
   AND?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   OR?: Prisma.BatchWhereInput[]
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  txHash?: Prisma.StringFilter<"Batch"> | string
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
-  harvestDate?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   activities?: Prisma.ActivityLogListRelationFilter
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   transits?: Prisma.StepTransitListRelationFilter
-  qualityChecks?: Prisma.StepQualityListRelationFilter
+  qualityTest?: Prisma.XOR<Prisma.QualityTestNullableScalarRelationFilter, Prisma.QualityTestWhereInput> | null
 }, "id" | "blockchainId">
 
 export type BatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  blockchainId?: Prisma.SortOrderInput | Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  blockchainId?: Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  qrCodeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   farmerId?: Prisma.SortOrder
-  harvestDate?: Prisma.SortOrder
+  harvestDate?: Prisma.SortOrderInput | Prisma.SortOrder
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -381,17 +366,16 @@ export type BatchScalarWhereWithAggregatesInput = {
   OR?: Prisma.BatchScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BatchScalarWhereWithAggregatesInput | Prisma.BatchScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  blockchainId?: Prisma.BigIntNullableWithAggregatesFilter<"Batch"> | bigint | number | null
-  txHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  blockchainId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
+  txHash?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   productName?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   unit?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  ipfsHash?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusWithAggregatesFilter<"Batch"> | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   farmerId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  harvestDate?: Prisma.DateTimeWithAggregatesFilter<"Batch"> | Date | string
+  harvestDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Batch"> | Date | string
@@ -399,101 +383,96 @@ export type BatchScalarWhereWithAggregatesInput = {
 
 export type BatchCreateInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
 export type BatchUncheckedCreateInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
   farmerId: string
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
 
 export type BatchUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchCreateManyInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
   farmerId: string
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -501,16 +480,15 @@ export type BatchCreateManyInput = {
 
 export type BatchUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -518,17 +496,16 @@ export type BatchUpdateManyMutationInput = {
 
 export type BatchUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -559,7 +536,6 @@ export type BatchCountOrderByAggregateInput = {
   unit?: Prisma.SortOrder
   ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  qrCodeUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -568,7 +544,6 @@ export type BatchCountOrderByAggregateInput = {
 }
 
 export type BatchAvgOrderByAggregateInput = {
-  blockchainId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -582,7 +557,6 @@ export type BatchMaxOrderByAggregateInput = {
   unit?: Prisma.SortOrder
   ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  qrCodeUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -600,7 +574,6 @@ export type BatchMinOrderByAggregateInput = {
   unit?: Prisma.SortOrder
   ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  qrCodeUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -609,7 +582,6 @@ export type BatchMinOrderByAggregateInput = {
 }
 
 export type BatchSumOrderByAggregateInput = {
-  blockchainId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -669,14 +641,6 @@ export type BatchUpdateOneRequiredWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutActivitiesInput, Prisma.BatchUpdateWithoutActivitiesInput>, Prisma.BatchUncheckedUpdateWithoutActivitiesInput>
 }
 
-export type NullableBigIntFieldUpdateOperationsInput = {
-  set?: bigint | number | null
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
 export type EnumCategoryFieldUpdateOperationsInput = {
   set?: $Enums.Category
 }
@@ -711,58 +675,56 @@ export type BatchUpdateOneRequiredWithoutTransitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutTransitsInput, Prisma.BatchUpdateWithoutTransitsInput>, Prisma.BatchUncheckedUpdateWithoutTransitsInput>
 }
 
-export type BatchCreateNestedOneWithoutQualityChecksInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutQualityChecksInput, Prisma.BatchUncheckedCreateWithoutQualityChecksInput>
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutQualityChecksInput
+export type BatchCreateNestedOneWithoutQualityTestInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutQualityTestInput, Prisma.BatchUncheckedCreateWithoutQualityTestInput>
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutQualityTestInput
   connect?: Prisma.BatchWhereUniqueInput
 }
 
-export type BatchUpdateOneRequiredWithoutQualityChecksNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutQualityChecksInput, Prisma.BatchUncheckedCreateWithoutQualityChecksInput>
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutQualityChecksInput
-  upsert?: Prisma.BatchUpsertWithoutQualityChecksInput
+export type BatchUpdateOneRequiredWithoutQualityTestNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutQualityTestInput, Prisma.BatchUncheckedCreateWithoutQualityTestInput>
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutQualityTestInput
+  upsert?: Prisma.BatchUpsertWithoutQualityTestInput
   connect?: Prisma.BatchWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutQualityChecksInput, Prisma.BatchUpdateWithoutQualityChecksInput>, Prisma.BatchUncheckedUpdateWithoutQualityChecksInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutQualityTestInput, Prisma.BatchUpdateWithoutQualityTestInput>, Prisma.BatchUncheckedUpdateWithoutQualityTestInput>
 }
 
 export type BatchCreateWithoutFarmerInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutFarmerInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutFarmerInput = {
@@ -796,17 +758,16 @@ export type BatchScalarWhereInput = {
   OR?: Prisma.BatchScalarWhereInput[]
   NOT?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
-  blockchainId?: Prisma.BigIntNullableFilter<"Batch"> | bigint | number | null
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  blockchainId?: Prisma.StringFilter<"Batch"> | string
+  txHash?: Prisma.StringFilter<"Batch"> | string
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatFilter<"Batch"> | number
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.StringNullableFilter<"Batch"> | string | null
   farmerId?: Prisma.StringFilter<"Batch"> | string
-  harvestDate?: Prisma.DateTimeFilter<"Batch"> | Date | string
+  harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Batch"> | Date | string
@@ -814,42 +775,40 @@ export type BatchScalarWhereInput = {
 
 export type BatchCreateWithoutActivitiesInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutActivitiesInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
   farmerId: string
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutActivitiesInput = {
@@ -870,82 +829,78 @@ export type BatchUpdateToOneWithWhereWithoutActivitiesInput = {
 
 export type BatchUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchCreateWithoutTransitsInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
-  qualityChecks?: Prisma.StepQualityCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
 export type BatchUncheckedCreateWithoutTransitsInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
   farmerId: string
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
-  qualityChecks?: Prisma.StepQualityUncheckedCreateNestedManyWithoutBatchInput
+  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
 
 export type BatchCreateOrConnectWithoutTransitsInput = {
@@ -966,56 +921,53 @@ export type BatchUpdateToOneWithWhereWithoutTransitsInput = {
 
 export type BatchUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
-  qualityChecks?: Prisma.StepQualityUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
 
-export type BatchCreateWithoutQualityChecksInput = {
+export type BatchCreateWithoutQualityTestInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1024,19 +976,18 @@ export type BatchCreateWithoutQualityChecksInput = {
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
 }
 
-export type BatchUncheckedCreateWithoutQualityChecksInput = {
+export type BatchUncheckedCreateWithoutQualityTestInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
   farmerId: string
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1044,34 +995,33 @@ export type BatchUncheckedCreateWithoutQualityChecksInput = {
   transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
 }
 
-export type BatchCreateOrConnectWithoutQualityChecksInput = {
+export type BatchCreateOrConnectWithoutQualityTestInput = {
   where: Prisma.BatchWhereUniqueInput
-  create: Prisma.XOR<Prisma.BatchCreateWithoutQualityChecksInput, Prisma.BatchUncheckedCreateWithoutQualityChecksInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutQualityTestInput, Prisma.BatchUncheckedCreateWithoutQualityTestInput>
 }
 
-export type BatchUpsertWithoutQualityChecksInput = {
-  update: Prisma.XOR<Prisma.BatchUpdateWithoutQualityChecksInput, Prisma.BatchUncheckedUpdateWithoutQualityChecksInput>
-  create: Prisma.XOR<Prisma.BatchCreateWithoutQualityChecksInput, Prisma.BatchUncheckedCreateWithoutQualityChecksInput>
+export type BatchUpsertWithoutQualityTestInput = {
+  update: Prisma.XOR<Prisma.BatchUpdateWithoutQualityTestInput, Prisma.BatchUncheckedUpdateWithoutQualityTestInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutQualityTestInput, Prisma.BatchUncheckedCreateWithoutQualityTestInput>
   where?: Prisma.BatchWhereInput
 }
 
-export type BatchUpdateToOneWithWhereWithoutQualityChecksInput = {
+export type BatchUpdateToOneWithWhereWithoutQualityTestInput = {
   where?: Prisma.BatchWhereInput
-  data: Prisma.XOR<Prisma.BatchUpdateWithoutQualityChecksInput, Prisma.BatchUncheckedUpdateWithoutQualityChecksInput>
+  data: Prisma.XOR<Prisma.BatchUpdateWithoutQualityTestInput, Prisma.BatchUncheckedUpdateWithoutQualityTestInput>
 }
 
-export type BatchUpdateWithoutQualityChecksInput = {
+export type BatchUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1080,19 +1030,18 @@ export type BatchUpdateWithoutQualityChecksInput = {
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
 }
 
-export type BatchUncheckedUpdateWithoutQualityChecksInput = {
+export type BatchUncheckedUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1102,16 +1051,15 @@ export type BatchUncheckedUpdateWithoutQualityChecksInput = {
 
 export type BatchCreateManyFarmerInput = {
   id?: string
-  blockchainId?: bigint | number | null
-  txHash?: string | null
+  blockchainId: string
+  txHash: string
   productName: string
   category?: $Enums.Category
   quantity: number
   unit: string
-  ipfsHash?: string | null
+  ipfsHash: string
   status?: $Enums.BatchStatus
-  qrCodeUrl?: string | null
-  harvestDate?: Date | string
+  harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1119,56 +1067,53 @@ export type BatchCreateManyFarmerInput = {
 
 export type BatchUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
   transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
-  qualityChecks?: Prisma.StepQualityUncheckedUpdateManyWithoutBatchNestedInput
+  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
 
 export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  qrCodeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1182,13 +1127,11 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
 export type BatchCountOutputType = {
   activities: number
   transits: number
-  qualityChecks: number
 }
 
 export type BatchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | BatchCountOutputTypeCountActivitiesArgs
   transits?: boolean | BatchCountOutputTypeCountTransitsArgs
-  qualityChecks?: boolean | BatchCountOutputTypeCountQualityChecksArgs
 }
 
 /**
@@ -1215,13 +1158,6 @@ export type BatchCountOutputTypeCountTransitsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.StepTransitWhereInput
 }
 
-/**
- * BatchCountOutputType without action
- */
-export type BatchCountOutputTypeCountQualityChecksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StepQualityWhereInput
-}
-
 
 export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1233,7 +1169,6 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   unit?: boolean
   ipfsHash?: boolean
   status?: boolean
-  qrCodeUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1242,7 +1177,7 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   transits?: boolean | Prisma.Batch$transitsArgs<ExtArgs>
-  qualityChecks?: boolean | Prisma.Batch$qualityChecksArgs<ExtArgs>
+  qualityTest?: boolean | Prisma.Batch$qualityTestArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["batch"]>
 
@@ -1256,7 +1191,6 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   unit?: boolean
   ipfsHash?: boolean
   status?: boolean
-  qrCodeUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1275,7 +1209,6 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   unit?: boolean
   ipfsHash?: boolean
   status?: boolean
-  qrCodeUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1294,7 +1227,6 @@ export type BatchSelectScalar = {
   unit?: boolean
   ipfsHash?: boolean
   status?: boolean
-  qrCodeUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1302,12 +1234,12 @@ export type BatchSelectScalar = {
   updatedAt?: boolean
 }
 
-export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "ipfsHash" | "status" | "qrCodeUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt", ExtArgs["result"]["batch"]>
+export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "ipfsHash" | "status" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt", ExtArgs["result"]["batch"]>
 export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   transits?: boolean | Prisma.Batch$transitsArgs<ExtArgs>
-  qualityChecks?: boolean | Prisma.Batch$qualityChecksArgs<ExtArgs>
+  qualityTest?: boolean | Prisma.Batch$qualityTestArgs<ExtArgs>
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1323,21 +1255,20 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     activities: Prisma.$ActivityLogPayload<ExtArgs>[]
     farmer: Prisma.$UserPayload<ExtArgs>
     transits: Prisma.$StepTransitPayload<ExtArgs>[]
-    qualityChecks: Prisma.$StepQualityPayload<ExtArgs>[]
+    qualityTest: Prisma.$QualityTestPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    blockchainId: bigint | null
-    txHash: string | null
+    blockchainId: string
+    txHash: string
     productName: string
     category: $Enums.Category
     quantity: number
     unit: string
-    ipfsHash: string | null
+    ipfsHash: string
     status: $Enums.BatchStatus
-    qrCodeUrl: string | null
     farmerId: string
-    harvestDate: Date
+    harvestDate: Date | null
     expiryDate: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1738,7 +1669,7 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
   activities<T extends Prisma.Batch$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   farmer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   transits<T extends Prisma.Batch$transitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$transitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepTransitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  qualityChecks<T extends Prisma.Batch$qualityChecksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$qualityChecksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepQualityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qualityTest<T extends Prisma.Batch$qualityTestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$qualityTestArgs<ExtArgs>>): Prisma.Prisma__QualityTestClient<runtime.Types.Result.GetResult<Prisma.$QualityTestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1769,7 +1700,7 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface BatchFieldRefs {
   readonly id: Prisma.FieldRef<"Batch", 'String'>
-  readonly blockchainId: Prisma.FieldRef<"Batch", 'BigInt'>
+  readonly blockchainId: Prisma.FieldRef<"Batch", 'String'>
   readonly txHash: Prisma.FieldRef<"Batch", 'String'>
   readonly productName: Prisma.FieldRef<"Batch", 'String'>
   readonly category: Prisma.FieldRef<"Batch", 'Category'>
@@ -1777,7 +1708,6 @@ export interface BatchFieldRefs {
   readonly unit: Prisma.FieldRef<"Batch", 'String'>
   readonly ipfsHash: Prisma.FieldRef<"Batch", 'String'>
   readonly status: Prisma.FieldRef<"Batch", 'BatchStatus'>
-  readonly qrCodeUrl: Prisma.FieldRef<"Batch", 'String'>
   readonly farmerId: Prisma.FieldRef<"Batch", 'String'>
   readonly harvestDate: Prisma.FieldRef<"Batch", 'DateTime'>
   readonly expiryDate: Prisma.FieldRef<"Batch", 'DateTime'>
@@ -2232,27 +2162,22 @@ export type Batch$transitsArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Batch.qualityChecks
+ * Batch.qualityTest
  */
-export type Batch$qualityChecksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Batch$qualityTestArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the StepQuality
+   * Select specific fields to fetch from the QualityTest
    */
-  select?: Prisma.StepQualitySelect<ExtArgs> | null
+  select?: Prisma.QualityTestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the StepQuality
+   * Omit specific fields from the QualityTest
    */
-  omit?: Prisma.StepQualityOmit<ExtArgs> | null
+  omit?: Prisma.QualityTestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.StepQualityInclude<ExtArgs> | null
-  where?: Prisma.StepQualityWhereInput
-  orderBy?: Prisma.StepQualityOrderByWithRelationInput | Prisma.StepQualityOrderByWithRelationInput[]
-  cursor?: Prisma.StepQualityWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StepQualityScalarFieldEnum | Prisma.StepQualityScalarFieldEnum[]
+  include?: Prisma.QualityTestInclude<ExtArgs> | null
+  where?: Prisma.QualityTestWhereInput
 }
 
 /**

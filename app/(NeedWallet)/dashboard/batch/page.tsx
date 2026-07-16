@@ -16,7 +16,7 @@ import { Loading } from '@/app/components/Loading';
 
 export default function BatchPage() {
   const { user } = useAuth();
-  if(!user) return <Loading message="Loading user data..." />;
+  if (!user) return <Loading message="Loading user data..." />;
   const { t } = useTranslation();
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -109,17 +109,10 @@ export default function BatchPage() {
           IN_TRANSIT: { color: 'purple', text: 'Đang vận chuyển' },
           RETAILING: { color: 'geekblue', text: 'Đang bán lẻ' },
           SOLD: { color: 'success', text: 'Đã bán hết' },
+          ABORTED: { color: 'error', text: 'Hết hạn sử dụng' },
         };
         return <Tag color={statusConfig[status]?.color}>{statusConfig[status]?.text}</Tag>;
       },
-    },
-    {
-      title: t('Blockchain ID'),
-      dataIndex: 'blockchainId',
-      key: 'blockchainId',
-      align: 'center',
-      render: (blockchainId: bigint | null) =>
-        blockchainId !== null ? <span className="font-mono text-neutral-700">#{blockchainId.toString()}</span> : <span className="text-neutral-300">-</span>,
     },
     {
       title: t('Tx Hash'),
@@ -139,17 +132,6 @@ export default function BatchPage() {
           </Tooltip>
         );
       },
-    },
-    {
-      title: t('IPFS'),
-      dataIndex: 'ipfsHash',
-      key: 'ipfsHash',
-      render: (ipfsHash: string | null) =>
-        ipfsHash ? (
-          <Typography.Link href={`https://ipfs.io/ipfs/${ipfsHash}`} target="_blank" className="font-mono text-xs">
-            Xem Metadata
-          </Typography.Link>
-        ) : <span className="text-neutral-300">-</span>,
     },
     {
       title: t('Harvest Date'),

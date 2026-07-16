@@ -11,26 +11,32 @@ export async function GET(
     const batch = await prisma.batch.findUnique({
       where: { id: id },
       include: {
-        farmer: { include: { company: true } },
+        // 1. Đúng: Lấy farmer và thông tin công ty của farmer đó
+        farmer: {
+          include: { company: true }
+        },
+
+        // 2. Sửa lại: transits (trước đó bạn viết sai thành trasits)
         transits: {
           include: { shipper: true },
-          orderBy: { departureTime: 'asc' } // Sắp xếp theo chặng từ cũ đến mới
+          orderBy: { departureTime: 'asc' }
         },
-        qualityChecks: {
-          include: { inspector: true },
-          orderBy: { inspectedAt: 'desc' } // Lấy kiểm định mới nhất lên đầu
+
+        // 3. Sửa lại: qualityTest (trước đó bạn viết sai thành qualityTests)
+        // Và kiểm tra trường 'retailer' thay vì 'inspector' nếu đó là tên trong model của bạn
+        qualityTest: {
+          include: { retailer: true },
+          // Lưu ý: QualityTest là 1-1 nên không có orderBy ở đây được 
+          // (trừ khi bạn đổi nó thành 1-nhiều)
         }
       }
     });
 
     if (!batch) return NextResponse.json({ success: false, error: "Cannot find batch" }, { status: 404 });
 
-    // Hàm đệ quy nhỏ để chuyển đổi mọi BigInt (nếu có) thành String
-    const serializeData = JSON.parse(
-      JSON.stringify(batch, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
-    );
+    const { protectedKey, ...companyData } = batch.farmer.company;
 
-    return NextResponse.json({ success: true, data: serializeData }, { status: 200 });
+    return NextResponse.json({ success: true, data: batch }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });
   }
@@ -58,20 +64,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       return NextResponse.json({ success: false, errors: z.treeifyError(validation.error) }, { status: 400 });
     }
 
-    const data = { ...validation.data, blockchainId: validation.data.blockchainId ? BigInt(validation.data.blockchainId) : undefined };
+    const data = validation.data;
 
     const newBatch = await prisma.batch.update({
       where: { id: id },
       data,
     });
 
-    // Serialize BigInt trước khi trả về
-    const serializedBatch = {
-      ...newBatch,
-      blockchainId: newBatch.blockchainId?.toString() ?? null
-    };
-
-    return NextResponse.json({ success: true, data: serializedBatch }, { status: 201 });
+    return NextResponse.json({ success: true, data: newBatch }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });
   }

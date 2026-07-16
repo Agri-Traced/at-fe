@@ -229,13 +229,13 @@ export type StepTransitGroupByOutputType = {
   id: string
   batchId: string
   shipperId: string
-  txHash: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature: number | null
   humidity: number | null
   vehicleNumber: string | null
-  statusDetails: string
+  statusDetails: string | null
   departureTime: Date
   arrivalTime: Date | null
   _count: StepTransitCountAggregateOutputType | null
@@ -267,13 +267,13 @@ export type StepTransitWhereInput = {
   id?: Prisma.StringFilter<"StepTransit"> | string
   batchId?: Prisma.StringFilter<"StepTransit"> | string
   shipperId?: Prisma.StringFilter<"StepTransit"> | string
-  txHash?: Prisma.StringNullableFilter<"StepTransit"> | string | null
+  txHash?: Prisma.StringFilter<"StepTransit"> | string
   fromLocation?: Prisma.StringFilter<"StepTransit"> | string
   toLocation?: Prisma.StringFilter<"StepTransit"> | string
   temperature?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   humidity?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   vehicleNumber?: Prisma.StringNullableFilter<"StepTransit"> | string | null
-  statusDetails?: Prisma.StringFilter<"StepTransit"> | string
+  statusDetails?: Prisma.StringNullableFilter<"StepTransit"> | string | null
   departureTime?: Prisma.DateTimeFilter<"StepTransit"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"StepTransit"> | Date | string | null
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
@@ -284,13 +284,13 @@ export type StepTransitOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
   shipperId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   fromLocation?: Prisma.SortOrder
   toLocation?: Prisma.SortOrder
   temperature?: Prisma.SortOrderInput | Prisma.SortOrder
   humidity?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  statusDetails?: Prisma.SortOrder
+  statusDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   departureTime?: Prisma.SortOrder
   arrivalTime?: Prisma.SortOrderInput | Prisma.SortOrder
   batch?: Prisma.BatchOrderByWithRelationInput
@@ -304,13 +304,13 @@ export type StepTransitWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.StepTransitWhereInput | Prisma.StepTransitWhereInput[]
   batchId?: Prisma.StringFilter<"StepTransit"> | string
   shipperId?: Prisma.StringFilter<"StepTransit"> | string
-  txHash?: Prisma.StringNullableFilter<"StepTransit"> | string | null
+  txHash?: Prisma.StringFilter<"StepTransit"> | string
   fromLocation?: Prisma.StringFilter<"StepTransit"> | string
   toLocation?: Prisma.StringFilter<"StepTransit"> | string
   temperature?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   humidity?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   vehicleNumber?: Prisma.StringNullableFilter<"StepTransit"> | string | null
-  statusDetails?: Prisma.StringFilter<"StepTransit"> | string
+  statusDetails?: Prisma.StringNullableFilter<"StepTransit"> | string | null
   departureTime?: Prisma.DateTimeFilter<"StepTransit"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"StepTransit"> | Date | string | null
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
@@ -321,13 +321,13 @@ export type StepTransitOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
   shipperId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  txHash?: Prisma.SortOrder
   fromLocation?: Prisma.SortOrder
   toLocation?: Prisma.SortOrder
   temperature?: Prisma.SortOrderInput | Prisma.SortOrder
   humidity?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  statusDetails?: Prisma.SortOrder
+  statusDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   departureTime?: Prisma.SortOrder
   arrivalTime?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.StepTransitCountOrderByAggregateInput
@@ -344,26 +344,26 @@ export type StepTransitScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
   batchId?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
   shipperId?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
-  txHash?: Prisma.StringNullableWithAggregatesFilter<"StepTransit"> | string | null
+  txHash?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
   fromLocation?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
   toLocation?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
   temperature?: Prisma.FloatNullableWithAggregatesFilter<"StepTransit"> | number | null
   humidity?: Prisma.FloatNullableWithAggregatesFilter<"StepTransit"> | number | null
   vehicleNumber?: Prisma.StringNullableWithAggregatesFilter<"StepTransit"> | string | null
-  statusDetails?: Prisma.StringWithAggregatesFilter<"StepTransit"> | string
+  statusDetails?: Prisma.StringNullableWithAggregatesFilter<"StepTransit"> | string | null
   departureTime?: Prisma.DateTimeWithAggregatesFilter<"StepTransit"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableWithAggregatesFilter<"StepTransit"> | Date | string | null
 }
 
 export type StepTransitCreateInput = {
   id?: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
   batch: Prisma.BatchCreateNestedOneWithoutTransitsInput
@@ -374,26 +374,26 @@ export type StepTransitUncheckedCreateInput = {
   id?: string
   batchId: string
   shipperId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
 
 export type StepTransitUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   batch?: Prisma.BatchUpdateOneRequiredWithoutTransitsNestedInput
@@ -404,13 +404,13 @@ export type StepTransitUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   shipperId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -419,26 +419,26 @@ export type StepTransitCreateManyInput = {
   id?: string
   batchId: string
   shipperId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
 
 export type StepTransitUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -447,13 +447,13 @@ export type StepTransitUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   shipperId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -617,13 +617,13 @@ export type NullableFloatFieldUpdateOperationsInput = {
 
 export type StepTransitCreateWithoutShipperInput = {
   id?: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
   batch: Prisma.BatchCreateNestedOneWithoutTransitsInput
@@ -632,13 +632,13 @@ export type StepTransitCreateWithoutShipperInput = {
 export type StepTransitUncheckedCreateWithoutShipperInput = {
   id?: string
   batchId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
@@ -676,26 +676,26 @@ export type StepTransitScalarWhereInput = {
   id?: Prisma.StringFilter<"StepTransit"> | string
   batchId?: Prisma.StringFilter<"StepTransit"> | string
   shipperId?: Prisma.StringFilter<"StepTransit"> | string
-  txHash?: Prisma.StringNullableFilter<"StepTransit"> | string | null
+  txHash?: Prisma.StringFilter<"StepTransit"> | string
   fromLocation?: Prisma.StringFilter<"StepTransit"> | string
   toLocation?: Prisma.StringFilter<"StepTransit"> | string
   temperature?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   humidity?: Prisma.FloatNullableFilter<"StepTransit"> | number | null
   vehicleNumber?: Prisma.StringNullableFilter<"StepTransit"> | string | null
-  statusDetails?: Prisma.StringFilter<"StepTransit"> | string
+  statusDetails?: Prisma.StringNullableFilter<"StepTransit"> | string | null
   departureTime?: Prisma.DateTimeFilter<"StepTransit"> | Date | string
   arrivalTime?: Prisma.DateTimeNullableFilter<"StepTransit"> | Date | string | null
 }
 
 export type StepTransitCreateWithoutBatchInput = {
   id?: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
   shipper: Prisma.UserCreateNestedOneWithoutTransportsInput
@@ -704,13 +704,13 @@ export type StepTransitCreateWithoutBatchInput = {
 export type StepTransitUncheckedCreateWithoutBatchInput = {
   id?: string
   shipperId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
@@ -744,26 +744,26 @@ export type StepTransitUpdateManyWithWhereWithoutBatchInput = {
 export type StepTransitCreateManyShipperInput = {
   id?: string
   batchId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
 
 export type StepTransitUpdateWithoutShipperInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   batch?: Prisma.BatchUpdateOneRequiredWithoutTransitsNestedInput
@@ -772,13 +772,13 @@ export type StepTransitUpdateWithoutShipperInput = {
 export type StepTransitUncheckedUpdateWithoutShipperInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -786,13 +786,13 @@ export type StepTransitUncheckedUpdateWithoutShipperInput = {
 export type StepTransitUncheckedUpdateManyWithoutShipperInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -800,26 +800,26 @@ export type StepTransitUncheckedUpdateManyWithoutShipperInput = {
 export type StepTransitCreateManyBatchInput = {
   id?: string
   shipperId: string
-  txHash?: string | null
+  txHash: string
   fromLocation: string
   toLocation: string
   temperature?: number | null
   humidity?: number | null
   vehicleNumber?: string | null
-  statusDetails: string
+  statusDetails?: string | null
   departureTime?: Date | string
   arrivalTime?: Date | string | null
 }
 
 export type StepTransitUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   shipper?: Prisma.UserUpdateOneRequiredWithoutTransportsNestedInput
@@ -828,13 +828,13 @@ export type StepTransitUpdateWithoutBatchInput = {
 export type StepTransitUncheckedUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   shipperId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -842,13 +842,13 @@ export type StepTransitUncheckedUpdateWithoutBatchInput = {
 export type StepTransitUncheckedUpdateManyWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   shipperId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.StringFieldUpdateOperationsInput | string
   fromLocation?: Prisma.StringFieldUpdateOperationsInput | string
   toLocation?: Prisma.StringFieldUpdateOperationsInput | string
   temperature?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   humidity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   vehicleNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  statusDetails?: Prisma.StringFieldUpdateOperationsInput | string
+  statusDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departureTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -945,13 +945,13 @@ export type $StepTransitPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     batchId: string
     shipperId: string
-    txHash: string | null
+    txHash: string
     fromLocation: string
     toLocation: string
     temperature: number | null
     humidity: number | null
     vehicleNumber: string | null
-    statusDetails: string
+    statusDetails: string | null
     departureTime: Date
     arrivalTime: Date | null
   }, ExtArgs["result"]["stepTransit"]>

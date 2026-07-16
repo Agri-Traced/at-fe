@@ -67,7 +67,7 @@ export type Batch = Prisma.BatchModel
  */
 export type StepTransit = Prisma.StepTransitModel
 /**
- * Model StepQuality
+ * Model QualityTest
  * 
  */
-export type StepQuality = Prisma.StepQualityModel
+export type QualityTest = Prisma.QualityTestModel

@@ -15,8 +15,8 @@ export async function GET(
           include: { shipper: true },
           orderBy: { departureTime: 'asc' } // Sắp xếp theo chặng từ cũ đến mới
         },
-        qualityChecks: {
-          include: { inspector: true },
+        qualityTest: {
+          include: { retailer: true },
           orderBy: { inspectedAt: 'desc' } // Lấy kiểm định mới nhất lên đầu
         }
       }

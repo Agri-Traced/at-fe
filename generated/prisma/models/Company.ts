@@ -288,9 +288,9 @@ export type CompanyUncheckedUpdateManyInput = {
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type CompanyNullableScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput | null
-  isNot?: Prisma.CompanyWhereInput | null
+export type CompanyScalarRelationFilter = {
+  is?: Prisma.CompanyWhereInput
+  isNot?: Prisma.CompanyWhereInput
 }
 
 export type CompanyCountOrderByAggregateInput = {
@@ -323,12 +323,10 @@ export type CompanyCreateNestedOneWithoutMembersInput = {
   connect?: Prisma.CompanyWhereUniqueInput
 }
 
-export type CompanyUpdateOneWithoutMembersNestedInput = {
+export type CompanyUpdateOneRequiredWithoutMembersNestedInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutMembersInput, Prisma.CompanyUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutMembersInput
   upsert?: Prisma.CompanyUpsertWithoutMembersInput
-  disconnect?: Prisma.CompanyWhereInput | boolean
-  delete?: Prisma.CompanyWhereInput | boolean
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutMembersInput, Prisma.CompanyUpdateWithoutMembersInput>, Prisma.CompanyUncheckedUpdateWithoutMembersInput>
 }

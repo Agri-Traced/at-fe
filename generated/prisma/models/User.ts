@@ -178,7 +178,7 @@ export type UserGroupByOutputType = {
   email: string | null
   phone: string | null
   role: $Enums.Role
-  companyId: string | null
+  companyId: string
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -211,13 +211,13 @@ export type UserWhereInput = {
   email?: Prisma.StringNullableFilter<"User"> | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  companyId?: Prisma.StringNullableFilter<"User"> | string | null
+  companyId?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   batchesCreated?: Prisma.BatchListRelationFilter
   transports?: Prisma.StepTransitListRelationFilter
-  inspections?: Prisma.StepQualityListRelationFilter
+  qualityTests?: Prisma.QualityTestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -227,13 +227,13 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   batchesCreated?: Prisma.BatchOrderByRelationAggregateInput
   transports?: Prisma.StepTransitOrderByRelationAggregateInput
-  inspections?: Prisma.StepQualityOrderByRelationAggregateInput
+  qualityTests?: Prisma.QualityTestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -246,13 +246,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   fullName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  companyId?: Prisma.StringNullableFilter<"User"> | string | null
+  companyId?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   batchesCreated?: Prisma.BatchListRelationFilter
   transports?: Prisma.StepTransitListRelationFilter
-  inspections?: Prisma.StepQualityListRelationFilter
+  qualityTests?: Prisma.QualityTestListRelationFilter
 }, "id" | "walletAddress" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -262,7 +262,7 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -280,7 +280,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  companyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  companyId?: Prisma.StringWithAggregatesFilter<"User"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -294,10 +294,10 @@ export type UserCreateInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
-  company?: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
   batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -307,12 +307,12 @@ export type UserUncheckedCreateInput = {
   email?: string | null
   phone?: string | null
   role?: $Enums.Role
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityUncheckedCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
 }
 
 export type UserUpdateInput = {
@@ -324,10 +324,10 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneWithoutMembersNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
   batchesCreated?: Prisma.BatchUpdateManyWithoutFarmerNestedInput
   transports?: Prisma.StepTransitUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -337,12 +337,12 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batchesCreated?: Prisma.BatchUncheckedUpdateManyWithoutFarmerNestedInput
   transports?: Prisma.StepTransitUncheckedUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUncheckedUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -352,7 +352,7 @@ export type UserCreateManyInput = {
   email?: string | null
   phone?: string | null
   role?: $Enums.Role
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -375,7 +375,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -517,18 +517,18 @@ export type UserUpdateOneRequiredWithoutTransportsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransportsInput, Prisma.UserUpdateWithoutTransportsInput>, Prisma.UserUncheckedUpdateWithoutTransportsInput>
 }
 
-export type UserCreateNestedOneWithoutInspectionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutInspectionsInput, Prisma.UserUncheckedCreateWithoutInspectionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInspectionsInput
+export type UserCreateNestedOneWithoutQualityTestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQualityTestsInput, Prisma.UserUncheckedCreateWithoutQualityTestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQualityTestsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutInspectionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutInspectionsInput, Prisma.UserUncheckedCreateWithoutInspectionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInspectionsInput
-  upsert?: Prisma.UserUpsertWithoutInspectionsInput
+export type UserUpdateOneRequiredWithoutQualityTestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQualityTestsInput, Prisma.UserUncheckedCreateWithoutQualityTestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQualityTestsInput
+  upsert?: Prisma.UserUpsertWithoutQualityTestsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInspectionsInput, Prisma.UserUpdateWithoutInspectionsInput>, Prisma.UserUncheckedUpdateWithoutInspectionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQualityTestsInput, Prisma.UserUpdateWithoutQualityTestsInput>, Prisma.UserUncheckedUpdateWithoutQualityTestsInput>
 }
 
 export type UserCreateWithoutCompanyInput = {
@@ -542,7 +542,7 @@ export type UserCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -556,7 +556,7 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityUncheckedCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -595,7 +595,7 @@ export type UserScalarWhereInput = {
   email?: Prisma.StringNullableFilter<"User"> | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  companyId?: Prisma.StringNullableFilter<"User"> | string | null
+  companyId?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -609,9 +609,9 @@ export type UserCreateWithoutBatchesCreatedInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
-  company?: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
   transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
 }
 
 export type UserUncheckedCreateWithoutBatchesCreatedInput = {
@@ -621,11 +621,11 @@ export type UserUncheckedCreateWithoutBatchesCreatedInput = {
   email?: string | null
   phone?: string | null
   role?: $Enums.Role
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
-  inspections?: Prisma.StepQualityUncheckedCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
 }
 
 export type UserCreateOrConnectWithoutBatchesCreatedInput = {
@@ -653,9 +653,9 @@ export type UserUpdateWithoutBatchesCreatedInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneWithoutMembersNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
   transports?: Prisma.StepTransitUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBatchesCreatedInput = {
@@ -665,11 +665,11 @@ export type UserUncheckedUpdateWithoutBatchesCreatedInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transports?: Prisma.StepTransitUncheckedUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUncheckedUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserCreateWithoutTransportsInput = {
@@ -681,9 +681,9 @@ export type UserCreateWithoutTransportsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
-  company?: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
   batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
-  inspections?: Prisma.StepQualityCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
 }
 
 export type UserUncheckedCreateWithoutTransportsInput = {
@@ -693,11 +693,11 @@ export type UserUncheckedCreateWithoutTransportsInput = {
   email?: string | null
   phone?: string | null
   role?: $Enums.Role
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
-  inspections?: Prisma.StepQualityUncheckedCreateNestedManyWithoutInspectorInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
 }
 
 export type UserCreateOrConnectWithoutTransportsInput = {
@@ -725,9 +725,9 @@ export type UserUpdateWithoutTransportsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneWithoutMembersNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
   batchesCreated?: Prisma.BatchUpdateManyWithoutFarmerNestedInput
-  inspections?: Prisma.StepQualityUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransportsInput = {
@@ -737,14 +737,14 @@ export type UserUncheckedUpdateWithoutTransportsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batchesCreated?: Prisma.BatchUncheckedUpdateManyWithoutFarmerNestedInput
-  inspections?: Prisma.StepQualityUncheckedUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput
 }
 
-export type UserCreateWithoutInspectionsInput = {
+export type UserCreateWithoutQualityTestsInput = {
   id?: string
   walletAddress: string
   fullName: string
@@ -753,42 +753,42 @@ export type UserCreateWithoutInspectionsInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
-  company?: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
   batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
 }
 
-export type UserUncheckedCreateWithoutInspectionsInput = {
+export type UserUncheckedCreateWithoutQualityTestsInput = {
   id?: string
   walletAddress: string
   fullName: string
   email?: string | null
   phone?: string | null
   role?: $Enums.Role
-  companyId?: string | null
+  companyId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
   transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
 }
 
-export type UserCreateOrConnectWithoutInspectionsInput = {
+export type UserCreateOrConnectWithoutQualityTestsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutInspectionsInput, Prisma.UserUncheckedCreateWithoutInspectionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQualityTestsInput, Prisma.UserUncheckedCreateWithoutQualityTestsInput>
 }
 
-export type UserUpsertWithoutInspectionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutInspectionsInput, Prisma.UserUncheckedUpdateWithoutInspectionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutInspectionsInput, Prisma.UserUncheckedCreateWithoutInspectionsInput>
+export type UserUpsertWithoutQualityTestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQualityTestsInput, Prisma.UserUncheckedUpdateWithoutQualityTestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQualityTestsInput, Prisma.UserUncheckedCreateWithoutQualityTestsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutInspectionsInput = {
+export type UserUpdateToOneWithWhereWithoutQualityTestsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutInspectionsInput, Prisma.UserUncheckedUpdateWithoutInspectionsInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQualityTestsInput, Prisma.UserUncheckedUpdateWithoutQualityTestsInput>
 }
 
-export type UserUpdateWithoutInspectionsInput = {
+export type UserUpdateWithoutQualityTestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -797,19 +797,19 @@ export type UserUpdateWithoutInspectionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneWithoutMembersNestedInput
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
   batchesCreated?: Prisma.BatchUpdateManyWithoutFarmerNestedInput
   transports?: Prisma.StepTransitUpdateManyWithoutShipperNestedInput
 }
 
-export type UserUncheckedUpdateWithoutInspectionsInput = {
+export type UserUncheckedUpdateWithoutQualityTestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batchesCreated?: Prisma.BatchUncheckedUpdateManyWithoutFarmerNestedInput
@@ -838,7 +838,7 @@ export type UserUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batchesCreated?: Prisma.BatchUpdateManyWithoutFarmerNestedInput
   transports?: Prisma.StepTransitUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -852,7 +852,7 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batchesCreated?: Prisma.BatchUncheckedUpdateManyWithoutFarmerNestedInput
   transports?: Prisma.StepTransitUncheckedUpdateManyWithoutShipperNestedInput
-  inspections?: Prisma.StepQualityUncheckedUpdateManyWithoutInspectorNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -874,13 +874,13 @@ export type UserUncheckedUpdateManyWithoutCompanyInput = {
 export type UserCountOutputType = {
   batchesCreated: number
   transports: number
-  inspections: number
+  qualityTests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   batchesCreated?: boolean | UserCountOutputTypeCountBatchesCreatedArgs
   transports?: boolean | UserCountOutputTypeCountTransportsArgs
-  inspections?: boolean | UserCountOutputTypeCountInspectionsArgs
+  qualityTests?: boolean | UserCountOutputTypeCountQualityTestsArgs
 }
 
 /**
@@ -910,8 +910,8 @@ export type UserCountOutputTypeCountTransportsArgs<ExtArgs extends runtime.Types
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountInspectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StepQualityWhereInput
+export type UserCountOutputTypeCountQualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QualityTestWhereInput
 }
 
 
@@ -925,10 +925,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   batchesCreated?: boolean | Prisma.User$batchesCreatedArgs<ExtArgs>
   transports?: boolean | Prisma.User$transportsArgs<ExtArgs>
-  inspections?: boolean | Prisma.User$inspectionsArgs<ExtArgs>
+  qualityTests?: boolean | Prisma.User$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -942,7 +942,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -955,7 +955,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   companyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -972,26 +972,26 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "walletAddress" | "fullName" | "email" | "phone" | "role" | "companyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   batchesCreated?: boolean | Prisma.User$batchesCreatedArgs<ExtArgs>
   transports?: boolean | Prisma.User$transportsArgs<ExtArgs>
-  inspections?: boolean | Prisma.User$inspectionsArgs<ExtArgs>
+  qualityTests?: boolean | Prisma.User$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.User$companyArgs<ExtArgs>
+  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    company: Prisma.$CompanyPayload<ExtArgs> | null
+    company: Prisma.$CompanyPayload<ExtArgs>
     batchesCreated: Prisma.$BatchPayload<ExtArgs>[]
     transports: Prisma.$StepTransitPayload<ExtArgs>[]
-    inspections: Prisma.$StepQualityPayload<ExtArgs>[]
+    qualityTests: Prisma.$QualityTestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1000,7 +1000,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string | null
     phone: string | null
     role: $Enums.Role
-    companyId: string | null
+    companyId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1397,10 +1397,10 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.User$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   batchesCreated<T extends Prisma.User$batchesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$batchesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transports<T extends Prisma.User$transportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepTransitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  inspections<T extends Prisma.User$inspectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepQualityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qualityTests<T extends Prisma.User$qualityTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$qualityTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualityTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1840,25 +1840,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.company
- */
-export type User$companyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Company
-   */
-  select?: Prisma.CompanySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Company
-   */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
-  where?: Prisma.CompanyWhereInput
-}
-
-/**
  * User.batchesCreated
  */
 export type User$batchesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1907,27 +1888,27 @@ export type User$transportsArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * User.inspections
+ * User.qualityTests
  */
-export type User$inspectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$qualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the StepQuality
+   * Select specific fields to fetch from the QualityTest
    */
-  select?: Prisma.StepQualitySelect<ExtArgs> | null
+  select?: Prisma.QualityTestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the StepQuality
+   * Omit specific fields from the QualityTest
    */
-  omit?: Prisma.StepQualityOmit<ExtArgs> | null
+  omit?: Prisma.QualityTestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.StepQualityInclude<ExtArgs> | null
-  where?: Prisma.StepQualityWhereInput
-  orderBy?: Prisma.StepQualityOrderByWithRelationInput | Prisma.StepQualityOrderByWithRelationInput[]
-  cursor?: Prisma.StepQualityWhereUniqueInput
+  include?: Prisma.QualityTestInclude<ExtArgs> | null
+  where?: Prisma.QualityTestWhereInput
+  orderBy?: Prisma.QualityTestOrderByWithRelationInput | Prisma.QualityTestOrderByWithRelationInput[]
+  cursor?: Prisma.QualityTestWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.StepQualityScalarFieldEnum | Prisma.StepQualityScalarFieldEnum[]
+  distinct?: Prisma.QualityTestScalarFieldEnum | Prisma.QualityTestScalarFieldEnum[]
 }
 
 /**

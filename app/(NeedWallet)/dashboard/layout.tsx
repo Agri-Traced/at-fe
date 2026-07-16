@@ -7,18 +7,6 @@ import ConnectWalletButton from "@/app/components/ConnectWalletButton";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const [pathname, setPathname] = useState('/welcome');
-  const menuData = [
-    {
-      path: '/',
-      name: 'Welcome',
-      icon: <HomeOutlined />,
-    },
-    {
-      path: '/batch',
-      name: 'Batch',
-      icon: <InboxOutlined />,
-    }
-  ];
 
   return (
     <div style={{ height: '100vh' }}>
@@ -26,13 +14,6 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         title="gri-Trace Blockchain"
         logo='/icon.png'
         location={{ pathname }}
-        route={{
-          path: '/',
-          routes: menuData,
-        }}
-        menuItemRender={(item, dom) => (
-          <a onClick={() => setPathname(item.path ?? '/')}>{dom}</a>
-        )}
       >
         {/* Vùng chứa nội dung chính, tự động căn chỉnh và có breadcrumb */}
         <PageContainer

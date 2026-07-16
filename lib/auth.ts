@@ -25,7 +25,7 @@ export function withAuth(handler: (req: NextRequest, user: IUserJWT) => Promise<
 
 export function withRole(role: string, handler: (req: NextRequest, user: IUserJWT) => Promise<Response>) {
   return withAuth(async (req, user) => {
-    if (user.role !== role) {
+    if (user.role !== role && user.role !== 'OWNER') {
       return NextResponse.json(
         { error: `Forbidden: You do not have permission: ${role}`, code: 'FORBIDDEN' },
         { status: 403 }

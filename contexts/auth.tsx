@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [account, error, pathname, login]);
 
   useEffect(() => {
-    if (!account) {
+    if (!account && user) {
       api.post('/user/logout');
     }
-  }, [account]);
+  }, [account, user !== undefined]);
 
   if (isLoading || isPending) {
     return <Loading message={t('Connecting to your wallet...')} />

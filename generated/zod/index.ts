@@ -16,13 +16,13 @@ export const UserScalarFieldEnumSchema = z.enum(['id','walletAddress','fullName'
 
 export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','location','protectedKey']);
 
-export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
+export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp','txHash']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','txHash','productName','category','quantity','unit','ipfsHash','status','qrCodeUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','txHash','productName','category','quantity','unit','ipfsHash','status','farmerId','harvestDate','expiryDate','createdAt','updatedAt']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','statusDetails','departureTime','arrivalTime']);
 
-export const StepQualityScalarFieldEnumSchema = z.enum(['id','batchId','inspectorId','txHash','isPassed','reportUrl','note','inspectedAt']);
+export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','txHash','isPassed','note','testedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -34,11 +34,11 @@ export const RoleSchema = z.enum(['FARMER','SHIPPER','RETAILER','CONSUMER']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
 
-export const OrganizationTypeSchema = z.enum(['FARM','LOGISTICS','RETAILER']);
+export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
 
 export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
 
-export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','RETAILING','SOLD']);
+export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','RETAILING','SOLD','ABORTED']);
 
 export type BatchStatusType = `${z.infer<typeof BatchStatusSchema>}`
 
@@ -61,7 +61,7 @@ export const UserSchema = z.object({
   fullName: z.string(),
   email: z.string().nullable(),
   phone: z.string().nullable(),
-  companyId: z.string().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -91,6 +91,7 @@ export const ActivityLogSchema = z.object({
   batchId: z.string(),
   description: z.string(),
   timestamp: z.coerce.date(),
+  txHash: z.string(),
 })
 
 export type ActivityLog = z.infer<typeof ActivityLogSchema>
@@ -103,15 +104,14 @@ export const BatchSchema = z.object({
   category: CategorySchema,
   status: BatchStatusSchema,
   id: z.uuid(),
-  blockchainId: z.bigint().nullable(),
-  txHash: z.string().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().nullable(),
-  qrCodeUrl: z.string().nullable(),
+  ipfsHash: z.string(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date(),
+  harvestDate: z.coerce.date().nullable(),
   expiryDate: z.coerce.date().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -127,13 +127,13 @@ export const StepTransitSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
   shipperId: z.string(),
-  txHash: z.string().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().nullable(),
   humidity: z.number().nullable(),
   vehicleNumber: z.string().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().nullable(),
   departureTime: z.coerce.date(),
   arrivalTime: z.coerce.date().nullable(),
 })
@@ -141,21 +141,20 @@ export const StepTransitSchema = z.object({
 export type StepTransit = z.infer<typeof StepTransitSchema>
 
 /////////////////////////////////////////
-// STEP QUALITY SCHEMA
+// QUALITY TEST SCHEMA
 /////////////////////////////////////////
 
-export const StepQualitySchema = z.object({
+export const QualityTestSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
-  inspectorId: z.string(),
-  txHash: z.string().nullable(),
+  retailerId: z.string(),
+  txHash: z.string(),
   isPassed: z.boolean(),
-  reportUrl: z.string().nullable(),
   note: z.string().nullable(),
-  inspectedAt: z.coerce.date(),
+  testedAt: z.coerce.date(),
 })
 
-export type StepQuality = z.infer<typeof StepQualitySchema>
+export type QualityTest = z.infer<typeof QualityTestSchema>
 
 /////////////////////////////////////////
 // SELECT & INCLUDE
@@ -168,7 +167,7 @@ export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   company: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
   batchesCreated: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
   transports: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
-  inspections: z.union([z.boolean(),z.lazy(() => StepQualityFindManyArgsSchema)]).optional(),
+  qualityTests: z.union([z.boolean(),z.lazy(() => QualityTestFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict();
 
@@ -184,7 +183,7 @@ export const UserCountOutputTypeArgsSchema: z.ZodType<Prisma.UserCountOutputType
 export const UserCountOutputTypeSelectSchema: z.ZodType<Prisma.UserCountOutputTypeSelect> = z.object({
   batchesCreated: z.boolean().optional(),
   transports: z.boolean().optional(),
-  inspections: z.boolean().optional(),
+  qualityTests: z.boolean().optional(),
 }).strict();
 
 export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
@@ -200,7 +199,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   company: z.union([z.boolean(),z.lazy(() => CompanyArgsSchema)]).optional(),
   batchesCreated: z.union([z.boolean(),z.lazy(() => BatchFindManyArgsSchema)]).optional(),
   transports: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
-  inspections: z.union([z.boolean(),z.lazy(() => StepQualityFindManyArgsSchema)]).optional(),
+  qualityTests: z.union([z.boolean(),z.lazy(() => QualityTestFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -252,6 +251,7 @@ export const ActivityLogSelectSchema: z.ZodType<Prisma.ActivityLogSelect> = z.ob
   batchId: z.boolean().optional(),
   description: z.boolean().optional(),
   timestamp: z.boolean().optional(),
+  txHash: z.boolean().optional(),
   batch: z.union([z.boolean(),z.lazy(() => BatchArgsSchema)]).optional(),
 }).strict()
 
@@ -262,7 +262,7 @@ export const BatchIncludeSchema: z.ZodType<Prisma.BatchInclude> = z.object({
   activities: z.union([z.boolean(),z.lazy(() => ActivityLogFindManyArgsSchema)]).optional(),
   farmer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   transits: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
-  qualityChecks: z.union([z.boolean(),z.lazy(() => StepQualityFindManyArgsSchema)]).optional(),
+  qualityTest: z.union([z.boolean(),z.lazy(() => QualityTestArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BatchCountOutputTypeArgsSchema)]).optional(),
 }).strict();
 
@@ -278,7 +278,6 @@ export const BatchCountOutputTypeArgsSchema: z.ZodType<Prisma.BatchCountOutputTy
 export const BatchCountOutputTypeSelectSchema: z.ZodType<Prisma.BatchCountOutputTypeSelect> = z.object({
   activities: z.boolean().optional(),
   transits: z.boolean().optional(),
-  qualityChecks: z.boolean().optional(),
 }).strict();
 
 export const BatchSelectSchema: z.ZodType<Prisma.BatchSelect> = z.object({
@@ -291,7 +290,6 @@ export const BatchSelectSchema: z.ZodType<Prisma.BatchSelect> = z.object({
   unit: z.boolean().optional(),
   ipfsHash: z.boolean().optional(),
   status: z.boolean().optional(),
-  qrCodeUrl: z.boolean().optional(),
   farmerId: z.boolean().optional(),
   harvestDate: z.boolean().optional(),
   expiryDate: z.boolean().optional(),
@@ -300,7 +298,7 @@ export const BatchSelectSchema: z.ZodType<Prisma.BatchSelect> = z.object({
   activities: z.union([z.boolean(),z.lazy(() => ActivityLogFindManyArgsSchema)]).optional(),
   farmer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   transits: z.union([z.boolean(),z.lazy(() => StepTransitFindManyArgsSchema)]).optional(),
-  qualityChecks: z.union([z.boolean(),z.lazy(() => StepQualityFindManyArgsSchema)]).optional(),
+  qualityTest: z.union([z.boolean(),z.lazy(() => QualityTestArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BatchCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -334,30 +332,29 @@ export const StepTransitSelectSchema: z.ZodType<Prisma.StepTransitSelect> = z.ob
   shipper: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-// STEP QUALITY
+// QUALITY TEST
 //------------------------------------------------------
 
-export const StepQualityIncludeSchema: z.ZodType<Prisma.StepQualityInclude> = z.object({
+export const QualityTestIncludeSchema: z.ZodType<Prisma.QualityTestInclude> = z.object({
   batch: z.union([z.boolean(),z.lazy(() => BatchArgsSchema)]).optional(),
-  inspector: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  retailer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict();
 
-export const StepQualityArgsSchema: z.ZodType<Prisma.StepQualityDefaultArgs> = z.object({
-  select: z.lazy(() => StepQualitySelectSchema).optional(),
-  include: z.lazy(() => StepQualityIncludeSchema).optional(),
+export const QualityTestArgsSchema: z.ZodType<Prisma.QualityTestDefaultArgs> = z.object({
+  select: z.lazy(() => QualityTestSelectSchema).optional(),
+  include: z.lazy(() => QualityTestIncludeSchema).optional(),
 }).strict();
 
-export const StepQualitySelectSchema: z.ZodType<Prisma.StepQualitySelect> = z.object({
+export const QualityTestSelectSchema: z.ZodType<Prisma.QualityTestSelect> = z.object({
   id: z.boolean().optional(),
   batchId: z.boolean().optional(),
-  inspectorId: z.boolean().optional(),
+  retailerId: z.boolean().optional(),
   txHash: z.boolean().optional(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.boolean().optional(),
   note: z.boolean().optional(),
-  inspectedAt: z.boolean().optional(),
+  testedAt: z.boolean().optional(),
   batch: z.union([z.boolean(),z.lazy(() => BatchArgsSchema)]).optional(),
-  inspector: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  retailer: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
 
@@ -375,13 +372,13 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.strictOb
   email: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   phone: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumRoleFilterSchema), z.lazy(() => RoleSchema) ]).optional(),
-  companyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  companyId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  company: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
+  company: z.union([ z.lazy(() => CompanyScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchListRelationFilterSchema).optional(),
   transports: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
-  inspections: z.lazy(() => StepQualityListRelationFilterSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestListRelationFilterSchema).optional(),
 });
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.strictObject({
@@ -391,13 +388,13 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   email: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   phone: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   role: z.lazy(() => SortOrderSchema).optional(),
-  companyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  companyId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   company: z.lazy(() => CompanyOrderByWithRelationInputSchema).optional(),
   batchesCreated: z.lazy(() => BatchOrderByRelationAggregateInputSchema).optional(),
   transports: z.lazy(() => StepTransitOrderByRelationAggregateInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityOrderByRelationAggregateInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestOrderByRelationAggregateInputSchema).optional(),
 });
 
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.union([
@@ -438,13 +435,13 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   fullName: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   phone: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumRoleFilterSchema), z.lazy(() => RoleSchema) ]).optional(),
-  companyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  companyId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  company: z.union([ z.lazy(() => CompanyNullableScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional().nullable(),
+  company: z.union([ z.lazy(() => CompanyScalarRelationFilterSchema), z.lazy(() => CompanyWhereInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchListRelationFilterSchema).optional(),
   transports: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
-  inspections: z.lazy(() => StepQualityListRelationFilterSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestListRelationFilterSchema).optional(),
 }));
 
 export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderByWithAggregationInput> = z.strictObject({
@@ -454,7 +451,7 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
   email: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   phone: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   role: z.lazy(() => SortOrderSchema).optional(),
-  companyId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  companyId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
@@ -472,7 +469,7 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   email: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   phone: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumRoleWithAggregatesFilterSchema), z.lazy(() => RoleSchema) ]).optional(),
-  companyId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  companyId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
 });
@@ -543,6 +540,7 @@ export const ActivityLogWhereInputSchema: z.ZodType<Prisma.ActivityLogWhereInput
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
 });
 
@@ -551,6 +549,7 @@ export const ActivityLogOrderByWithRelationInputSchema: z.ZodType<Prisma.Activit
   batchId: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   timestamp: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   batch: z.lazy(() => BatchOrderByWithRelationInputSchema).optional(),
 });
 
@@ -565,6 +564,7 @@ export const ActivityLogWhereUniqueInputSchema: z.ZodType<Prisma.ActivityLogWher
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
 }));
 
@@ -573,6 +573,7 @@ export const ActivityLogOrderByWithAggregationInputSchema: z.ZodType<Prisma.Acti
   batchId: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   timestamp: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => ActivityLogCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => ActivityLogMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => ActivityLogMinOrderByAggregateInputSchema).optional(),
@@ -586,6 +587,7 @@ export const ActivityLogScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.A
   batchId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
 });
 
 export const BatchWhereInputSchema: z.ZodType<Prisma.BatchWhereInput> = z.strictObject({
@@ -593,98 +595,94 @@ export const BatchWhereInputSchema: z.ZodType<Prisma.BatchWhereInput> = z.strict
   OR: z.lazy(() => BatchWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => BatchWhereInputSchema), z.lazy(() => BatchWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  blockchainId: z.union([ z.lazy(() => BigIntNullableFilterSchema), z.bigint() ]).optional().nullable(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  blockchainId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   productName: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   category: z.union([ z.lazy(() => EnumCategoryFilterSchema), z.lazy(() => CategorySchema) ]).optional(),
   quantity: z.union([ z.lazy(() => FloatFilterSchema), z.number() ]).optional(),
   unit: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  ipfsHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  ipfsHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumBatchStatusFilterSchema), z.lazy(() => BatchStatusSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   farmerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  harvestDate: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  harvestDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   activities: z.lazy(() => ActivityLogListRelationFilterSchema).optional(),
   farmer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
   transits: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityListRelationFilterSchema).optional(),
+  qualityTest: z.union([ z.lazy(() => QualityTestNullableScalarRelationFilterSchema), z.lazy(() => QualityTestWhereInputSchema) ]).optional().nullable(),
 });
 
 export const BatchOrderByWithRelationInputSchema: z.ZodType<Prisma.BatchOrderByWithRelationInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
-  blockchainId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  blockchainId: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   productName: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   quantity: z.lazy(() => SortOrderSchema).optional(),
   unit: z.lazy(() => SortOrderSchema).optional(),
-  ipfsHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  ipfsHash: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   farmerId: z.lazy(() => SortOrderSchema).optional(),
-  harvestDate: z.lazy(() => SortOrderSchema).optional(),
+  harvestDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   expiryDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   activities: z.lazy(() => ActivityLogOrderByRelationAggregateInputSchema).optional(),
   farmer: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   transits: z.lazy(() => StepTransitOrderByRelationAggregateInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityOrderByRelationAggregateInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestOrderByWithRelationInputSchema).optional(),
 });
 
 export const BatchWhereUniqueInputSchema: z.ZodType<Prisma.BatchWhereUniqueInput> = z.union([
   z.object({
     id: z.uuid(),
-    blockchainId: z.bigint(),
+    blockchainId: z.string(),
   }),
   z.object({
     id: z.uuid(),
   }),
   z.object({
-    blockchainId: z.bigint(),
+    blockchainId: z.string(),
   }),
 ])
 .and(z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional(),
+  blockchainId: z.string().optional(),
   AND: z.union([ z.lazy(() => BatchWhereInputSchema), z.lazy(() => BatchWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => BatchWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => BatchWhereInputSchema), z.lazy(() => BatchWhereInputSchema).array() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   productName: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   category: z.union([ z.lazy(() => EnumCategoryFilterSchema), z.lazy(() => CategorySchema) ]).optional(),
   quantity: z.union([ z.lazy(() => FloatFilterSchema), z.number() ]).optional(),
   unit: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  ipfsHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  ipfsHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumBatchStatusFilterSchema), z.lazy(() => BatchStatusSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   farmerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  harvestDate: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  harvestDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   activities: z.lazy(() => ActivityLogListRelationFilterSchema).optional(),
   farmer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
   transits: z.lazy(() => StepTransitListRelationFilterSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityListRelationFilterSchema).optional(),
+  qualityTest: z.union([ z.lazy(() => QualityTestNullableScalarRelationFilterSchema), z.lazy(() => QualityTestWhereInputSchema) ]).optional().nullable(),
 }));
 
 export const BatchOrderByWithAggregationInputSchema: z.ZodType<Prisma.BatchOrderByWithAggregationInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
-  blockchainId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  blockchainId: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   productName: z.lazy(() => SortOrderSchema).optional(),
   category: z.lazy(() => SortOrderSchema).optional(),
   quantity: z.lazy(() => SortOrderSchema).optional(),
   unit: z.lazy(() => SortOrderSchema).optional(),
-  ipfsHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  ipfsHash: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   farmerId: z.lazy(() => SortOrderSchema).optional(),
-  harvestDate: z.lazy(() => SortOrderSchema).optional(),
+  harvestDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   expiryDate: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -700,17 +698,16 @@ export const BatchScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BatchSc
   OR: z.lazy(() => BatchScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => BatchScalarWhereWithAggregatesInputSchema), z.lazy(() => BatchScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  blockchainId: z.union([ z.lazy(() => BigIntNullableWithAggregatesFilterSchema), z.bigint() ]).optional().nullable(),
-  txHash: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  blockchainId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   productName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   category: z.union([ z.lazy(() => EnumCategoryWithAggregatesFilterSchema), z.lazy(() => CategorySchema) ]).optional(),
   quantity: z.union([ z.lazy(() => FloatWithAggregatesFilterSchema), z.number() ]).optional(),
   unit: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  ipfsHash: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  ipfsHash: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumBatchStatusWithAggregatesFilterSchema), z.lazy(() => BatchStatusSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   farmerId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  harvestDate: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
+  harvestDate: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema), z.coerce.date() ]).optional().nullable(),
   expiryDate: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
@@ -723,13 +720,13 @@ export const StepTransitWhereInputSchema: z.ZodType<Prisma.StepTransitWhereInput
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   shipperId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   fromLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   toLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   temperature: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   humidity: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   vehicleNumber: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  statusDetails: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  statusDetails: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   departureTime: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   arrivalTime: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
@@ -740,13 +737,13 @@ export const StepTransitOrderByWithRelationInputSchema: z.ZodType<Prisma.StepTra
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
   shipperId: z.lazy(() => SortOrderSchema).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   fromLocation: z.lazy(() => SortOrderSchema).optional(),
   toLocation: z.lazy(() => SortOrderSchema).optional(),
   temperature: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   humidity: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   vehicleNumber: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  statusDetails: z.lazy(() => SortOrderSchema).optional(),
+  statusDetails: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   departureTime: z.lazy(() => SortOrderSchema).optional(),
   arrivalTime: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   batch: z.lazy(() => BatchOrderByWithRelationInputSchema).optional(),
@@ -763,13 +760,13 @@ export const StepTransitWhereUniqueInputSchema: z.ZodType<Prisma.StepTransitWher
   NOT: z.union([ z.lazy(() => StepTransitWhereInputSchema), z.lazy(() => StepTransitWhereInputSchema).array() ]).optional(),
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   shipperId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   fromLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   toLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   temperature: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   humidity: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   vehicleNumber: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  statusDetails: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  statusDetails: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   departureTime: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   arrivalTime: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
@@ -780,13 +777,13 @@ export const StepTransitOrderByWithAggregationInputSchema: z.ZodType<Prisma.Step
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
   shipperId: z.lazy(() => SortOrderSchema).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   fromLocation: z.lazy(() => SortOrderSchema).optional(),
   toLocation: z.lazy(() => SortOrderSchema).optional(),
   temperature: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   humidity: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   vehicleNumber: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  statusDetails: z.lazy(() => SortOrderSchema).optional(),
+  statusDetails: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   departureTime: z.lazy(() => SortOrderSchema).optional(),
   arrivalTime: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => StepTransitCountOrderByAggregateInputSchema).optional(),
@@ -803,91 +800,95 @@ export const StepTransitScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.S
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   shipperId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  txHash: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   fromLocation: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   toLocation: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   temperature: z.union([ z.lazy(() => FloatNullableWithAggregatesFilterSchema), z.number() ]).optional().nullable(),
   humidity: z.union([ z.lazy(() => FloatNullableWithAggregatesFilterSchema), z.number() ]).optional().nullable(),
   vehicleNumber: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
-  statusDetails: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
+  statusDetails: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   departureTime: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   arrivalTime: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema), z.coerce.date() ]).optional().nullable(),
 });
 
-export const StepQualityWhereInputSchema: z.ZodType<Prisma.StepQualityWhereInput> = z.strictObject({
-  AND: z.union([ z.lazy(() => StepQualityWhereInputSchema), z.lazy(() => StepQualityWhereInputSchema).array() ]).optional(),
-  OR: z.lazy(() => StepQualityWhereInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => StepQualityWhereInputSchema), z.lazy(() => StepQualityWhereInputSchema).array() ]).optional(),
+export const QualityTestWhereInputSchema: z.ZodType<Prisma.QualityTestWhereInput> = z.strictObject({
+  AND: z.union([ z.lazy(() => QualityTestWhereInputSchema), z.lazy(() => QualityTestWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QualityTestWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QualityTestWhereInputSchema), z.lazy(() => QualityTestWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  inspectorId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  retailerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   isPassed: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
-  reportUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   note: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  inspectedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  testedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
-  inspector: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  retailer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
 });
 
-export const StepQualityOrderByWithRelationInputSchema: z.ZodType<Prisma.StepQualityOrderByWithRelationInput> = z.strictObject({
+export const QualityTestOrderByWithRelationInputSchema: z.ZodType<Prisma.QualityTestOrderByWithRelationInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
-  inspectorId: z.lazy(() => SortOrderSchema).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  retailerId: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   isPassed: z.lazy(() => SortOrderSchema).optional(),
-  reportUrl: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   note: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  inspectedAt: z.lazy(() => SortOrderSchema).optional(),
+  testedAt: z.lazy(() => SortOrderSchema).optional(),
   batch: z.lazy(() => BatchOrderByWithRelationInputSchema).optional(),
-  inspector: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  retailer: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
 });
 
-export const StepQualityWhereUniqueInputSchema: z.ZodType<Prisma.StepQualityWhereUniqueInput> = z.object({
-  id: z.uuid(),
-})
+export const QualityTestWhereUniqueInputSchema: z.ZodType<Prisma.QualityTestWhereUniqueInput> = z.union([
+  z.object({
+    id: z.uuid(),
+    batchId: z.string(),
+  }),
+  z.object({
+    id: z.uuid(),
+  }),
+  z.object({
+    batchId: z.string(),
+  }),
+])
 .and(z.strictObject({
   id: z.uuid().optional(),
-  AND: z.union([ z.lazy(() => StepQualityWhereInputSchema), z.lazy(() => StepQualityWhereInputSchema).array() ]).optional(),
-  OR: z.lazy(() => StepQualityWhereInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => StepQualityWhereInputSchema), z.lazy(() => StepQualityWhereInputSchema).array() ]).optional(),
-  batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  inspectorId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  batchId: z.string().optional(),
+  AND: z.union([ z.lazy(() => QualityTestWhereInputSchema), z.lazy(() => QualityTestWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QualityTestWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QualityTestWhereInputSchema), z.lazy(() => QualityTestWhereInputSchema).array() ]).optional(),
+  retailerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   isPassed: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
-  reportUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   note: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  inspectedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  testedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   batch: z.union([ z.lazy(() => BatchScalarRelationFilterSchema), z.lazy(() => BatchWhereInputSchema) ]).optional(),
-  inspector: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  retailer: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
 }));
 
-export const StepQualityOrderByWithAggregationInputSchema: z.ZodType<Prisma.StepQualityOrderByWithAggregationInput> = z.strictObject({
+export const QualityTestOrderByWithAggregationInputSchema: z.ZodType<Prisma.QualityTestOrderByWithAggregationInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
-  inspectorId: z.lazy(() => SortOrderSchema).optional(),
-  txHash: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  retailerId: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
   isPassed: z.lazy(() => SortOrderSchema).optional(),
-  reportUrl: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   note: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
-  inspectedAt: z.lazy(() => SortOrderSchema).optional(),
-  _count: z.lazy(() => StepQualityCountOrderByAggregateInputSchema).optional(),
-  _max: z.lazy(() => StepQualityMaxOrderByAggregateInputSchema).optional(),
-  _min: z.lazy(() => StepQualityMinOrderByAggregateInputSchema).optional(),
+  testedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => QualityTestCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => QualityTestMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => QualityTestMinOrderByAggregateInputSchema).optional(),
 });
 
-export const StepQualityScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.StepQualityScalarWhereWithAggregatesInput> = z.strictObject({
-  AND: z.union([ z.lazy(() => StepQualityScalarWhereWithAggregatesInputSchema), z.lazy(() => StepQualityScalarWhereWithAggregatesInputSchema).array() ]).optional(),
-  OR: z.lazy(() => StepQualityScalarWhereWithAggregatesInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => StepQualityScalarWhereWithAggregatesInputSchema), z.lazy(() => StepQualityScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+export const QualityTestScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.QualityTestScalarWhereWithAggregatesInput> = z.strictObject({
+  AND: z.union([ z.lazy(() => QualityTestScalarWhereWithAggregatesInputSchema), z.lazy(() => QualityTestScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QualityTestScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QualityTestScalarWhereWithAggregatesInputSchema), z.lazy(() => QualityTestScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  inspectorId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  retailerId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   isPassed: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema), z.boolean() ]).optional(),
-  reportUrl: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   note: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
-  inspectedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
+  testedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
 });
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.strictObject({
@@ -899,10 +900,10 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.strict
   role: z.lazy(() => RoleSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema).optional(),
+  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema),
   batchesCreated: z.lazy(() => BatchCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> = z.strictObject({
@@ -912,12 +913,12 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   email: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
-  companyId: z.string().optional().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   batchesCreated: z.lazy(() => BatchUncheckedCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.strictObject({
@@ -929,10 +930,10 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.strict
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  company: z.lazy(() => CompanyUpdateOneWithoutMembersNestedInputSchema).optional(),
+  company: z.lazy(() => CompanyUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
   batchesCreated: z.lazy(() => BatchUpdateManyWithoutFarmerNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z.strictObject({
@@ -942,12 +943,12 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
-  companyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  companyId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchUncheckedUpdateManyWithoutFarmerNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUncheckedUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = z.strictObject({
@@ -957,7 +958,7 @@ export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = 
   email: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
-  companyId: z.string().optional().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -980,7 +981,7 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
-  companyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  companyId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
@@ -1049,6 +1050,7 @@ export const ActivityLogCreateInputSchema: z.ZodType<Prisma.ActivityLogCreateInp
   id: z.uuid().optional(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
   batch: z.lazy(() => BatchCreateNestedOneWithoutActivitiesInputSchema),
 });
 
@@ -1057,12 +1059,14 @@ export const ActivityLogUncheckedCreateInputSchema: z.ZodType<Prisma.ActivityLog
   batchId: z.string(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
 });
 
 export const ActivityLogUpdateInputSchema: z.ZodType<Prisma.ActivityLogUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batch: z.lazy(() => BatchUpdateOneRequiredWithoutActivitiesNestedInputSchema).optional(),
 });
 
@@ -1071,6 +1075,7 @@ export const ActivityLogUncheckedUpdateInputSchema: z.ZodType<Prisma.ActivityLog
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const ActivityLogCreateManyInputSchema: z.ZodType<Prisma.ActivityLogCreateManyInput> = z.strictObject({
@@ -1078,12 +1083,14 @@ export const ActivityLogCreateManyInputSchema: z.ZodType<Prisma.ActivityLogCreat
   batchId: z.string(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
 });
 
 export const ActivityLogUpdateManyMutationInputSchema: z.ZodType<Prisma.ActivityLogUpdateManyMutationInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const ActivityLogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ActivityLogUncheckedUpdateManyInput> = z.strictObject({
@@ -1091,105 +1098,101 @@ export const ActivityLogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Activit
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const BatchCreateInputSchema: z.ZodType<Prisma.BatchCreateInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchUncheckedCreateInputSchema: z.ZodType<Prisma.BatchUncheckedCreateInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchUpdateInputSchema: z.ZodType<Prisma.BatchUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchUncheckedUpdateInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchCreateManyInputSchema: z.ZodType<Prisma.BatchCreateManyInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -1197,16 +1200,15 @@ export const BatchCreateManyInputSchema: z.ZodType<Prisma.BatchCreateManyInput> 
 
 export const BatchUpdateManyMutationInputSchema: z.ZodType<Prisma.BatchUpdateManyMutationInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1214,17 +1216,16 @@ export const BatchUpdateManyMutationInputSchema: z.ZodType<Prisma.BatchUpdateMan
 
 export const BatchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1232,13 +1233,13 @@ export const BatchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BatchUnchecke
 
 export const StepTransitCreateInputSchema: z.ZodType<Prisma.StepTransitCreateInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
   batch: z.lazy(() => BatchCreateNestedOneWithoutTransitsInputSchema),
@@ -1249,26 +1250,26 @@ export const StepTransitUncheckedCreateInputSchema: z.ZodType<Prisma.StepTransit
   id: z.uuid().optional(),
   batchId: z.string(),
   shipperId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
 });
 
 export const StepTransitUpdateInputSchema: z.ZodType<Prisma.StepTransitUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   batch: z.lazy(() => BatchUpdateOneRequiredWithoutTransitsNestedInputSchema).optional(),
@@ -1279,13 +1280,13 @@ export const StepTransitUncheckedUpdateInputSchema: z.ZodType<Prisma.StepTransit
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shipperId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
@@ -1294,26 +1295,26 @@ export const StepTransitCreateManyInputSchema: z.ZodType<Prisma.StepTransitCreat
   id: z.uuid().optional(),
   batchId: z.string(),
   shipperId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
 });
 
 export const StepTransitUpdateManyMutationInputSchema: z.ZodType<Prisma.StepTransitUpdateManyMutationInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
@@ -1322,90 +1323,83 @@ export const StepTransitUncheckedUpdateManyInputSchema: z.ZodType<Prisma.StepTra
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shipperId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
 
-export const StepQualityCreateInputSchema: z.ZodType<Prisma.StepQualityCreateInput> = z.strictObject({
+export const QualityTestCreateInputSchema: z.ZodType<Prisma.QualityTestCreateInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
-  batch: z.lazy(() => BatchCreateNestedOneWithoutQualityChecksInputSchema),
-  inspector: z.lazy(() => UserCreateNestedOneWithoutInspectionsInputSchema),
+  testedAt: z.coerce.date().optional(),
+  batch: z.lazy(() => BatchCreateNestedOneWithoutQualityTestInputSchema),
+  retailer: z.lazy(() => UserCreateNestedOneWithoutQualityTestsInputSchema),
 });
 
-export const StepQualityUncheckedCreateInputSchema: z.ZodType<Prisma.StepQualityUncheckedCreateInput> = z.strictObject({
-  id: z.uuid().optional(),
-  batchId: z.string(),
-  inspectorId: z.string(),
-  txHash: z.string().optional().nullable(),
-  isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
-  note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
-});
-
-export const StepQualityUpdateInputSchema: z.ZodType<Prisma.StepQualityUpdateInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  batch: z.lazy(() => BatchUpdateOneRequiredWithoutQualityChecksNestedInputSchema).optional(),
-  inspector: z.lazy(() => UserUpdateOneRequiredWithoutInspectionsNestedInputSchema).optional(),
-});
-
-export const StepQualityUncheckedUpdateInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  inspectorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-});
-
-export const StepQualityCreateManyInputSchema: z.ZodType<Prisma.StepQualityCreateManyInput> = z.strictObject({
+export const QualityTestUncheckedCreateInputSchema: z.ZodType<Prisma.QualityTestUncheckedCreateInput> = z.strictObject({
   id: z.uuid().optional(),
   batchId: z.string(),
-  inspectorId: z.string(),
-  txHash: z.string().optional().nullable(),
+  retailerId: z.string(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
+  testedAt: z.coerce.date().optional(),
 });
 
-export const StepQualityUpdateManyMutationInputSchema: z.ZodType<Prisma.StepQualityUpdateManyMutationInput> = z.strictObject({
+export const QualityTestUpdateInputSchema: z.ZodType<Prisma.QualityTestUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  batch: z.lazy(() => BatchUpdateOneRequiredWithoutQualityTestNestedInputSchema).optional(),
+  retailer: z.lazy(() => UserUpdateOneRequiredWithoutQualityTestsNestedInputSchema).optional(),
 });
 
-export const StepQualityUncheckedUpdateManyInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateManyInput> = z.strictObject({
+export const QualityTestUncheckedUpdateInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  inspectorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  retailerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const QualityTestCreateManyInputSchema: z.ZodType<Prisma.QualityTestCreateManyInput> = z.strictObject({
+  id: z.uuid().optional(),
+  batchId: z.string(),
+  retailerId: z.string(),
+  txHash: z.string(),
+  isPassed: z.boolean().optional(),
+  note: z.string().optional().nullable(),
+  testedAt: z.coerce.date().optional(),
+});
+
+export const QualityTestUpdateManyMutationInputSchema: z.ZodType<Prisma.QualityTestUpdateManyMutationInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const QualityTestUncheckedUpdateManyInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateManyInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  retailerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.strictObject({
@@ -1456,9 +1450,9 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.strictOb
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 });
 
-export const CompanyNullableScalarRelationFilterSchema: z.ZodType<Prisma.CompanyNullableScalarRelationFilter> = z.strictObject({
-  is: z.lazy(() => CompanyWhereInputSchema).optional().nullable(),
-  isNot: z.lazy(() => CompanyWhereInputSchema).optional().nullable(),
+export const CompanyScalarRelationFilterSchema: z.ZodType<Prisma.CompanyScalarRelationFilter> = z.strictObject({
+  is: z.lazy(() => CompanyWhereInputSchema).optional(),
+  isNot: z.lazy(() => CompanyWhereInputSchema).optional(),
 });
 
 export const BatchListRelationFilterSchema: z.ZodType<Prisma.BatchListRelationFilter> = z.strictObject({
@@ -1473,10 +1467,10 @@ export const StepTransitListRelationFilterSchema: z.ZodType<Prisma.StepTransitLi
   none: z.lazy(() => StepTransitWhereInputSchema).optional(),
 });
 
-export const StepQualityListRelationFilterSchema: z.ZodType<Prisma.StepQualityListRelationFilter> = z.strictObject({
-  every: z.lazy(() => StepQualityWhereInputSchema).optional(),
-  some: z.lazy(() => StepQualityWhereInputSchema).optional(),
-  none: z.lazy(() => StepQualityWhereInputSchema).optional(),
+export const QualityTestListRelationFilterSchema: z.ZodType<Prisma.QualityTestListRelationFilter> = z.strictObject({
+  every: z.lazy(() => QualityTestWhereInputSchema).optional(),
+  some: z.lazy(() => QualityTestWhereInputSchema).optional(),
+  none: z.lazy(() => QualityTestWhereInputSchema).optional(),
 });
 
 export const SortOrderInputSchema: z.ZodType<Prisma.SortOrderInput> = z.strictObject({
@@ -1492,7 +1486,7 @@ export const StepTransitOrderByRelationAggregateInputSchema: z.ZodType<Prisma.St
   _count: z.lazy(() => SortOrderSchema).optional(),
 });
 
-export const StepQualityOrderByRelationAggregateInputSchema: z.ZodType<Prisma.StepQualityOrderByRelationAggregateInput> = z.strictObject({
+export const QualityTestOrderByRelationAggregateInputSchema: z.ZodType<Prisma.QualityTestOrderByRelationAggregateInput> = z.strictObject({
   _count: z.lazy(() => SortOrderSchema).optional(),
 });
 
@@ -1653,6 +1647,7 @@ export const ActivityLogCountOrderByAggregateInputSchema: z.ZodType<Prisma.Activ
   batchId: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   timestamp: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const ActivityLogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ActivityLogMaxOrderByAggregateInput> = z.strictObject({
@@ -1660,6 +1655,7 @@ export const ActivityLogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Activit
   batchId: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   timestamp: z.lazy(() => SortOrderSchema).optional(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const ActivityLogMinOrderByAggregateInputSchema: z.ZodType<Prisma.ActivityLogMinOrderByAggregateInput> = z.strictObject({
@@ -1667,17 +1663,7 @@ export const ActivityLogMinOrderByAggregateInputSchema: z.ZodType<Prisma.Activit
   batchId: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   timestamp: z.lazy(() => SortOrderSchema).optional(),
-});
-
-export const BigIntNullableFilterSchema: z.ZodType<Prisma.BigIntNullableFilter> = z.strictObject({
-  equals: z.bigint().optional().nullable(),
-  in: z.bigint().array().optional().nullable(),
-  notIn: z.bigint().array().optional().nullable(),
-  lt: z.bigint().optional(),
-  lte: z.bigint().optional(),
-  gt: z.bigint().optional(),
-  gte: z.bigint().optional(),
-  not: z.union([ z.bigint(),z.lazy(() => NestedBigIntNullableFilterSchema) ]).optional().nullable(),
+  txHash: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const EnumCategoryFilterSchema: z.ZodType<Prisma.EnumCategoryFilter> = z.strictObject({
@@ -1727,6 +1713,11 @@ export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelation
   isNot: z.lazy(() => UserWhereInputSchema).optional(),
 });
 
+export const QualityTestNullableScalarRelationFilterSchema: z.ZodType<Prisma.QualityTestNullableScalarRelationFilter> = z.strictObject({
+  is: z.lazy(() => QualityTestWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => QualityTestWhereInputSchema).optional().nullable(),
+});
+
 export const ActivityLogOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ActivityLogOrderByRelationAggregateInput> = z.strictObject({
   _count: z.lazy(() => SortOrderSchema).optional(),
 });
@@ -1741,7 +1732,6 @@ export const BatchCountOrderByAggregateInputSchema: z.ZodType<Prisma.BatchCountO
   unit: z.lazy(() => SortOrderSchema).optional(),
   ipfsHash: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
-  qrCodeUrl: z.lazy(() => SortOrderSchema).optional(),
   farmerId: z.lazy(() => SortOrderSchema).optional(),
   harvestDate: z.lazy(() => SortOrderSchema).optional(),
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
@@ -1750,7 +1740,6 @@ export const BatchCountOrderByAggregateInputSchema: z.ZodType<Prisma.BatchCountO
 });
 
 export const BatchAvgOrderByAggregateInputSchema: z.ZodType<Prisma.BatchAvgOrderByAggregateInput> = z.strictObject({
-  blockchainId: z.lazy(() => SortOrderSchema).optional(),
   quantity: z.lazy(() => SortOrderSchema).optional(),
 });
 
@@ -1764,7 +1753,6 @@ export const BatchMaxOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMaxOrder
   unit: z.lazy(() => SortOrderSchema).optional(),
   ipfsHash: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
-  qrCodeUrl: z.lazy(() => SortOrderSchema).optional(),
   farmerId: z.lazy(() => SortOrderSchema).optional(),
   harvestDate: z.lazy(() => SortOrderSchema).optional(),
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
@@ -1782,7 +1770,6 @@ export const BatchMinOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMinOrder
   unit: z.lazy(() => SortOrderSchema).optional(),
   ipfsHash: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
-  qrCodeUrl: z.lazy(() => SortOrderSchema).optional(),
   farmerId: z.lazy(() => SortOrderSchema).optional(),
   harvestDate: z.lazy(() => SortOrderSchema).optional(),
   expiryDate: z.lazy(() => SortOrderSchema).optional(),
@@ -1791,24 +1778,7 @@ export const BatchMinOrderByAggregateInputSchema: z.ZodType<Prisma.BatchMinOrder
 });
 
 export const BatchSumOrderByAggregateInputSchema: z.ZodType<Prisma.BatchSumOrderByAggregateInput> = z.strictObject({
-  blockchainId: z.lazy(() => SortOrderSchema).optional(),
   quantity: z.lazy(() => SortOrderSchema).optional(),
-});
-
-export const BigIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.BigIntNullableWithAggregatesFilter> = z.strictObject({
-  equals: z.bigint().optional().nullable(),
-  in: z.bigint().array().optional().nullable(),
-  notIn: z.bigint().array().optional().nullable(),
-  lt: z.bigint().optional(),
-  lte: z.bigint().optional(),
-  gt: z.bigint().optional(),
-  gte: z.bigint().optional(),
-  not: z.union([ z.bigint(),z.lazy(() => NestedBigIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
-  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
-  _sum: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
-  _min: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
-  _max: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
 });
 
 export const EnumCategoryWithAggregatesFilterSchema: z.ZodType<Prisma.EnumCategoryWithAggregatesFilter> = z.strictObject({
@@ -1948,37 +1918,34 @@ export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.strictObject({
   not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
 });
 
-export const StepQualityCountOrderByAggregateInputSchema: z.ZodType<Prisma.StepQualityCountOrderByAggregateInput> = z.strictObject({
+export const QualityTestCountOrderByAggregateInputSchema: z.ZodType<Prisma.QualityTestCountOrderByAggregateInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
-  inspectorId: z.lazy(() => SortOrderSchema).optional(),
+  retailerId: z.lazy(() => SortOrderSchema).optional(),
   txHash: z.lazy(() => SortOrderSchema).optional(),
   isPassed: z.lazy(() => SortOrderSchema).optional(),
-  reportUrl: z.lazy(() => SortOrderSchema).optional(),
   note: z.lazy(() => SortOrderSchema).optional(),
-  inspectedAt: z.lazy(() => SortOrderSchema).optional(),
+  testedAt: z.lazy(() => SortOrderSchema).optional(),
 });
 
-export const StepQualityMaxOrderByAggregateInputSchema: z.ZodType<Prisma.StepQualityMaxOrderByAggregateInput> = z.strictObject({
+export const QualityTestMaxOrderByAggregateInputSchema: z.ZodType<Prisma.QualityTestMaxOrderByAggregateInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
-  inspectorId: z.lazy(() => SortOrderSchema).optional(),
+  retailerId: z.lazy(() => SortOrderSchema).optional(),
   txHash: z.lazy(() => SortOrderSchema).optional(),
   isPassed: z.lazy(() => SortOrderSchema).optional(),
-  reportUrl: z.lazy(() => SortOrderSchema).optional(),
   note: z.lazy(() => SortOrderSchema).optional(),
-  inspectedAt: z.lazy(() => SortOrderSchema).optional(),
+  testedAt: z.lazy(() => SortOrderSchema).optional(),
 });
 
-export const StepQualityMinOrderByAggregateInputSchema: z.ZodType<Prisma.StepQualityMinOrderByAggregateInput> = z.strictObject({
+export const QualityTestMinOrderByAggregateInputSchema: z.ZodType<Prisma.QualityTestMinOrderByAggregateInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   batchId: z.lazy(() => SortOrderSchema).optional(),
-  inspectorId: z.lazy(() => SortOrderSchema).optional(),
+  retailerId: z.lazy(() => SortOrderSchema).optional(),
   txHash: z.lazy(() => SortOrderSchema).optional(),
   isPassed: z.lazy(() => SortOrderSchema).optional(),
-  reportUrl: z.lazy(() => SortOrderSchema).optional(),
   note: z.lazy(() => SortOrderSchema).optional(),
-  inspectedAt: z.lazy(() => SortOrderSchema).optional(),
+  testedAt: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregatesFilter> = z.strictObject({
@@ -2009,11 +1976,11 @@ export const StepTransitCreateNestedManyWithoutShipperInputSchema: z.ZodType<Pri
   connect: z.union([ z.lazy(() => StepTransitWhereUniqueInputSchema), z.lazy(() => StepTransitWhereUniqueInputSchema).array() ]).optional(),
 });
 
-export const StepQualityCreateNestedManyWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityCreateNestedManyWithoutInspectorInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateWithoutInspectorInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyInspectorInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
+export const QualityTestCreateNestedManyWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestCreateNestedManyWithoutRetailerInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateWithoutRetailerInputSchema).array(), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => QualityTestCreateManyRetailerInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
 });
 
 export const BatchUncheckedCreateNestedManyWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput> = z.strictObject({
@@ -2030,11 +1997,11 @@ export const StepTransitUncheckedCreateNestedManyWithoutShipperInputSchema: z.Zo
   connect: z.union([ z.lazy(() => StepTransitWhereUniqueInputSchema), z.lazy(() => StepTransitWhereUniqueInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUncheckedCreateNestedManyWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUncheckedCreateNestedManyWithoutInspectorInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateWithoutInspectorInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyInspectorInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
+export const QualityTestUncheckedCreateNestedManyWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateWithoutRetailerInputSchema).array(), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => QualityTestCreateManyRetailerInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
 });
 
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.strictObject({
@@ -2053,12 +2020,10 @@ export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTime
   set: z.coerce.date().optional(),
 });
 
-export const CompanyUpdateOneWithoutMembersNestedInputSchema: z.ZodType<Prisma.CompanyUpdateOneWithoutMembersNestedInput> = z.strictObject({
+export const CompanyUpdateOneRequiredWithoutMembersNestedInputSchema: z.ZodType<Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput> = z.strictObject({
   create: z.union([ z.lazy(() => CompanyCreateWithoutMembersInputSchema), z.lazy(() => CompanyUncheckedCreateWithoutMembersInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => CompanyCreateOrConnectWithoutMembersInputSchema).optional(),
   upsert: z.lazy(() => CompanyUpsertWithoutMembersInputSchema).optional(),
-  disconnect: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
-  delete: z.union([ z.boolean(),z.lazy(() => CompanyWhereInputSchema) ]).optional(),
   connect: z.lazy(() => CompanyWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => CompanyUpdateToOneWithWhereWithoutMembersInputSchema), z.lazy(() => CompanyUpdateWithoutMembersInputSchema), z.lazy(() => CompanyUncheckedUpdateWithoutMembersInputSchema) ]).optional(),
 });
@@ -2091,18 +2056,18 @@ export const StepTransitUpdateManyWithoutShipperNestedInputSchema: z.ZodType<Pri
   deleteMany: z.union([ z.lazy(() => StepTransitScalarWhereInputSchema), z.lazy(() => StepTransitScalarWhereInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUpdateManyWithoutInspectorNestedInputSchema: z.ZodType<Prisma.StepQualityUpdateManyWithoutInspectorNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateWithoutInspectorInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutInspectorInputSchema), z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutInspectorInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyInspectorInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutInspectorInputSchema), z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutInspectorInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => StepQualityUpdateManyWithWhereWithoutInspectorInputSchema), z.lazy(() => StepQualityUpdateManyWithWhereWithoutInspectorInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
+export const QualityTestUpdateManyWithoutRetailerNestedInputSchema: z.ZodType<Prisma.QualityTestUpdateManyWithoutRetailerNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateWithoutRetailerInputSchema).array(), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => QualityTestUpsertWithWhereUniqueWithoutRetailerInputSchema), z.lazy(() => QualityTestUpsertWithWhereUniqueWithoutRetailerInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => QualityTestCreateManyRetailerInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => QualityTestUpdateWithWhereUniqueWithoutRetailerInputSchema), z.lazy(() => QualityTestUpdateWithWhereUniqueWithoutRetailerInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => QualityTestUpdateManyWithWhereWithoutRetailerInputSchema), z.lazy(() => QualityTestUpdateManyWithWhereWithoutRetailerInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => QualityTestScalarWhereInputSchema), z.lazy(() => QualityTestScalarWhereInputSchema).array() ]).optional(),
 });
 
 export const BatchUncheckedUpdateManyWithoutFarmerNestedInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutFarmerNestedInput> = z.strictObject({
@@ -2133,18 +2098,18 @@ export const StepTransitUncheckedUpdateManyWithoutShipperNestedInputSchema: z.Zo
   deleteMany: z.union([ z.lazy(() => StepTransitScalarWhereInputSchema), z.lazy(() => StepTransitScalarWhereInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUncheckedUpdateManyWithoutInspectorNestedInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateManyWithoutInspectorNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateWithoutInspectorInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutInspectorInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutInspectorInputSchema), z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutInspectorInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyInspectorInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutInspectorInputSchema), z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutInspectorInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => StepQualityUpdateManyWithWhereWithoutInspectorInputSchema), z.lazy(() => StepQualityUpdateManyWithWhereWithoutInspectorInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
+export const QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateWithoutRetailerInputSchema).array(), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema), z.lazy(() => QualityTestCreateOrConnectWithoutRetailerInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => QualityTestUpsertWithWhereUniqueWithoutRetailerInputSchema), z.lazy(() => QualityTestUpsertWithWhereUniqueWithoutRetailerInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => QualityTestCreateManyRetailerInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => QualityTestWhereUniqueInputSchema), z.lazy(() => QualityTestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => QualityTestUpdateWithWhereUniqueWithoutRetailerInputSchema), z.lazy(() => QualityTestUpdateWithWhereUniqueWithoutRetailerInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => QualityTestUpdateManyWithWhereWithoutRetailerInputSchema), z.lazy(() => QualityTestUpdateManyWithWhereWithoutRetailerInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => QualityTestScalarWhereInputSchema), z.lazy(() => QualityTestScalarWhereInputSchema).array() ]).optional(),
 });
 
 export const UserCreateNestedManyWithoutCompanyInputSchema: z.ZodType<Prisma.UserCreateNestedManyWithoutCompanyInput> = z.strictObject({
@@ -2227,11 +2192,10 @@ export const StepTransitCreateNestedManyWithoutBatchInputSchema: z.ZodType<Prism
   connect: z.union([ z.lazy(() => StepTransitWhereUniqueInputSchema), z.lazy(() => StepTransitWhereUniqueInputSchema).array() ]).optional(),
 });
 
-export const StepQualityCreateNestedManyWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityCreateNestedManyWithoutBatchInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityCreateWithoutBatchInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyBatchInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
+export const QualityTestCreateNestedOneWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestCreateNestedOneWithoutBatchInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => QualityTestCreateOrConnectWithoutBatchInputSchema).optional(),
+  connect: z.lazy(() => QualityTestWhereUniqueInputSchema).optional(),
 });
 
 export const ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput> = z.strictObject({
@@ -2248,19 +2212,10 @@ export const StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema: z.ZodT
   connect: z.union([ z.lazy(() => StepTransitWhereUniqueInputSchema), z.lazy(() => StepTransitWhereUniqueInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUncheckedCreateNestedManyWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUncheckedCreateNestedManyWithoutBatchInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityCreateWithoutBatchInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyBatchInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-});
-
-export const NullableBigIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableBigIntFieldUpdateOperationsInput> = z.strictObject({
-  set: z.bigint().optional().nullable(),
-  increment: z.bigint().optional(),
-  decrement: z.bigint().optional(),
-  multiply: z.bigint().optional(),
-  divide: z.bigint().optional(),
+export const QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => QualityTestCreateOrConnectWithoutBatchInputSchema).optional(),
+  connect: z.lazy(() => QualityTestWhereUniqueInputSchema).optional(),
 });
 
 export const EnumCategoryFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumCategoryFieldUpdateOperationsInput> = z.strictObject({
@@ -2319,18 +2274,14 @@ export const StepTransitUpdateManyWithoutBatchNestedInputSchema: z.ZodType<Prism
   deleteMany: z.union([ z.lazy(() => StepTransitScalarWhereInputSchema), z.lazy(() => StepTransitScalarWhereInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUpdateManyWithoutBatchNestedInputSchema: z.ZodType<Prisma.StepQualityUpdateManyWithoutBatchNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityCreateWithoutBatchInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutBatchInputSchema), z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutBatchInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyBatchInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutBatchInputSchema), z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutBatchInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => StepQualityUpdateManyWithWhereWithoutBatchInputSchema), z.lazy(() => StepQualityUpdateManyWithWhereWithoutBatchInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
+export const QualityTestUpdateOneWithoutBatchNestedInputSchema: z.ZodType<Prisma.QualityTestUpdateOneWithoutBatchNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => QualityTestCreateOrConnectWithoutBatchInputSchema).optional(),
+  upsert: z.lazy(() => QualityTestUpsertWithoutBatchInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => QualityTestWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => QualityTestWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => QualityTestWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => QualityTestUpdateToOneWithWhereWithoutBatchInputSchema), z.lazy(() => QualityTestUpdateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutBatchInputSchema) ]).optional(),
 });
 
 export const ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema: z.ZodType<Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput> = z.strictObject({
@@ -2361,18 +2312,14 @@ export const StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema: z.ZodT
   deleteMany: z.union([ z.lazy(() => StepTransitScalarWhereInputSchema), z.lazy(() => StepTransitScalarWhereInputSchema).array() ]).optional(),
 });
 
-export const StepQualityUncheckedUpdateManyWithoutBatchNestedInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateManyWithoutBatchNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityCreateWithoutBatchInputSchema).array(), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema), z.lazy(() => StepQualityCreateOrConnectWithoutBatchInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutBatchInputSchema), z.lazy(() => StepQualityUpsertWithWhereUniqueWithoutBatchInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => StepQualityCreateManyBatchInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => StepQualityWhereUniqueInputSchema), z.lazy(() => StepQualityWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutBatchInputSchema), z.lazy(() => StepQualityUpdateWithWhereUniqueWithoutBatchInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => StepQualityUpdateManyWithWhereWithoutBatchInputSchema), z.lazy(() => StepQualityUpdateManyWithWhereWithoutBatchInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
+export const QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => QualityTestCreateOrConnectWithoutBatchInputSchema).optional(),
+  upsert: z.lazy(() => QualityTestUpsertWithoutBatchInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => QualityTestWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => QualityTestWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => QualityTestWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => QualityTestUpdateToOneWithWhereWithoutBatchInputSchema), z.lazy(() => QualityTestUpdateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutBatchInputSchema) ]).optional(),
 });
 
 export const BatchCreateNestedOneWithoutTransitsInputSchema: z.ZodType<Prisma.BatchCreateNestedOneWithoutTransitsInput> = z.strictObject({
@@ -2411,15 +2358,15 @@ export const UserUpdateOneRequiredWithoutTransportsNestedInputSchema: z.ZodType<
   update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutTransportsInputSchema), z.lazy(() => UserUpdateWithoutTransportsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutTransportsInputSchema) ]).optional(),
 });
 
-export const BatchCreateNestedOneWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchCreateNestedOneWithoutQualityChecksInput> = z.strictObject({
-  create: z.union([ z.lazy(() => BatchCreateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityChecksInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => BatchCreateOrConnectWithoutQualityChecksInputSchema).optional(),
+export const BatchCreateNestedOneWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchCreateNestedOneWithoutQualityTestInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityTestInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BatchCreateOrConnectWithoutQualityTestInputSchema).optional(),
   connect: z.lazy(() => BatchWhereUniqueInputSchema).optional(),
 });
 
-export const UserCreateNestedOneWithoutInspectionsInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutInspectionsInput> = z.strictObject({
-  create: z.union([ z.lazy(() => UserCreateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedCreateWithoutInspectionsInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutInspectionsInputSchema).optional(),
+export const UserCreateNestedOneWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutQualityTestsInput> = z.strictObject({
+  create: z.union([ z.lazy(() => UserCreateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedCreateWithoutQualityTestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutQualityTestsInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
 });
 
@@ -2427,20 +2374,20 @@ export const BoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BoolFieldUpd
   set: z.boolean().optional(),
 });
 
-export const BatchUpdateOneRequiredWithoutQualityChecksNestedInputSchema: z.ZodType<Prisma.BatchUpdateOneRequiredWithoutQualityChecksNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => BatchCreateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityChecksInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => BatchCreateOrConnectWithoutQualityChecksInputSchema).optional(),
-  upsert: z.lazy(() => BatchUpsertWithoutQualityChecksInputSchema).optional(),
+export const BatchUpdateOneRequiredWithoutQualityTestNestedInputSchema: z.ZodType<Prisma.BatchUpdateOneRequiredWithoutQualityTestNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => BatchCreateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityTestInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BatchCreateOrConnectWithoutQualityTestInputSchema).optional(),
+  upsert: z.lazy(() => BatchUpsertWithoutQualityTestInputSchema).optional(),
   connect: z.lazy(() => BatchWhereUniqueInputSchema).optional(),
-  update: z.union([ z.lazy(() => BatchUpdateToOneWithWhereWithoutQualityChecksInputSchema), z.lazy(() => BatchUpdateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityChecksInputSchema) ]).optional(),
+  update: z.union([ z.lazy(() => BatchUpdateToOneWithWhereWithoutQualityTestInputSchema), z.lazy(() => BatchUpdateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityTestInputSchema) ]).optional(),
 });
 
-export const UserUpdateOneRequiredWithoutInspectionsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutInspectionsNestedInput> = z.strictObject({
-  create: z.union([ z.lazy(() => UserCreateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedCreateWithoutInspectionsInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutInspectionsInputSchema).optional(),
-  upsert: z.lazy(() => UserUpsertWithoutInspectionsInputSchema).optional(),
+export const UserUpdateOneRequiredWithoutQualityTestsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutQualityTestsNestedInput> = z.strictObject({
+  create: z.union([ z.lazy(() => UserCreateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedCreateWithoutQualityTestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutQualityTestsInputSchema).optional(),
+  upsert: z.lazy(() => UserUpsertWithoutQualityTestsInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
-  update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutInspectionsInputSchema), z.lazy(() => UserUpdateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutInspectionsInputSchema) ]).optional(),
+  update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutQualityTestsInputSchema), z.lazy(() => UserUpdateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutQualityTestsInputSchema) ]).optional(),
 });
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.strictObject({
@@ -2586,17 +2533,6 @@ export const NestedEnumOrganizationTypeWithAggregatesFilterSchema: z.ZodType<Pri
   _max: z.lazy(() => NestedEnumOrganizationTypeFilterSchema).optional(),
 });
 
-export const NestedBigIntNullableFilterSchema: z.ZodType<Prisma.NestedBigIntNullableFilter> = z.strictObject({
-  equals: z.bigint().optional().nullable(),
-  in: z.bigint().array().optional().nullable(),
-  notIn: z.bigint().array().optional().nullable(),
-  lt: z.bigint().optional(),
-  lte: z.bigint().optional(),
-  gt: z.bigint().optional(),
-  gte: z.bigint().optional(),
-  not: z.union([ z.bigint(),z.lazy(() => NestedBigIntNullableFilterSchema) ]).optional().nullable(),
-});
-
 export const NestedEnumCategoryFilterSchema: z.ZodType<Prisma.NestedEnumCategoryFilter> = z.strictObject({
   equals: z.lazy(() => CategorySchema).optional(),
   in: z.lazy(() => CategorySchema).array().optional(),
@@ -2631,33 +2567,6 @@ export const NestedDateTimeNullableFilterSchema: z.ZodType<Prisma.NestedDateTime
   gt: z.coerce.date().optional(),
   gte: z.coerce.date().optional(),
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeNullableFilterSchema) ]).optional().nullable(),
-});
-
-export const NestedBigIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBigIntNullableWithAggregatesFilter> = z.strictObject({
-  equals: z.bigint().optional().nullable(),
-  in: z.bigint().array().optional().nullable(),
-  notIn: z.bigint().array().optional().nullable(),
-  lt: z.bigint().optional(),
-  lte: z.bigint().optional(),
-  gt: z.bigint().optional(),
-  gte: z.bigint().optional(),
-  not: z.union([ z.bigint(),z.lazy(() => NestedBigIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
-  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
-  _sum: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
-  _min: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
-  _max: z.lazy(() => NestedBigIntNullableFilterSchema).optional(),
-});
-
-export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.strictObject({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
 });
 
 export const NestedEnumCategoryWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumCategoryWithAggregatesFilter> = z.strictObject({
@@ -2708,6 +2617,17 @@ export const NestedDateTimeNullableWithAggregatesFilterSchema: z.ZodType<Prisma.
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeNullableFilterSchema).optional(),
+});
+
+export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.strictObject({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
 });
 
 export const NestedFloatNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedFloatNullableWithAggregatesFilter> = z.strictObject({
@@ -2762,42 +2682,40 @@ export const CompanyCreateOrConnectWithoutMembersInputSchema: z.ZodType<Prisma.C
 
 export const BatchCreateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchCreateWithoutFarmerInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchUncheckedCreateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutFarmerInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchCreateOrConnectWithoutFarmerInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutFarmerInput> = z.strictObject({
@@ -2812,13 +2730,13 @@ export const BatchCreateManyFarmerInputEnvelopeSchema: z.ZodType<Prisma.BatchCre
 
 export const StepTransitCreateWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitCreateWithoutShipperInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
   batch: z.lazy(() => BatchCreateNestedOneWithoutTransitsInputSchema),
@@ -2827,13 +2745,13 @@ export const StepTransitCreateWithoutShipperInputSchema: z.ZodType<Prisma.StepTr
 export const StepTransitUncheckedCreateWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUncheckedCreateWithoutShipperInput> = z.strictObject({
   id: z.uuid().optional(),
   batchId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
 });
@@ -2848,33 +2766,31 @@ export const StepTransitCreateManyShipperInputEnvelopeSchema: z.ZodType<Prisma.S
   skipDuplicates: z.boolean().optional(),
 });
 
-export const StepQualityCreateWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityCreateWithoutInspectorInput> = z.strictObject({
+export const QualityTestCreateWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestCreateWithoutRetailerInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
-  batch: z.lazy(() => BatchCreateNestedOneWithoutQualityChecksInputSchema),
+  testedAt: z.coerce.date().optional(),
+  batch: z.lazy(() => BatchCreateNestedOneWithoutQualityTestInputSchema),
 });
 
-export const StepQualityUncheckedCreateWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUncheckedCreateWithoutInspectorInput> = z.strictObject({
+export const QualityTestUncheckedCreateWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUncheckedCreateWithoutRetailerInput> = z.strictObject({
   id: z.uuid().optional(),
   batchId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
+  testedAt: z.coerce.date().optional(),
 });
 
-export const StepQualityCreateOrConnectWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityCreateOrConnectWithoutInspectorInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema) ]),
+export const QualityTestCreateOrConnectWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestCreateOrConnectWithoutRetailerInput> = z.strictObject({
+  where: z.lazy(() => QualityTestWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema) ]),
 });
 
-export const StepQualityCreateManyInspectorInputEnvelopeSchema: z.ZodType<Prisma.StepQualityCreateManyInspectorInputEnvelope> = z.strictObject({
-  data: z.union([ z.lazy(() => StepQualityCreateManyInspectorInputSchema), z.lazy(() => StepQualityCreateManyInspectorInputSchema).array() ]),
+export const QualityTestCreateManyRetailerInputEnvelopeSchema: z.ZodType<Prisma.QualityTestCreateManyRetailerInputEnvelope> = z.strictObject({
+  data: z.union([ z.lazy(() => QualityTestCreateManyRetailerInputSchema), z.lazy(() => QualityTestCreateManyRetailerInputSchema).array() ]),
   skipDuplicates: z.boolean().optional(),
 });
 
@@ -2926,17 +2842,16 @@ export const BatchScalarWhereInputSchema: z.ZodType<Prisma.BatchScalarWhereInput
   OR: z.lazy(() => BatchScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => BatchScalarWhereInputSchema), z.lazy(() => BatchScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  blockchainId: z.union([ z.lazy(() => BigIntNullableFilterSchema), z.bigint() ]).optional().nullable(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  blockchainId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   productName: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   category: z.union([ z.lazy(() => EnumCategoryFilterSchema), z.lazy(() => CategorySchema) ]).optional(),
   quantity: z.union([ z.lazy(() => FloatFilterSchema), z.number() ]).optional(),
   unit: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  ipfsHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  ipfsHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumBatchStatusFilterSchema), z.lazy(() => BatchStatusSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   farmerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  harvestDate: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  harvestDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   expiryDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
@@ -2965,45 +2880,44 @@ export const StepTransitScalarWhereInputSchema: z.ZodType<Prisma.StepTransitScal
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   shipperId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   fromLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   toLocation: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   temperature: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   humidity: z.union([ z.lazy(() => FloatNullableFilterSchema), z.number() ]).optional().nullable(),
   vehicleNumber: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  statusDetails: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  statusDetails: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   departureTime: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   arrivalTime: z.union([ z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date() ]).optional().nullable(),
 });
 
-export const StepQualityUpsertWithWhereUniqueWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUpsertWithWhereUniqueWithoutInspectorInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedUpdateWithoutInspectorInputSchema) ]),
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutInspectorInputSchema) ]),
+export const QualityTestUpsertWithWhereUniqueWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUpsertWithWhereUniqueWithoutRetailerInput> = z.strictObject({
+  where: z.lazy(() => QualityTestWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => QualityTestUpdateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutRetailerInputSchema) ]),
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutRetailerInputSchema) ]),
 });
 
-export const StepQualityUpdateWithWhereUniqueWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUpdateWithWhereUniqueWithoutInspectorInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  data: z.union([ z.lazy(() => StepQualityUpdateWithoutInspectorInputSchema), z.lazy(() => StepQualityUncheckedUpdateWithoutInspectorInputSchema) ]),
+export const QualityTestUpdateWithWhereUniqueWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUpdateWithWhereUniqueWithoutRetailerInput> = z.strictObject({
+  where: z.lazy(() => QualityTestWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => QualityTestUpdateWithoutRetailerInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutRetailerInputSchema) ]),
 });
 
-export const StepQualityUpdateManyWithWhereWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUpdateManyWithWhereWithoutInspectorInput> = z.strictObject({
-  where: z.lazy(() => StepQualityScalarWhereInputSchema),
-  data: z.union([ z.lazy(() => StepQualityUpdateManyMutationInputSchema), z.lazy(() => StepQualityUncheckedUpdateManyWithoutInspectorInputSchema) ]),
+export const QualityTestUpdateManyWithWhereWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUpdateManyWithWhereWithoutRetailerInput> = z.strictObject({
+  where: z.lazy(() => QualityTestScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => QualityTestUpdateManyMutationInputSchema), z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerInputSchema) ]),
 });
 
-export const StepQualityScalarWhereInputSchema: z.ZodType<Prisma.StepQualityScalarWhereInput> = z.strictObject({
-  AND: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
-  OR: z.lazy(() => StepQualityScalarWhereInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => StepQualityScalarWhereInputSchema), z.lazy(() => StepQualityScalarWhereInputSchema).array() ]).optional(),
+export const QualityTestScalarWhereInputSchema: z.ZodType<Prisma.QualityTestScalarWhereInput> = z.strictObject({
+  AND: z.union([ z.lazy(() => QualityTestScalarWhereInputSchema), z.lazy(() => QualityTestScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => QualityTestScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => QualityTestScalarWhereInputSchema), z.lazy(() => QualityTestScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  inspectorId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  txHash: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  retailerId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   isPassed: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
-  reportUrl: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   note: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
-  inspectedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  testedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
 });
 
 export const UserCreateWithoutCompanyInputSchema: z.ZodType<Prisma.UserCreateWithoutCompanyInput> = z.strictObject({
@@ -3017,7 +2931,7 @@ export const UserCreateWithoutCompanyInputSchema: z.ZodType<Prisma.UserCreateWit
   updatedAt: z.coerce.date().optional(),
   batchesCreated: z.lazy(() => BatchCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserUncheckedCreateWithoutCompanyInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutCompanyInput> = z.strictObject({
@@ -3031,7 +2945,7 @@ export const UserUncheckedCreateWithoutCompanyInputSchema: z.ZodType<Prisma.User
   updatedAt: z.coerce.date().optional(),
   batchesCreated: z.lazy(() => BatchUncheckedCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserCreateOrConnectWithoutCompanyInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutCompanyInput> = z.strictObject({
@@ -3070,49 +2984,47 @@ export const UserScalarWhereInputSchema: z.ZodType<Prisma.UserScalarWhereInput> 
   email: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   phone: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumRoleFilterSchema), z.lazy(() => RoleSchema) ]).optional(),
-  companyId: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  companyId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
 });
 
 export const BatchCreateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchCreateWithoutActivitiesInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchUncheckedCreateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutActivitiesInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchCreateOrConnectWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutActivitiesInput> = z.strictObject({
@@ -3133,54 +3045,54 @@ export const BatchUpdateToOneWithWhereWithoutActivitiesInputSchema: z.ZodType<Pr
 
 export const BatchUpdateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchUpdateWithoutActivitiesInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchUncheckedUpdateWithoutActivitiesInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutActivitiesInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const ActivityLogCreateWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
 });
 
 export const ActivityLogUncheckedCreateWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUncheckedCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
 });
 
 export const ActivityLogCreateOrConnectWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogCreateOrConnectWithoutBatchInput> = z.strictObject({
@@ -3202,9 +3114,9 @@ export const UserCreateWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserCr
   role: z.lazy(() => RoleSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema).optional(),
+  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema),
   transports: z.lazy(() => StepTransitCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserUncheckedCreateWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutBatchesCreatedInput> = z.strictObject({
@@ -3214,11 +3126,11 @@ export const UserUncheckedCreateWithoutBatchesCreatedInputSchema: z.ZodType<Pris
   email: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
-  companyId: z.string().optional().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   transports: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutShipperInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserCreateOrConnectWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutBatchesCreatedInput> = z.strictObject({
@@ -3228,13 +3140,13 @@ export const UserCreateOrConnectWithoutBatchesCreatedInputSchema: z.ZodType<Pris
 
 export const StepTransitCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
   shipper: z.lazy(() => UserCreateNestedOneWithoutTransportsInputSchema),
@@ -3243,13 +3155,13 @@ export const StepTransitCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepTran
 export const StepTransitUncheckedCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUncheckedCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
   shipperId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
 });
@@ -3264,34 +3176,27 @@ export const StepTransitCreateManyBatchInputEnvelopeSchema: z.ZodType<Prisma.Ste
   skipDuplicates: z.boolean().optional(),
 });
 
-export const StepQualityCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityCreateWithoutBatchInput> = z.strictObject({
+export const QualityTestCreateWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
-  inspector: z.lazy(() => UserCreateNestedOneWithoutInspectionsInputSchema),
+  testedAt: z.coerce.date().optional(),
+  retailer: z.lazy(() => UserCreateNestedOneWithoutQualityTestsInputSchema),
 });
 
-export const StepQualityUncheckedCreateWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUncheckedCreateWithoutBatchInput> = z.strictObject({
+export const QualityTestUncheckedCreateWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUncheckedCreateWithoutBatchInput> = z.strictObject({
   id: z.uuid().optional(),
-  inspectorId: z.string(),
-  txHash: z.string().optional().nullable(),
+  retailerId: z.string(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
+  testedAt: z.coerce.date().optional(),
 });
 
-export const StepQualityCreateOrConnectWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityCreateOrConnectWithoutBatchInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema) ]),
-});
-
-export const StepQualityCreateManyBatchInputEnvelopeSchema: z.ZodType<Prisma.StepQualityCreateManyBatchInputEnvelope> = z.strictObject({
-  data: z.union([ z.lazy(() => StepQualityCreateManyBatchInputSchema), z.lazy(() => StepQualityCreateManyBatchInputSchema).array() ]),
-  skipDuplicates: z.boolean().optional(),
+export const QualityTestCreateOrConnectWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestCreateOrConnectWithoutBatchInput> = z.strictObject({
+  where: z.lazy(() => QualityTestWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]),
 });
 
 export const ActivityLogUpsertWithWhereUniqueWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUpsertWithWhereUniqueWithoutBatchInput> = z.strictObject({
@@ -3318,6 +3223,7 @@ export const ActivityLogScalarWhereInputSchema: z.ZodType<Prisma.ActivityLogScal
   batchId: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   timestamp: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
+  txHash: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
 });
 
 export const UserUpsertWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserUpsertWithoutBatchesCreatedInput> = z.strictObject({
@@ -3340,9 +3246,9 @@ export const UserUpdateWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserUp
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  company: z.lazy(() => CompanyUpdateOneWithoutMembersNestedInputSchema).optional(),
+  company: z.lazy(() => CompanyUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserUncheckedUpdateWithoutBatchesCreatedInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutBatchesCreatedInput> = z.strictObject({
@@ -3352,11 +3258,11 @@ export const UserUncheckedUpdateWithoutBatchesCreatedInputSchema: z.ZodType<Pris
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
-  companyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  companyId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   transports: z.lazy(() => StepTransitUncheckedUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const StepTransitUpsertWithWhereUniqueWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUpsertWithWhereUniqueWithoutBatchInput> = z.strictObject({
@@ -3375,60 +3281,71 @@ export const StepTransitUpdateManyWithWhereWithoutBatchInputSchema: z.ZodType<Pr
   data: z.union([ z.lazy(() => StepTransitUpdateManyMutationInputSchema), z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchInputSchema) ]),
 });
 
-export const StepQualityUpsertWithWhereUniqueWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUpsertWithWhereUniqueWithoutBatchInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  update: z.union([ z.lazy(() => StepQualityUpdateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedUpdateWithoutBatchInputSchema) ]),
-  create: z.union([ z.lazy(() => StepQualityCreateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedCreateWithoutBatchInputSchema) ]),
+export const QualityTestUpsertWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUpsertWithoutBatchInput> = z.strictObject({
+  update: z.union([ z.lazy(() => QualityTestUpdateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutBatchInputSchema) ]),
+  create: z.union([ z.lazy(() => QualityTestCreateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedCreateWithoutBatchInputSchema) ]),
+  where: z.lazy(() => QualityTestWhereInputSchema).optional(),
 });
 
-export const StepQualityUpdateWithWhereUniqueWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUpdateWithWhereUniqueWithoutBatchInput> = z.strictObject({
-  where: z.lazy(() => StepQualityWhereUniqueInputSchema),
-  data: z.union([ z.lazy(() => StepQualityUpdateWithoutBatchInputSchema), z.lazy(() => StepQualityUncheckedUpdateWithoutBatchInputSchema) ]),
+export const QualityTestUpdateToOneWithWhereWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUpdateToOneWithWhereWithoutBatchInput> = z.strictObject({
+  where: z.lazy(() => QualityTestWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => QualityTestUpdateWithoutBatchInputSchema), z.lazy(() => QualityTestUncheckedUpdateWithoutBatchInputSchema) ]),
 });
 
-export const StepQualityUpdateManyWithWhereWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUpdateManyWithWhereWithoutBatchInput> = z.strictObject({
-  where: z.lazy(() => StepQualityScalarWhereInputSchema),
-  data: z.union([ z.lazy(() => StepQualityUpdateManyMutationInputSchema), z.lazy(() => StepQualityUncheckedUpdateManyWithoutBatchInputSchema) ]),
+export const QualityTestUpdateWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUpdateWithoutBatchInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  retailer: z.lazy(() => UserUpdateOneRequiredWithoutQualityTestsNestedInputSchema).optional(),
+});
+
+export const QualityTestUncheckedUpdateWithoutBatchInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateWithoutBatchInput> = z.strictObject({
+  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  retailerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const BatchCreateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchCreateWithoutTransitsInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogCreateNestedManyWithoutBatchInputSchema).optional(),
   farmer: z.lazy(() => UserCreateNestedOneWithoutBatchesCreatedInputSchema),
-  qualityChecks: z.lazy(() => StepQualityCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchUncheckedCreateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutTransitsInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   activities: z.lazy(() => ActivityLogUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedCreateNestedOneWithoutBatchInputSchema).optional(),
 });
 
 export const BatchCreateOrConnectWithoutTransitsInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutTransitsInput> = z.strictObject({
@@ -3445,9 +3362,9 @@ export const UserCreateWithoutTransportsInputSchema: z.ZodType<Prisma.UserCreate
   role: z.lazy(() => RoleSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema).optional(),
+  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema),
   batchesCreated: z.lazy(() => BatchCreateNestedManyWithoutFarmerInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserUncheckedCreateWithoutTransportsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutTransportsInput> = z.strictObject({
@@ -3457,11 +3374,11 @@ export const UserUncheckedCreateWithoutTransportsInputSchema: z.ZodType<Prisma.U
   email: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
-  companyId: z.string().optional().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   batchesCreated: z.lazy(() => BatchUncheckedCreateNestedManyWithoutFarmerInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedCreateNestedManyWithoutInspectorInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedCreateNestedManyWithoutRetailerInputSchema).optional(),
 });
 
 export const UserCreateOrConnectWithoutTransportsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutTransportsInput> = z.strictObject({
@@ -3482,42 +3399,40 @@ export const BatchUpdateToOneWithWhereWithoutTransitsInputSchema: z.ZodType<Pris
 
 export const BatchUpdateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchUpdateWithoutTransitsInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   farmer: z.lazy(() => UserUpdateOneRequiredWithoutBatchesCreatedNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchUncheckedUpdateWithoutTransitsInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutTransitsInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const UserUpsertWithoutTransportsInputSchema: z.ZodType<Prisma.UserUpsertWithoutTransportsInput> = z.strictObject({
@@ -3540,9 +3455,9 @@ export const UserUpdateWithoutTransportsInputSchema: z.ZodType<Prisma.UserUpdate
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  company: z.lazy(() => CompanyUpdateOneWithoutMembersNestedInputSchema).optional(),
+  company: z.lazy(() => CompanyUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
   batchesCreated: z.lazy(() => BatchUpdateManyWithoutFarmerNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserUncheckedUpdateWithoutTransportsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutTransportsInput> = z.strictObject({
@@ -3552,25 +3467,24 @@ export const UserUncheckedUpdateWithoutTransportsInputSchema: z.ZodType<Prisma.U
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
-  companyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  companyId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchUncheckedUpdateManyWithoutFarmerNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
-export const BatchCreateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchCreateWithoutQualityChecksInput> = z.strictObject({
+export const BatchCreateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchCreateWithoutQualityTestInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -3579,19 +3493,18 @@ export const BatchCreateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchC
   transits: z.lazy(() => StepTransitCreateNestedManyWithoutBatchInputSchema).optional(),
 });
 
-export const BatchUncheckedCreateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutQualityChecksInput> = z.strictObject({
+export const BatchUncheckedCreateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUncheckedCreateWithoutQualityTestInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
   farmerId: z.string(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -3599,12 +3512,12 @@ export const BatchUncheckedCreateWithoutQualityChecksInputSchema: z.ZodType<Pris
   transits: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutBatchInputSchema).optional(),
 });
 
-export const BatchCreateOrConnectWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutQualityChecksInput> = z.strictObject({
+export const BatchCreateOrConnectWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchCreateOrConnectWithoutQualityTestInput> = z.strictObject({
   where: z.lazy(() => BatchWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => BatchCreateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityChecksInputSchema) ]),
+  create: z.union([ z.lazy(() => BatchCreateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityTestInputSchema) ]),
 });
 
-export const UserCreateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserCreateWithoutInspectionsInput> = z.strictObject({
+export const UserCreateWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserCreateWithoutQualityTestsInput> = z.strictObject({
   id: z.uuid().optional(),
   walletAddress: z.string(),
   fullName: z.string(),
@@ -3613,53 +3526,52 @@ export const UserCreateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserCreat
   role: z.lazy(() => RoleSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema).optional(),
+  company: z.lazy(() => CompanyCreateNestedOneWithoutMembersInputSchema),
   batchesCreated: z.lazy(() => BatchCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitCreateNestedManyWithoutShipperInputSchema).optional(),
 });
 
-export const UserUncheckedCreateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutInspectionsInput> = z.strictObject({
+export const UserUncheckedCreateWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutQualityTestsInput> = z.strictObject({
   id: z.uuid().optional(),
   walletAddress: z.string(),
   fullName: z.string(),
   email: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
-  companyId: z.string().optional().nullable(),
+  companyId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   batchesCreated: z.lazy(() => BatchUncheckedCreateNestedManyWithoutFarmerInputSchema).optional(),
   transports: z.lazy(() => StepTransitUncheckedCreateNestedManyWithoutShipperInputSchema).optional(),
 });
 
-export const UserCreateOrConnectWithoutInspectionsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutInspectionsInput> = z.strictObject({
+export const UserCreateOrConnectWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutQualityTestsInput> = z.strictObject({
   where: z.lazy(() => UserWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => UserCreateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedCreateWithoutInspectionsInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedCreateWithoutQualityTestsInputSchema) ]),
 });
 
-export const BatchUpsertWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchUpsertWithoutQualityChecksInput> = z.strictObject({
-  update: z.union([ z.lazy(() => BatchUpdateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityChecksInputSchema) ]),
-  create: z.union([ z.lazy(() => BatchCreateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityChecksInputSchema) ]),
+export const BatchUpsertWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUpsertWithoutQualityTestInput> = z.strictObject({
+  update: z.union([ z.lazy(() => BatchUpdateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityTestInputSchema) ]),
+  create: z.union([ z.lazy(() => BatchCreateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedCreateWithoutQualityTestInputSchema) ]),
   where: z.lazy(() => BatchWhereInputSchema).optional(),
 });
 
-export const BatchUpdateToOneWithWhereWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchUpdateToOneWithWhereWithoutQualityChecksInput> = z.strictObject({
+export const BatchUpdateToOneWithWhereWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUpdateToOneWithWhereWithoutQualityTestInput> = z.strictObject({
   where: z.lazy(() => BatchWhereInputSchema).optional(),
-  data: z.union([ z.lazy(() => BatchUpdateWithoutQualityChecksInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityChecksInputSchema) ]),
+  data: z.union([ z.lazy(() => BatchUpdateWithoutQualityTestInputSchema), z.lazy(() => BatchUncheckedUpdateWithoutQualityTestInputSchema) ]),
 });
 
-export const BatchUpdateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchUpdateWithoutQualityChecksInput> = z.strictObject({
+export const BatchUpdateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUpdateWithoutQualityTestInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3668,19 +3580,18 @@ export const BatchUpdateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchU
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
 });
 
-export const BatchUncheckedUpdateWithoutQualityChecksInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutQualityChecksInput> = z.strictObject({
+export const BatchUncheckedUpdateWithoutQualityTestInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutQualityTestInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   farmerId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3688,18 +3599,18 @@ export const BatchUncheckedUpdateWithoutQualityChecksInputSchema: z.ZodType<Pris
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
 });
 
-export const UserUpsertWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUpsertWithoutInspectionsInput> = z.strictObject({
-  update: z.union([ z.lazy(() => UserUpdateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutInspectionsInputSchema) ]),
-  create: z.union([ z.lazy(() => UserCreateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedCreateWithoutInspectionsInputSchema) ]),
+export const UserUpsertWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserUpsertWithoutQualityTestsInput> = z.strictObject({
+  update: z.union([ z.lazy(() => UserUpdateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutQualityTestsInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedCreateWithoutQualityTestsInputSchema) ]),
   where: z.lazy(() => UserWhereInputSchema).optional(),
 });
 
-export const UserUpdateToOneWithWhereWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUpdateToOneWithWhereWithoutInspectionsInput> = z.strictObject({
+export const UserUpdateToOneWithWhereWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserUpdateToOneWithWhereWithoutQualityTestsInput> = z.strictObject({
   where: z.lazy(() => UserWhereInputSchema).optional(),
-  data: z.union([ z.lazy(() => UserUpdateWithoutInspectionsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutInspectionsInputSchema) ]),
+  data: z.union([ z.lazy(() => UserUpdateWithoutQualityTestsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutQualityTestsInputSchema) ]),
 });
 
-export const UserUpdateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUpdateWithoutInspectionsInput> = z.strictObject({
+export const UserUpdateWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserUpdateWithoutQualityTestsInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   walletAddress: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fullName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3708,19 +3619,19 @@ export const UserUpdateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUpdat
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  company: z.lazy(() => CompanyUpdateOneWithoutMembersNestedInputSchema).optional(),
+  company: z.lazy(() => CompanyUpdateOneRequiredWithoutMembersNestedInputSchema).optional(),
   batchesCreated: z.lazy(() => BatchUpdateManyWithoutFarmerNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUpdateManyWithoutShipperNestedInputSchema).optional(),
 });
 
-export const UserUncheckedUpdateWithoutInspectionsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutInspectionsInput> = z.strictObject({
+export const UserUncheckedUpdateWithoutQualityTestsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutQualityTestsInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   walletAddress: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fullName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema), z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
-  companyId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  companyId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchUncheckedUpdateManyWithoutFarmerNestedInputSchema).optional(),
@@ -3729,16 +3640,15 @@ export const UserUncheckedUpdateWithoutInspectionsInputSchema: z.ZodType<Prisma.
 
 export const BatchCreateManyFarmerInputSchema: z.ZodType<Prisma.BatchCreateManyFarmerInput> = z.strictObject({
   id: z.uuid().optional(),
-  blockchainId: z.bigint().optional().nullable(),
-  txHash: z.string().optional().nullable(),
+  blockchainId: z.string(),
+  txHash: z.string(),
   productName: z.string(),
   category: z.lazy(() => CategorySchema).optional(),
   quantity: z.number(),
   unit: z.string(),
-  ipfsHash: z.string().optional().nullable(),
+  ipfsHash: z.string(),
   status: z.lazy(() => BatchStatusSchema).optional(),
-  qrCodeUrl: z.string().optional().nullable(),
-  harvestDate: z.coerce.date().optional(),
+  harvestDate: z.coerce.date().optional().nullable(),
   expiryDate: z.coerce.date().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -3747,79 +3657,75 @@ export const BatchCreateManyFarmerInputSchema: z.ZodType<Prisma.BatchCreateManyF
 export const StepTransitCreateManyShipperInputSchema: z.ZodType<Prisma.StepTransitCreateManyShipperInput> = z.strictObject({
   id: z.uuid().optional(),
   batchId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
 });
 
-export const StepQualityCreateManyInspectorInputSchema: z.ZodType<Prisma.StepQualityCreateManyInspectorInput> = z.strictObject({
+export const QualityTestCreateManyRetailerInputSchema: z.ZodType<Prisma.QualityTestCreateManyRetailerInput> = z.strictObject({
   id: z.uuid().optional(),
   batchId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
+  testedAt: z.coerce.date().optional(),
 });
 
 export const BatchUpdateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUpdateWithoutFarmerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchUncheckedUpdateWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateWithoutFarmerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   activities: z.lazy(() => ActivityLogUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
   transits: z.lazy(() => StepTransitUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
-  qualityChecks: z.lazy(() => StepQualityUncheckedUpdateManyWithoutBatchNestedInputSchema).optional(),
+  qualityTest: z.lazy(() => QualityTestUncheckedUpdateOneWithoutBatchNestedInputSchema).optional(),
 });
 
 export const BatchUncheckedUpdateManyWithoutFarmerInputSchema: z.ZodType<Prisma.BatchUncheckedUpdateManyWithoutFarmerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  blockchainId: z.union([ z.bigint(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  blockchainId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   productName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategorySchema), z.lazy(() => EnumCategoryFieldUpdateOperationsInputSchema) ]).optional(),
   quantity: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   unit: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ipfsHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ipfsHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BatchStatusSchema), z.lazy(() => EnumBatchStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  qrCodeUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  harvestDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  harvestDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   expiryDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3827,13 +3733,13 @@ export const BatchUncheckedUpdateManyWithoutFarmerInputSchema: z.ZodType<Prisma.
 
 export const StepTransitUpdateWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUpdateWithoutShipperInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   batch: z.lazy(() => BatchUpdateOneRequiredWithoutTransitsNestedInputSchema).optional(),
@@ -3842,13 +3748,13 @@ export const StepTransitUpdateWithoutShipperInputSchema: z.ZodType<Prisma.StepTr
 export const StepTransitUncheckedUpdateWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUncheckedUpdateWithoutShipperInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
@@ -3856,45 +3762,42 @@ export const StepTransitUncheckedUpdateWithoutShipperInputSchema: z.ZodType<Pris
 export const StepTransitUncheckedUpdateManyWithoutShipperInputSchema: z.ZodType<Prisma.StepTransitUncheckedUpdateManyWithoutShipperInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
 
-export const StepQualityUpdateWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUpdateWithoutInspectorInput> = z.strictObject({
+export const QualityTestUpdateWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUpdateWithoutRetailerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  batch: z.lazy(() => BatchUpdateOneRequiredWithoutQualityChecksNestedInputSchema).optional(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  batch: z.lazy(() => BatchUpdateOneRequiredWithoutQualityTestNestedInputSchema).optional(),
 });
 
-export const StepQualityUncheckedUpdateWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateWithoutInspectorInput> = z.strictObject({
+export const QualityTestUncheckedUpdateWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateWithoutRetailerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
-export const StepQualityUncheckedUpdateManyWithoutInspectorInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateManyWithoutInspectorInput> = z.strictObject({
+export const QualityTestUncheckedUpdateManyWithoutRetailerInputSchema: z.ZodType<Prisma.QualityTestUncheckedUpdateManyWithoutRetailerInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   batchId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  testedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const UserCreateManyCompanyInputSchema: z.ZodType<Prisma.UserCreateManyCompanyInput> = z.strictObject({
@@ -3919,7 +3822,7 @@ export const UserUpdateWithoutCompanyInputSchema: z.ZodType<Prisma.UserUpdateWit
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchUpdateManyWithoutFarmerNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserUncheckedUpdateWithoutCompanyInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutCompanyInput> = z.strictObject({
@@ -3933,7 +3836,7 @@ export const UserUncheckedUpdateWithoutCompanyInputSchema: z.ZodType<Prisma.User
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   batchesCreated: z.lazy(() => BatchUncheckedUpdateManyWithoutFarmerNestedInputSchema).optional(),
   transports: z.lazy(() => StepTransitUncheckedUpdateManyWithoutShipperNestedInputSchema).optional(),
-  inspections: z.lazy(() => StepQualityUncheckedUpdateManyWithoutInspectorNestedInputSchema).optional(),
+  qualityTests: z.lazy(() => QualityTestUncheckedUpdateManyWithoutRetailerNestedInputSchema).optional(),
 });
 
 export const UserUncheckedUpdateManyWithoutCompanyInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyWithoutCompanyInput> = z.strictObject({
@@ -3951,59 +3854,53 @@ export const ActivityLogCreateManyBatchInputSchema: z.ZodType<Prisma.ActivityLog
   id: z.uuid().optional(),
   description: z.string(),
   timestamp: z.coerce.date().optional(),
+  txHash: z.string(),
 });
 
 export const StepTransitCreateManyBatchInputSchema: z.ZodType<Prisma.StepTransitCreateManyBatchInput> = z.strictObject({
   id: z.uuid().optional(),
   shipperId: z.string(),
-  txHash: z.string().optional().nullable(),
+  txHash: z.string(),
   fromLocation: z.string(),
   toLocation: z.string(),
   temperature: z.number().optional().nullable(),
   humidity: z.number().optional().nullable(),
   vehicleNumber: z.string().optional().nullable(),
-  statusDetails: z.string(),
+  statusDetails: z.string().optional().nullable(),
   departureTime: z.coerce.date().optional(),
   arrivalTime: z.coerce.date().optional().nullable(),
-});
-
-export const StepQualityCreateManyBatchInputSchema: z.ZodType<Prisma.StepQualityCreateManyBatchInput> = z.strictObject({
-  id: z.uuid().optional(),
-  inspectorId: z.string(),
-  txHash: z.string().optional().nullable(),
-  isPassed: z.boolean().optional(),
-  reportUrl: z.string().optional().nullable(),
-  note: z.string().optional().nullable(),
-  inspectedAt: z.coerce.date().optional(),
 });
 
 export const ActivityLogUpdateWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUpdateWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const ActivityLogUncheckedUpdateWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUncheckedUpdateWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const ActivityLogUncheckedUpdateManyWithoutBatchInputSchema: z.ZodType<Prisma.ActivityLogUncheckedUpdateManyWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   timestamp: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const StepTransitUpdateWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUpdateWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   shipper: z.lazy(() => UserUpdateOneRequiredWithoutTransportsNestedInputSchema).optional(),
@@ -4012,13 +3909,13 @@ export const StepTransitUpdateWithoutBatchInputSchema: z.ZodType<Prisma.StepTran
 export const StepTransitUncheckedUpdateWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUncheckedUpdateWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shipperId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 });
@@ -4026,45 +3923,15 @@ export const StepTransitUncheckedUpdateWithoutBatchInputSchema: z.ZodType<Prisma
 export const StepTransitUncheckedUpdateManyWithoutBatchInputSchema: z.ZodType<Prisma.StepTransitUncheckedUpdateManyWithoutBatchInput> = z.strictObject({
   id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   shipperId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  txHash: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   fromLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   toLocation: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   temperature: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   humidity: z.union([ z.number(),z.lazy(() => NullableFloatFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   vehicleNumber: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  statusDetails: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  statusDetails: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   departureTime: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   arrivalTime: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-});
-
-export const StepQualityUpdateWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUpdateWithoutBatchInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  inspector: z.lazy(() => UserUpdateOneRequiredWithoutInspectionsNestedInputSchema).optional(),
-});
-
-export const StepQualityUncheckedUpdateWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateWithoutBatchInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  inspectorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-});
-
-export const StepQualityUncheckedUpdateManyWithoutBatchInputSchema: z.ZodType<Prisma.StepQualityUncheckedUpdateManyWithoutBatchInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  inspectorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  txHash: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  isPassed: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  reportUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  note: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  inspectedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 /////////////////////////////////////////
@@ -4381,66 +4248,66 @@ export const StepTransitFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.StepTransi
   where: StepTransitWhereUniqueInputSchema, 
 }).strict();
 
-export const StepQualityFindFirstArgsSchema: z.ZodType<Prisma.StepQualityFindFirstArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereInputSchema.optional(), 
-  orderBy: z.union([ StepQualityOrderByWithRelationInputSchema.array(), StepQualityOrderByWithRelationInputSchema ]).optional(),
-  cursor: StepQualityWhereUniqueInputSchema.optional(), 
+export const QualityTestFindFirstArgsSchema: z.ZodType<Prisma.QualityTestFindFirstArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereInputSchema.optional(), 
+  orderBy: z.union([ QualityTestOrderByWithRelationInputSchema.array(), QualityTestOrderByWithRelationInputSchema ]).optional(),
+  cursor: QualityTestWhereUniqueInputSchema.optional(), 
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: z.union([ StepQualityScalarFieldEnumSchema, StepQualityScalarFieldEnumSchema.array() ]).optional(),
+  distinct: z.union([ QualityTestScalarFieldEnumSchema, QualityTestScalarFieldEnumSchema.array() ]).optional(),
 }).strict();
 
-export const StepQualityFindFirstOrThrowArgsSchema: z.ZodType<Prisma.StepQualityFindFirstOrThrowArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereInputSchema.optional(), 
-  orderBy: z.union([ StepQualityOrderByWithRelationInputSchema.array(), StepQualityOrderByWithRelationInputSchema ]).optional(),
-  cursor: StepQualityWhereUniqueInputSchema.optional(), 
+export const QualityTestFindFirstOrThrowArgsSchema: z.ZodType<Prisma.QualityTestFindFirstOrThrowArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereInputSchema.optional(), 
+  orderBy: z.union([ QualityTestOrderByWithRelationInputSchema.array(), QualityTestOrderByWithRelationInputSchema ]).optional(),
+  cursor: QualityTestWhereUniqueInputSchema.optional(), 
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: z.union([ StepQualityScalarFieldEnumSchema, StepQualityScalarFieldEnumSchema.array() ]).optional(),
+  distinct: z.union([ QualityTestScalarFieldEnumSchema, QualityTestScalarFieldEnumSchema.array() ]).optional(),
 }).strict();
 
-export const StepQualityFindManyArgsSchema: z.ZodType<Prisma.StepQualityFindManyArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereInputSchema.optional(), 
-  orderBy: z.union([ StepQualityOrderByWithRelationInputSchema.array(), StepQualityOrderByWithRelationInputSchema ]).optional(),
-  cursor: StepQualityWhereUniqueInputSchema.optional(), 
+export const QualityTestFindManyArgsSchema: z.ZodType<Prisma.QualityTestFindManyArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereInputSchema.optional(), 
+  orderBy: z.union([ QualityTestOrderByWithRelationInputSchema.array(), QualityTestOrderByWithRelationInputSchema ]).optional(),
+  cursor: QualityTestWhereUniqueInputSchema.optional(), 
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: z.union([ StepQualityScalarFieldEnumSchema, StepQualityScalarFieldEnumSchema.array() ]).optional(),
+  distinct: z.union([ QualityTestScalarFieldEnumSchema, QualityTestScalarFieldEnumSchema.array() ]).optional(),
 }).strict();
 
-export const StepQualityAggregateArgsSchema: z.ZodType<Prisma.StepQualityAggregateArgs> = z.object({
-  where: StepQualityWhereInputSchema.optional(), 
-  orderBy: z.union([ StepQualityOrderByWithRelationInputSchema.array(), StepQualityOrderByWithRelationInputSchema ]).optional(),
-  cursor: StepQualityWhereUniqueInputSchema.optional(), 
-  take: z.number().optional(),
-  skip: z.number().optional(),
-}).strict();
-
-export const StepQualityGroupByArgsSchema: z.ZodType<Prisma.StepQualityGroupByArgs> = z.object({
-  where: StepQualityWhereInputSchema.optional(), 
-  orderBy: z.union([ StepQualityOrderByWithAggregationInputSchema.array(), StepQualityOrderByWithAggregationInputSchema ]).optional(),
-  by: StepQualityScalarFieldEnumSchema.array(), 
-  having: StepQualityScalarWhereWithAggregatesInputSchema.optional(), 
+export const QualityTestAggregateArgsSchema: z.ZodType<Prisma.QualityTestAggregateArgs> = z.object({
+  where: QualityTestWhereInputSchema.optional(), 
+  orderBy: z.union([ QualityTestOrderByWithRelationInputSchema.array(), QualityTestOrderByWithRelationInputSchema ]).optional(),
+  cursor: QualityTestWhereUniqueInputSchema.optional(), 
   take: z.number().optional(),
   skip: z.number().optional(),
 }).strict();
 
-export const StepQualityFindUniqueArgsSchema: z.ZodType<Prisma.StepQualityFindUniqueArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereUniqueInputSchema, 
+export const QualityTestGroupByArgsSchema: z.ZodType<Prisma.QualityTestGroupByArgs> = z.object({
+  where: QualityTestWhereInputSchema.optional(), 
+  orderBy: z.union([ QualityTestOrderByWithAggregationInputSchema.array(), QualityTestOrderByWithAggregationInputSchema ]).optional(),
+  by: QualityTestScalarFieldEnumSchema.array(), 
+  having: QualityTestScalarWhereWithAggregatesInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
 }).strict();
 
-export const StepQualityFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.StepQualityFindUniqueOrThrowArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereUniqueInputSchema, 
+export const QualityTestFindUniqueArgsSchema: z.ZodType<Prisma.QualityTestFindUniqueArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereUniqueInputSchema, 
+}).strict();
+
+export const QualityTestFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.QualityTestFindUniqueOrThrowArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereUniqueInputSchema, 
 }).strict();
 
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
@@ -4713,56 +4580,56 @@ export const StepTransitDeleteManyArgsSchema: z.ZodType<Prisma.StepTransitDelete
   limit: z.number().optional(),
 }).strict();
 
-export const StepQualityCreateArgsSchema: z.ZodType<Prisma.StepQualityCreateArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  data: z.union([ StepQualityCreateInputSchema, StepQualityUncheckedCreateInputSchema ]),
+export const QualityTestCreateArgsSchema: z.ZodType<Prisma.QualityTestCreateArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  data: z.union([ QualityTestCreateInputSchema, QualityTestUncheckedCreateInputSchema ]),
 }).strict();
 
-export const StepQualityUpsertArgsSchema: z.ZodType<Prisma.StepQualityUpsertArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereUniqueInputSchema, 
-  create: z.union([ StepQualityCreateInputSchema, StepQualityUncheckedCreateInputSchema ]),
-  update: z.union([ StepQualityUpdateInputSchema, StepQualityUncheckedUpdateInputSchema ]),
+export const QualityTestUpsertArgsSchema: z.ZodType<Prisma.QualityTestUpsertArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereUniqueInputSchema, 
+  create: z.union([ QualityTestCreateInputSchema, QualityTestUncheckedCreateInputSchema ]),
+  update: z.union([ QualityTestUpdateInputSchema, QualityTestUncheckedUpdateInputSchema ]),
 }).strict();
 
-export const StepQualityCreateManyArgsSchema: z.ZodType<Prisma.StepQualityCreateManyArgs> = z.object({
-  data: z.union([ StepQualityCreateManyInputSchema, StepQualityCreateManyInputSchema.array() ]),
+export const QualityTestCreateManyArgsSchema: z.ZodType<Prisma.QualityTestCreateManyArgs> = z.object({
+  data: z.union([ QualityTestCreateManyInputSchema, QualityTestCreateManyInputSchema.array() ]),
   skipDuplicates: z.boolean().optional(),
 }).strict();
 
-export const StepQualityCreateManyAndReturnArgsSchema: z.ZodType<Prisma.StepQualityCreateManyAndReturnArgs> = z.object({
-  data: z.union([ StepQualityCreateManyInputSchema, StepQualityCreateManyInputSchema.array() ]),
+export const QualityTestCreateManyAndReturnArgsSchema: z.ZodType<Prisma.QualityTestCreateManyAndReturnArgs> = z.object({
+  data: z.union([ QualityTestCreateManyInputSchema, QualityTestCreateManyInputSchema.array() ]),
   skipDuplicates: z.boolean().optional(),
 }).strict();
 
-export const StepQualityDeleteArgsSchema: z.ZodType<Prisma.StepQualityDeleteArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  where: StepQualityWhereUniqueInputSchema, 
+export const QualityTestDeleteArgsSchema: z.ZodType<Prisma.QualityTestDeleteArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  where: QualityTestWhereUniqueInputSchema, 
 }).strict();
 
-export const StepQualityUpdateArgsSchema: z.ZodType<Prisma.StepQualityUpdateArgs> = z.object({
-  select: StepQualitySelectSchema.optional(),
-  include: StepQualityIncludeSchema.optional(),
-  data: z.union([ StepQualityUpdateInputSchema, StepQualityUncheckedUpdateInputSchema ]),
-  where: StepQualityWhereUniqueInputSchema, 
+export const QualityTestUpdateArgsSchema: z.ZodType<Prisma.QualityTestUpdateArgs> = z.object({
+  select: QualityTestSelectSchema.optional(),
+  include: QualityTestIncludeSchema.optional(),
+  data: z.union([ QualityTestUpdateInputSchema, QualityTestUncheckedUpdateInputSchema ]),
+  where: QualityTestWhereUniqueInputSchema, 
 }).strict();
 
-export const StepQualityUpdateManyArgsSchema: z.ZodType<Prisma.StepQualityUpdateManyArgs> = z.object({
-  data: z.union([ StepQualityUpdateManyMutationInputSchema, StepQualityUncheckedUpdateManyInputSchema ]),
-  where: StepQualityWhereInputSchema.optional(), 
+export const QualityTestUpdateManyArgsSchema: z.ZodType<Prisma.QualityTestUpdateManyArgs> = z.object({
+  data: z.union([ QualityTestUpdateManyMutationInputSchema, QualityTestUncheckedUpdateManyInputSchema ]),
+  where: QualityTestWhereInputSchema.optional(), 
   limit: z.number().optional(),
 }).strict();
 
-export const StepQualityUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.StepQualityUpdateManyAndReturnArgs> = z.object({
-  data: z.union([ StepQualityUpdateManyMutationInputSchema, StepQualityUncheckedUpdateManyInputSchema ]),
-  where: StepQualityWhereInputSchema.optional(), 
+export const QualityTestUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.QualityTestUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ QualityTestUpdateManyMutationInputSchema, QualityTestUncheckedUpdateManyInputSchema ]),
+  where: QualityTestWhereInputSchema.optional(), 
   limit: z.number().optional(),
 }).strict();
 
-export const StepQualityDeleteManyArgsSchema: z.ZodType<Prisma.StepQualityDeleteManyArgs> = z.object({
-  where: StepQualityWhereInputSchema.optional(), 
+export const QualityTestDeleteManyArgsSchema: z.ZodType<Prisma.QualityTestDeleteManyArgs> = z.object({
+  where: QualityTestWhereInputSchema.optional(), 
   limit: z.number().optional(),
 }).strict();
