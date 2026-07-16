@@ -4,12 +4,15 @@ import { z } from "zod";
 import { withRole } from '@/lib/auth';
 
 const batchCreate = z.object({
+  blockchainId: z.string().min(1, "Missing Blockchain ID"),
   productName: z.string().min(1, "Missing Product Name"),
   category: z.enum(["VEGETABLE", "FRUIT", "GRAIN", "BEAN", "HERB", "OTHER"]),
   quantity: z.number().positive("Quantity must be a positive number"),
   unit: z.string().min(1, "Missing Unit"),
   harvestDate: z.iso.datetime().optional(), // Định dạng ISO 8601
-  expiryDate: z.iso.datetime().optional() // Định dạng ISO 8601
+  expiryDate: z.iso.datetime().optional(), // Định dạng ISO 8601
+  txHash: z.string().min(1, "Missing Transaction Hash"),
+  ipfsHash: z.string().min(1, "Missing IPFS Hash"),
 });
 
 export const POST = withRole('FARMER', async (req, user) => {
