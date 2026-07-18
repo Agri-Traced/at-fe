@@ -4,11 +4,11 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator zod {
-  provider                 = "zod-prisma-types"
-  output                   = "../generated/zod" // Hoặc nơi bạn muốn xuất ra
-  
+  provider = "zod-prisma-types"
+  output   = "../generated/zod" // Hoặc nơi bạn muốn xuất ra
+
   // 1. CHÌA KHÓA ĐỂ LẤY TÊN Y HỆT: Bỏ hậu tố Schema mặc định
-  modelSuffix              = "" 
+  modelSuffix = ""
 }
 
 generator client {
@@ -23,10 +23,10 @@ datasource db {
 // 1. QUẢN LÝ TÁC NHÂN (USERS)
 // Lưu trữ thông tin phân quyền cho 4 nhóm tác nhân dựa trên địa chỉ ví cá nhân.
 enum Role {
-  FARMER       // Nông dân
-  SHIPPER      // Nhà vận chuyển
-  RETAILER     // Nhà bán lẻ
-  CONSUMER     // Người tiêu dùng
+  FARMER // Nông dân
+  SHIPPER // Nhà vận chuyển
+  RETAILER // Nhà bán lẻ
+  CONSUMER // Người tiêu dùng
 }
 
 model User {
@@ -42,9 +42,9 @@ model User {
   updatedAt     DateTime @updatedAt
 
   // Mối quan hệ từ các bảng khác
-  batchesCreated Batch[]        @relation("FarmerBatches")
-  transports     StepTransit[]  @relation("ShipperTransports")
-  qualityTests   QualityTest[]  @relation("RetailerTests")
+  batchesCreated Batch[]       @relation("FarmerBatches")
+  transports     StepTransit[] @relation("ShipperTransports")
+  qualityTests   QualityTest[] @relation("RetailerTests")
 }
 
 enum OrganizationType {
@@ -54,26 +54,26 @@ enum OrganizationType {
 }
 
 model Company {
-  id           String   @id @default(uuid())
-  type         OrganizationType // Dùng Enum thay cho Boolean
-  companyName  String
-  location     String
-  protectedKey String   // Dùng để gia nhập
-  members      User[]
-  shippedBatches  Batch[]       @relation("ShipperBatches")  // Danh sách các lô hàng công ty này đi giao
-  retailedBatches Batch[]       @relation("RetailerBatches") // Danh sách các lô hàng siêu thị này bày bán
+  id              String           @id @default(uuid())
+  type            OrganizationType // Dùng Enum thay cho Boolean
+  companyName     String
+  location        String
+  protectedKey    String // Dùng để gia nhập
+  members         User[]
+  shippedBatches  Batch[]          @relation("ShipperBatches") // Danh sách các lô hàng công ty này đi giao
+  retailedBatches Batch[]          @relation("RetailerBatches") // Danh sách các lô hàng siêu thị này bày bán
 }
 
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
 // Đây là bảng cốt lõi, liên kết trực tiếp với dữ liệu On-chain qua chuỗi định danh Batch ID.
 enum BatchStatus {
-  PLANTED      // Đã gieo trồng
-  HARVESTED    // Đã thu hoạch
-  IN_TRANSIT   // Đang trong quá trình vận chuyển
-  TESTING      // Đang kiểm tra
-  RETAILING    // Đã đến nhà bán lẻ / Đang trên kệ hàng
-  SOLD         // Đã bán cho người tiêu dùng
-  ABORTED      // Đã hủy
+  PLANTED // Đã gieo trồng
+  HARVESTED // Đã thu hoạch
+  IN_TRANSIT // Đang trong quá trình vận chuyển
+  TESTING // Đang kiểm tra
+  RETAILING // Đã đến nhà bán lẻ / Đang trên kệ hàng
+  SOLD // Đã bán cho người tiêu dùng
+  ABORTED // Đã hủy
 }
 
 enum Category {
@@ -86,79 +86,82 @@ enum Category {
 }
 
 model ActivityLog {
-  id              String   @id @default(uuid())
-  batchId         String
-  batch           Batch    @relation(fields: [batchId], references: [id])
-  description     String   // "Bón phân đợt 1"
-  timestamp       DateTime @default(now())
-  txHash          String
+  id          String   @id @default(uuid())
+  batchId     String
+  batch       Batch    @relation(fields: [batchId], references: [id])
+  description String // "Bón phân đợt 1"
+  timestamp   DateTime @default(now())
+  txHash      String
 }
 
-
 model Batch {
-  id              String     @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
-  blockchainId    String     @unique              // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
-  txHash          String                          // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
-  productName     String
-  category        Category    @default(VEGETABLE)
-  quantity        Float                            // Khối lượng / Số lượng lô hàng
-  unit            String                           // Đơn vị tính (KG, Tấn, Thùng...)
-  ipfsHash        String                          // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
-  status          BatchStatus @default(PLANTED)
-  activities      ActivityLog[] // Lưu lịch sử canh tác
-  
+  id             String        @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
+  blockchainId   String        @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
+  txHash         String // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
+  productName    String
+  category       Category      @default(VEGETABLE)
+  quantity       Float // Khối lượng / Số lượng lô hàng
+  unit           String // Đơn vị tính (KG, Tấn, Thùng...)
+  ipfsHash       String // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
+  status         BatchStatus   @default(PLANTED)
+  activities     ActivityLog[] // Lưu lịch sử canh tác
+  minTemperature Float // Nhiệt độ bảo quản tối thiểu (°C)
+  maxTemperature Float // Nhiệt độ bảo quản tối đa (°C)
+  minHumidity    Float // Độ ẩm bảo quản tối thiểu (%)
+  maxHumidity    Float // Độ ẩm bảo quản tối đa (%)
+
   // Quan hệ tác nhân gieo trồng
-  farmerId        String
-  farmer          User        @relation("FarmerBatches", fields: [farmerId], references: [id])
-  
+  farmerId String
+  farmer   User   @relation("FarmerBatches", fields: [farmerId], references: [id])
+
   // Lịch sử thời gian
-  harvestDate     DateTime?                        // Ngày thu hoạch dự kiến
-  expiryDate      DateTime?                        // Hạn sử dụng dự kiến
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  retailCompanyId  String?
-  retailCompany   Company?    @relation("RetailerBatches", fields: [retailCompanyId], references: [id])  
+  harvestDate     DateTime? // Ngày thu hoạch dự kiến
+  expiryDate      DateTime? // Hạn sử dụng dự kiến
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  retailCompanyId String?
+  retailCompany   Company?  @relation("RetailerBatches", fields: [retailCompanyId], references: [id])
 
   shipperCompanyId String?
-  shipperCompany  Company?    @relation("ShipperBatches", fields: [shipperCompanyId], references: [id])
+  shipperCompany   Company? @relation("ShipperBatches", fields: [shipperCompanyId], references: [id])
 
   // Mối quan hệ các chặng hành trình
-  transits        StepTransit[]
-  qualityTest     QualityTest?
+  transits    StepTransit[]
+  qualityTest QualityTest?
 }
 
 // 3. CHI TIẾT HÀNH TRÌNH VẬN CHUYỂN (TRANSPORT LOGS)
 // Nhật ký ghi lại từng chặng đi của Shipper. Mỗi lần quét mã QR khi nhận/giao hàng sẽ tạo 1 bản ghi.
 model StepTransit {
-  id              String   @id @default(uuid())
-  batchId         String
-  batch           Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  
-  shipperId       String
-  shipper         User     @relation("ShipperTransports", fields: [shipperId], references: [id])
-  
-  txHash          String  // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
-  fromLocation    String
-  toLocation      String
-  temperature     Float?   // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
-  humidity        Float?   // Độ ẩm bảo quản
-  vehicleNumber   String?  // Biển số xe vận chuyển
-  statusDetails   String?   // Ghi chú chi tiết trạng thái (VD: "Đang bốc xếp", "Đã lưu kho trung chuyển")
-  
-  departureTime   DateTime @default(now())
-  arrivalTime     DateTime?
+  id      String @id @default(uuid())
+  batchId String
+  batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  shipperId String
+  shipper   User   @relation("ShipperTransports", fields: [shipperId], references: [id])
+
+  txHash        String // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
+  fromLocation  String
+  toLocation    String
+  temperature   Float? // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
+  humidity      Float? // Độ ẩm bảo quản
+  vehicleNumber String? // Biển số xe vận chuyển
+  statusDetails String? // Ghi chú chi tiết trạng thái (VD: "Đang bốc xếp", "Đã lưu kho trung chuyển")
+
+  departureTime DateTime  @default(now())
+  arrivalTime   DateTime?
 }
 
 model QualityTest {
-  id           String    @id @default(uuid())
-  batchId      String    @unique // 1 lô hàng chỉ có 1 kết quả kiểm định chính thức
-  batch        Batch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  
-  retailerId   String
-  retailer     User      @relation("RetailerTests", fields: [retailerId], references: [id])
-  
-  txHash       String   // Transaction Hash kiểm định bất biến trên blockchain
-  isPassed     Boolean   @default(false)
-  note         String?   // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
-  testedAt     DateTime  @default(now())
+  id      String @id @default(uuid())
+  batchId String @unique // 1 lô hàng chỉ có 1 kết quả kiểm định chính thức
+  batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  retailerId String
+  retailer   User   @relation("RetailerTests", fields: [retailerId], references: [id])
+
+  txHash   String // Transaction Hash kiểm định bất biến trên blockchain
+  isPassed Boolean  @default(false)
+  note     String? // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
+  testedAt DateTime @default(now())
 }

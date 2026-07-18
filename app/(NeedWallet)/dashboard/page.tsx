@@ -165,33 +165,29 @@ export default function BatchPage() {
 
   return (
     <>
-      <Flex justify='space-between' className='mb-3!' gap={10}>
-        <Space>
-          <Input
+      <Flex wrap justify='space-between' className='mb-3!' gap={10}>
+        <div className='sm:w-[40%] w-full flex items-center gap-3'>
+          <Input.Search
             placeholder={t('Input batch name')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <Button
-            shape='circle'
-            onClick={() => {
-              setSearchInput('');
-            }}
-          >
-            <CloseOutlined />
-          </Button>
-          <Button
-            shape='circle'
-          >
-            <SyncOutlined />
-          </Button>
-          <Button
-            type='primary'
-            icon={<SearchOutlined />}
-          >
-            {t('Search')}
-          </Button>
-        </Space>
+          <Space>
+            <Button
+              shape='circle'
+              onClick={() => {
+                setSearchInput('');
+              }}
+            >
+              <CloseOutlined />
+            </Button>
+            <Button
+              shape='circle'
+            >
+              <SyncOutlined />
+            </Button>
+          </Space>
+        </div>
         <Button type='primary' onClick={() => setOpenCreateModal(true)}>
           <PlusOutlined />
           {t('New batch')}

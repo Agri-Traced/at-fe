@@ -1,26 +1,25 @@
 'use client';
 
 import api from '@/lib/axios';
-import { useWeb3js } from '@ant-design/web3-eth-web3js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { App } from 'antd'
 import { useRouter } from 'next/navigation';
 import { useConnection } from '@ant-design/web3';
+import { useSignMessage } from 'wagmi';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
-  const web3 = useWeb3js();
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const router = useRouter();
   const { disconnect } = useConnection();
+  const { signMessageAsync } = useSignMessage();
 
   return useMutation({
     mutationFn: async (address: string) => {
-      if (!web3) return
       const message = `${t('Verify access for your wallet to login')}`;
-      const signature = await web3.eth.personal.sign(web3.utils.utf8ToHex(message), address, '');
+      const signature = await signMessageAsync({ message });
       const res = await api.post<{ token: string }>('/user/login', {
         address,
         message,
@@ -42,10 +41,12 @@ export const useLogin = () => {
         router.replace('/register');
         return;
       }
+
       if (disconnect) disconnect();
       router.replace('/login');
       notification.error({
         title: t('Login failed.'),
+        description: error?.response?.data?.message || error?.message,
         showProgress: true,
         placement: 'bottomRight'
       })

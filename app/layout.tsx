@@ -5,7 +5,8 @@ import { I18nProvider } from "@/contexts/i18n";
 import { ConfigProvider } from "antd";
 import Mounting from "./components/Mouting";
 import ReactQueryProvider from "@/lib/reactQueryProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { App } from "antd";
+import { Metadata } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const queryClient = new QueryClient();
+
+export const metadata: Metadata = {
+  title: "Agri-Trace",
+  description: "Agri-Trace is a blockchain-based traceability system for agricultural products.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
+};
 
 export default async function RootLayout({
   children,
@@ -29,10 +38,6 @@ export default async function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <link rel="icon" href="/icon.png" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon.png" />
-      </head>
       <body className="min-h-screen flex flex-col">
         <AntdRegistry>
           <ConfigProvider
@@ -44,9 +49,11 @@ export default async function RootLayout({
           >
             <I18nProvider>
               <ReactQueryProvider>
-                <Mounting>
-                  {children}
-                </Mounting>
+                <App>
+                  <Mounting>
+                    {children}
+                  </Mounting>
+                </App>
               </ReactQueryProvider>
             </I18nProvider>
           </ConfigProvider>

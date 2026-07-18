@@ -1,25 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { getSignerContract, getReadOnlyContract } from './config';
+import { useWriteContract, useConfig } from 'wagmi';
+import { readContract } from '@wagmi/core';
 import { App } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { ABI } from './abis/type';
+import { ContractFunctionArgs } from 'viem';
+
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+
+type FunctionName = Extract<(typeof ABI)[number], { type: 'function', stateMutability: 'nonpayable' | 'payable' }>['name'];
+type ReadFunctionNames = Extract<(typeof ABI)[number], { type: 'function'; stateMutability: 'view' | 'pure' }>['name'];
+
 
 export function useContract() {
-  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
   const { notification } = App.useApp();
+  const { writeContractAsync, isPending } = useWriteContract();
+  const config = useConfig();
 
-  // Hàm thực thi các tác vụ GHI dữ liệu (Đẩy batch, chuyển trạng thái...)
-  const executeWrite = async (callback: (contract: any) => Promise<any>) => {
-    setLoading(true);
+  const executeWrite = async (functionName: FunctionName, args: ContractFunctionArgs<typeof ABI, 'nonpayable' | 'payable', FunctionName>) => {
+    if (!CONTRACT_ADDRESS) {
+      throw new Error("Smart contract address is not defined in environment variables");
+    }
     try {
-      const contract = await getSignerContract();
-      const result = await callback(contract);
-      return result;
+      const txHash = await writeContractAsync({
+        address: CONTRACT_ADDRESS as `0x${string}`,
+        abi: ABI,
+        functionName,
+        args,
+      });
+      return txHash;
     } catch (error: any) {
       console.error("Blockchain Write Error:", error);
-      if (error.code === 'ACTION_REJECTED') {
+
+      const isRejected = error?.message?.includes('User rejected') || error?.code === 4001;
+
+      if (isRejected) {
         notification.error({
           message: t('You have rejected the transaction on your wallet.'),
           showProgress: true,
@@ -33,21 +50,31 @@ export function useContract() {
         });
       }
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Hàm thực thi các tác vụ ĐỌC dữ liệu (Xem thông tin batch)
-  const executeRead = async (callback: (contract: any) => Promise<any>) => {
+  const executeRead = async (
+    functionName: ReadFunctionNames
+  ) => {
+    if (!CONTRACT_ADDRESS) {
+      throw new Error("Smart contract address is not defined in environment variables");
+    }
     try {
-      const contract = getReadOnlyContract();
-      return await callback(contract);
+      const data = await readContract(config, {
+        address: CONTRACT_ADDRESS as `0x${string}`,
+        abi: ABI,
+        functionName,
+      });
+      return data;
     } catch (error) {
       console.error("Blockchain Read Error:", error);
       throw error;
     }
   };
 
-  return { executeWrite, executeRead, loading };
+  return {
+    executeWrite,
+    executeRead,
+    loading: isPending
+  };
 }

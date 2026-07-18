@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Modal, Spin, Result } from 'antd';
 import { SafetyCertificateOutlined } from '@ant-design/icons';
 import { Web3 } from 'web3';
-import contractAbi from "@/blockchain/abis/AgriTrace.json"; // Đường dẫn tới file ABI của bạn
 import api from '@/lib/axios';
+import { ABI } from '@/blockchain/abis/type';
 
 interface VerifyModalProps {
   blockchainId: string;
@@ -32,7 +32,7 @@ export default function VerificationBox({ blockchainId, web2Data }: VerifyModalP
       steps.push("🔌 Kết nối cổng mạng blockchain Sepolia...");
       setLog([...steps]);
       const web3 = new Web3(new Web3.providers.HttpProvider(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL!));
-      const contract = new web3.eth.Contract(contractAbi.abi, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!);
+      const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!);
 
       // BƯỚC 2: Truy vấn dữ liệu On-chain từ Smart Contract
       steps.push(`🔍 Đang truy vấn lô hàng #${blockchainId} trên Smart Contract...`);

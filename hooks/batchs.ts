@@ -26,7 +26,7 @@ export type BatchRelation = Batch & {
 export const postBatchActivityLog = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => api.post(`/batches/${id}/activity-logs`, data),
+    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => api.post<ActivityLog, ActivityLog>(`/batches/${id}/activity-logs`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['batches'] });
     }

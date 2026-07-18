@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { ethers } from "ethers";
-import contractAbi from "@/blockchain/abis/AgriTrace.json"; // Đường dẫn tới file ABI của bạn
-
+import { ABI } from "@/blockchain/abis/type";
 export async function POST(request: Request) {
   try {
     const { address, role } = await request.json();
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
 
     // 2. Kết nối tới Smart Contract bằng quyền của Admin
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
-    const contract = new ethers.Contract(contractAddress, contractAbi.abi, adminWallet);
+    const contract = new ethers.Contract(contractAddress, ABI, adminWallet);
 
     // 3. Tính toán mã hash của Role (Ví dụ: "FARMER_ROLE" -> 0x...)
     // Nếu contract dùng cấu trúc Role.Farmer (Enum) thay vì AccessControl bytes32,
