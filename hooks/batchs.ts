@@ -23,6 +23,16 @@ export type BatchRelation = Batch & {
   qualityTest: QualityTestRelation | null;
 }
 
+export const postBatchActivityLog = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => api.post(`/batches/${id}/activity-logs`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+};
+
 const fetchBatches = async () => {
   const { data } = await api.get('/batches');
   return data;
@@ -40,9 +50,39 @@ const fetchBatchByUserId = async (id: string) => {
   return data;
 }
 
+export const useBatchShip = (id: string) => {
+  return useQuery({
+    queryKey: ['batches'],
+    queryFn: async () => {
+      const { data } = await api.get<BatchRelation[]>(`/batches/ship/${id}`);
+      return data;
+    }
+  });
+}
+
+export const useBatchFarm = (id: string) => {
+  return useQuery({
+    queryKey: ['batches'],
+    queryFn: async () => {
+      const { data } = await api.get<BatchRelation[]>(`/batches/farm/${id}`);
+      return data;
+    }
+  });
+}
+
+export const useBatchRetail = (id: string) => {
+  return useQuery({
+    queryKey: ['batches'],
+    queryFn: async () => {
+      const { data } = await api.get<BatchRelation[]>(`/batches/retail/${id}`);
+      return data;
+    }
+  });
+}
+
 export const useBatchesByUserId = (id: string) => {
   return useQuery({
-    queryKey: ['batches-user'],
+    queryKey: ['batches'],
     queryFn: () => fetchBatchByUserId(id),
   });
 }

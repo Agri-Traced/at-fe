@@ -93,6 +93,17 @@ export default function TracePage() {
 
   const { data, isLoading: loading } = useBatch(id);
 
+  const transportSummary = useMemo(() => {
+    if (!data || !data.transits || data.transits.length === 0) return null;
+    // Tính nhiệt độ trung bình
+    const avgTemp = data.transits.reduce((acc, curr) => acc + (curr.temperature ?? 0), 0) / data.transits.length;
+    // Tìm nhiệt độ cao nhất
+    const maxTemp = Math.max(...data.transits.map(t => t.temperature ?? 0));
+    // Kiểm tra xem tất cả các chặng có "đạt ngưỡng an toàn" không
+    const isAllSafe = data.transits.every(t => (t.temperature ?? 0) >= 2 && (t.temperature ?? 0) <= 8);
+    return { avgTemp, maxTemp, isAllSafe };
+  }, [data?.transits]);
+
   if (loading) {
     return (
       <Loading message={t('Fetching trace data...')} />
@@ -107,19 +118,9 @@ export default function TracePage() {
     );
   }
 
-  const transportSummary = useMemo(() => {
-    if (!data.transits || data.transits.length === 0) return null;
-    // Tính nhiệt độ trung bình
-    const avgTemp = data.transits.reduce((acc, curr) => acc + (curr.temperature ?? 0), 0) / data.transits.length;
-    // Tìm nhiệt độ cao nhất
-    const maxTemp = Math.max(...data.transits.map(t => t.temperature ?? 0));
-    // Kiểm tra xem tất cả các chặng có "đạt ngưỡng an toàn" không
-    const isAllSafe = data.transits.every(t => (t.temperature ?? 0) >= 2 && (t.temperature ?? 0) <= 8);
-    return { avgTemp, maxTemp, isAllSafe };
-  }, [data.transits]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pb-12">
+    <div className="min-h-screen bg-linear-to-b from-green-50 to-white pb-12">
       {/* HEADER: Thương hiệu & Chứng thực Blockchain */}
       <div className="bg-green-600 text-white p-6 rounded-b-[2.5rem] shadow-lg text-center relative">
         <div className="absolute top-4 right-4 bg-white/20 px-3 py-1 rounded-full text-xs flex items-center gap-1 backdrop-blur-sm">
@@ -155,11 +156,11 @@ export default function TracePage() {
             </div>
             <div>
               <p className="text-gray-400 text-xs"><CalendarOutlined /> Ngày thu hoạch</p>
-              <p className="font-medium text-gray-700">{data.harvestDate ? data.harvestDate.toLocaleDateString() : "Chưa xác định"}</p>
+              <p className="font-medium text-gray-700">{data.harvestDate ? new Date(data.harvestDate).toLocaleDateString() : "Chưa xác định"}</p>
             </div>
             <div>
               <p className="text-gray-400 text-xs"><CalendarOutlined /> Hạn sử dụng</p>
-              <p className="font-medium text-red-500">{data.expiryDate ? data.expiryDate.toLocaleDateString() : "Chưa xác định"}</p>
+              <p className="font-medium text-red-500">{data.expiryDate ? new Date(data.expiryDate).toLocaleDateString() : "Chưa xác định"}</p>
             </div>
           </div>
         </Card>
@@ -201,7 +202,7 @@ export default function TracePage() {
             items={[
               {
                 title: <span className="font-bold text-sm text-gray-800">1. Gieo Trồng & Canh Tác</span>,
-                description: (
+                description: data.activities ? (
                   <div className="text-xs text-gray-500 mt-1">
                     <p className="font-semibold text-green-600">{data.farmer.fullName}</p>
                     <ul className="list-disc list-inside mt-1 space-y-1">
@@ -210,13 +211,17 @@ export default function TracePage() {
                       ))}
                     </ul>
                   </div>
+                ) : (
+                  <div className="text-xs text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p className="font-semibold text-yellow-700">⚠ CHƯA CÓ DỮ LIỆU HOẠT ĐỘNG</p>
+                  </div>
                 ),
               },
               {
                 title: <span className="font-bold text-sm text-gray-800">2. Thu Hoạch & Đóng Gói</span>,
                 description: (
                   <div className="text-xs text-gray-500 mt-1">
-                    <p>Ngày: <span className="font-medium text-gray-700">{data.harvestDate ? data.harvestDate.toLocaleDateString() : "Chưa xác định"}</span></p>
+                    <p>Ngày: <span className="font-medium text-gray-700">{data.harvestDate ? new Date(data.harvestDate).toLocaleDateString() : "Chưa xác định"}</span></p>
                     <p className="text-blue-600 underline break-all font-mono">IPFS Hash: {data.ipfsHash}</p>
                   </div>
                 ),

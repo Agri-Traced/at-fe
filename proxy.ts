@@ -12,15 +12,11 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
-    const url = new URL('/login', request.url);
-    const searchQuery = request.nextUrl.search;
-    const callbackUrl = searchQuery ? pathname + searchQuery : pathname;
-    url.searchParams.set('callbackUrl', callbackUrl);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   if (token && guestRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   if (!token && protectedApiRoutes.some(route => pathname.startsWith(route))) {

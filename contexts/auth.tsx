@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { Loading } from '@/app/components/Loading';
 import { useTranslation } from 'react-i18next';
 import { useLogout } from '@/hooks/logout';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null | undefined;
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { mutate: logout } = useLogout();
   const pathname = usePathname();
   const { t } = useTranslation();
+  const router = useRouter();
 
   const { data: user, isLoading, error } = useQuery({
     queryKey: ['auth-user'],
@@ -45,18 +47,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     refetchOnWindowFocus: false,
   });
 
+  const isAuthError = error && ((error as any)?.response?.status === 401 || (error as any)?.response?.status === 403);
+
   useEffect(() => {
-    const isAuthError = error && ((error as any)?.response?.status === 401 || (error as any)?.response?.status === 403);
-    if (account && pathname !== '/register' && isAuthError) {
+    if (account && isAuthError && pathname === '/login') {
       login(account.address);
     }
-  }, [account, error, pathname, login]);
+  }, [account, isAuthError, pathname, login]);
 
   useEffect(() => {
     if (!account) {
       logout();
     }
-  }, [account]);
+  }, [account, logout]);
+
+    useEffect(() => {
+      if (account && user === null) {
+        router.push('/register');
+      }
+    }, [account, user]);
+  
 
   if (isLoading || isPending) {
     return <Loading message={t('Connecting to your wallet...')} />

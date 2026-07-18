@@ -14,7 +14,7 @@ const batchCreate = z.object({
   expiryDate: z.coerce.date().optional(), // Định dạng ISO 8601
   txHash: z.string().min(1, "Missing Transaction Hash"),
   ipfsHash: z.string().min(1, "Missing IPFS Hash"),
-  retailerId: z.string().min(1, "Missing Retailer ID"),
+  retailCompanyId: z.string().min(1, "Missing Retail Company ID"),
 });
 
 export const POST = withRole('FARMER', async (req, user, context) => {

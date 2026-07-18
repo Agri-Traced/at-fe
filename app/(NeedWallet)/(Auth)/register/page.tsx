@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/auth';
 import { useTranslation } from 'react-i18next';
-import { Card, Steps, Result, Form, Button, Radio, Typography } from 'antd';
+import { Card, Steps, Result, Form, Button, Radio, Typography, App } from 'antd';
 import { useEffect, useState } from 'react';
 import { Container } from '@/app/components';
 import { FormAccount } from './components/FormAccount';
@@ -20,8 +20,9 @@ export default function RegisterPage() {
   const [step, setStep] = useState(0);
   const [form] = Form.useForm<User>();
   const [term, setTerm] = useState(false);
-  const { mutate, isError, isPending, isSuccess } = usePostUser();
+  const { mutate, isPending, isSuccess } = usePostUser();
   const router = useRouter();
+  const { notification } = App.useApp();
 
   useEffect(() => {
     if (!account) {
@@ -35,16 +36,29 @@ export default function RegisterPage() {
     }
   }, [user])
 
-  if (!account || user) {
+  if (!account) {
+    console.log('account', account, 'user', user);
     return <Loading message={t('Connecting to wallet...')} />;
   }
 
   const onFinish = (values: User) => {
-    setStep(step + 1)
     mutate({
       ...values,
       walletAddress: account.address
+    }, {
+      onSuccess: () => {
+        setStep(step + 1)
+      },
+      onError: (error) => {
+        notification.error({
+          message: t('Registration failed'),
+          description: error.message,
+          showProgress: true,
+          placement: 'bottomRight',
+        });
+      }
     });
+
   }
 
   const items = [
@@ -81,19 +95,19 @@ export default function RegisterPage() {
                     {t('I agree to the terms and conditions')}
                   </Radio>
                 </Form.Item>
-                <Form.Item className="flex justify-between" >
+                <div className="flex gap-5">
                   <Button size="large" onClick={() => setStep(step - 1)}>
                     {t('Back')}
                   </Button>
-                  <Button disabled={!term} type="primary" size="large" htmlType="submit" >
-                    {t('Register')}
-                  </Button>
-                </Form.Item>
+                  <Form.Item >
+                    <Button disabled={!term} type="primary" size="large" htmlType="submit" >
+                      {t('Register')}
+                    </Button>
+                  </Form.Item>
+                </div>
               </div>
             </div>
-            {isError ? (
-              <Result status="error" title={t('Registration Failed')} subTitle={t('Registration failed.')} />
-            ) : isPending ? (
+            {isPending ? (
               <Loading message={t('Processing registration...')} />
             ) : isSuccess ? (
               <Result status="success" title={t('Registration Complete')} subTitle={t('You have successfully registered.')} />

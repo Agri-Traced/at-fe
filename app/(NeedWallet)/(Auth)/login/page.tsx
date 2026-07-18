@@ -4,26 +4,16 @@ import { Typography } from 'antd';
 import ConnectWalletButton from '@/app/components/ConnectWalletButton';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth';
-import { Loading } from '../../components/Loading';
-import { useEffect } from 'react';
+import { Loading } from '../../../components/Loading';
 
 const { Title } = Typography;
 
 export default function LoginPage() {
   const { t } = useTranslation()
   const { user, account } = useAuth();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (account && !user) {
-      router.push('/register');
-    }
-  }, [account, user]);
-
-
-  if (account && !user) {
+  if (account || user === null) {
     return <Loading message={t('Loading user data...')} />;
   }
 

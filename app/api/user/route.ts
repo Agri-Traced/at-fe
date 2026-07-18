@@ -32,6 +32,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Invalid protected key" }, { status: 400 });
     }
 
+    const userExists = await prisma.user.findUnique({
+      where: { walletAddress: validation.data.walletAddress }
+    });
+
+    if (userExists) {
+      return NextResponse.json({ success: false, error: "User with this wallet address already exists" }, { status: 400 });
+    }
+
     const data = validation.data;
     // Cập nhật hoặc tạo mới User
     const user = await prisma.user.create({

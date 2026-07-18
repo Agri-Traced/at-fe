@@ -35,6 +35,7 @@ export const useLogin = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth-user'] });
+      router.push('/dashboard');
     },
     onError: (error: any) => {
       if (error?.status === 404 || error.response?.status === 404) {
@@ -42,6 +43,7 @@ export const useLogin = () => {
         return;
       }
       if (disconnect) disconnect();
+      router.replace('/login');
       notification.error({
         title: t('Login failed.'),
         showProgress: true,

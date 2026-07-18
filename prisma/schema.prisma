@@ -44,7 +44,7 @@ model User {
   // Mối quan hệ từ các bảng khác
   batchesCreated Batch[]        @relation("FarmerBatches")
   transports     StepTransit[]  @relation("ShipperTransports")
-  qualityTests   QualityTest[] @relation("RetailerTests")
+  qualityTests   QualityTest[]  @relation("RetailerTests")
 }
 
 enum OrganizationType {

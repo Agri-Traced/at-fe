@@ -13,6 +13,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         title="Agri-Trace Blockchain"
         logo='/icon.png'
         location={{ pathname }}
+        menuRender={false}
       >
         {/* Vùng chứa nội dung chính, tự động căn chỉnh và có breadcrumb */}
         <PageContainer

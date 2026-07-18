@@ -1,18 +1,11 @@
-// app/layout.tsx
-'use client';
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { I18nProvider } from "@/contexts/i18n";
 import { ConfigProvider } from "antd";
-import dynamic from 'next/dynamic';
-
-// Khai báo dynamic import tắt SSR cho Web3
-const Web3ProviderWrapper = dynamic(
-  () => import('./components/Web3Wrapper'), // Chỉnh lại đúng đường dẫn file của bạn
-  { ssr: false }
-);
+import Mounting from "./components/Mouting";
+import ReactQueryProvider from "@/lib/reactQueryProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +17,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+const queryClient = new QueryClient();
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -48,9 +43,11 @@ export default function RootLayout({
             }}
           >
             <I18nProvider>
-              <Web3ProviderWrapper>
-                {children}
-              </Web3ProviderWrapper>
+              <ReactQueryProvider>
+                <Mounting>
+                  {children}
+                </Mounting>
+              </ReactQueryProvider>
             </I18nProvider>
           </ConfigProvider>
         </AntdRegistry>

@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const token = cookieStore.get('auth_token')?.value; // Lấy token từ cookie
 
     if (!token) {
-      return NextResponse.json({ error: { message: 'Unauthorized' } }, { status: 401 });
+      return NextResponse.json({ error: { message: 'No token provided' } }, { status: 401 });
     }
 
     // 2. Xác thực và giải mã token gỡ lấy thông tin ví (address)

@@ -1,82 +1,141 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { ProLayout, PageContainer, DefaultFooter } from '@ant-design/pro-layout';
-import { Button, Flex, Result } from 'antd';
-import { SmileOutlined } from '@ant-design/icons';
-import ConnectWalletButton from './components/ConnectWalletButton';
-import TransactionModal from './components/TransactionModal';
+import React, { useState } from 'react';
+import { Row, Col, Button, Card, Space, Drawer } from 'antd';
+import {
+  MenuOutlined,
+  SafetyCertificateOutlined,
+  DeploymentUnitOutlined,
+  BarChartOutlined
+} from '@ant-design/icons';
 
-const BasicLayout = () => {
-  const [pathname, setPathname] = useState('/welcome');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export default function LandingPage() {
+  const [visible, setVisible] = useState(false);
 
-  // Cấu hình menu (Thường sẽ được truyền từ router)
-  const menuData = [
-    {
-      path: '/',
-      name: 'Welcome',
-      icon: <SmileOutlined />,
-    },
-    {
-      path: '/public-scan',
-      name: 'Public Scan',
-      icon: <SmileOutlined />,
-    }
-  ];
+  // Menu links chung cho cả desktop và mobile drawer
+  const navLinks = (
+    <Space direction={visible ? "vertical" : "horizontal"} size="large" className={visible ? "w-full" : ""}>
+      <a href="#features" className="text-gray-600 hover:text-green-600 font-medium">Tính năng</a>
+      <a href="#how-it-works" className="text-gray-600 hover:text-green-600 font-medium">Quy trình</a>
+      <a href="#about" className="text-gray-600 hover:text-green-600 font-medium">Về chúng tôi</a>
+    </Space>
+  );
 
   return (
-    <div style={{ height: '100vh' }}>
-      <ProLayout
-        title="Agri-Trace Blockchain"
-        logo='/logo.png'
-        location={{ pathname }}
-        route={{
-          path: '/',
-          routes: menuData,
-        }}
-        menuItemRender={(item, dom) => (
-          <a onClick={() => setPathname(item.path ?? '/')}>{dom}</a>
-        )}
-        // Tùy chỉnh Footer
-        footerRender={() => (
-          <DefaultFooter
-            copyright="2026 Ant Design Pro"
-            links={[
-              {
-                key: 'Agri Trace',
-                title: 'Agri Trace',
-                href: '/',
-                blankTarget: true,
-              },
-            ]}
-          />
-        )}
-      >
-        {/* Vùng chứa nội dung chính, tự động căn chỉnh và có breadcrumb */}
-        <PageContainer
-          header={{
-            title: 'Tiêu đề trang',
-          }}
-        >
-          <div style={{ minHeight: '600px', backgroundColor: '#fff', padding: 24 }}>
-            <Result
-              icon={<SmileOutlined />}
-              title="Chào mừng bạn đến với Agri-Trace Blockchain"
-              extra={
-                <>
-                  <ConnectWalletButton />
-                  <Button onClick={() => setIsModalOpen(true)}>Sign Transaction</Button>
-                </>
-              }
-            />
-          </div>
-          <TransactionModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSign={() => { }} />
+    <div className="min-h-screen bg-gradient-to-b from-green-50/50 to-white text-gray-800">
 
-        </PageContainer>
-      </ProLayout>
+      {/* ─── NAVBAR ─── */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="text-xl font-bold text-green-700 flex items-center gap-2">
+            <DeploymentUnitOutlined /> AgriTrace
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks}
+            <Button type="primary" size="middle" className="bg-green-600 hover:bg-green-700 border-none rounded-md">
+              Vào Hệ Thống
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            className="md:hidden border-none shadow-none"
+            icon={<MenuOutlined />}
+            onClick={() => setVisible(true)}
+          />
+        </div>
+      </nav>
+
+      {/* Mobile Drawer */}
+      <Drawer title="Menu" placement="right" onClose={() => setVisible(false)} open={visible}>
+        <div className="flex flex-col gap-6">
+          {navLinks}
+          <Button type="primary" block className="bg-green-600 border-none mt-4">
+            Vào Hệ Thống
+          </Button>
+        </div>
+      </Drawer>
+
+      {/* ─── HERO SECTION ─── */}
+      <section className="max-w-7xl mx-auto px-6 py-16 md:py-28">
+        <Row gutter={[32, 48]} align="middle">
+          <Col xs={24} md={12} className="space-y-6">
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+              Minh bạch nông sản với <span className="text-green-600">Blockchain & IPFS</span>
+            </h1>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Giải pháp tối ưu hóa chuỗi cung ứng, số hóa nhật ký canh tác của nông dân và xây dựng niềm tin tuyệt đối với người tiêu dùng qua từng mã QR định danh.
+            </p>
+            <Space size="middle" className="w-full sm:w-auto">
+              <Button type="primary" size="large" className="bg-green-600 hover:bg-green-700 border-none h-12 px-8 rounded-lg text-base">
+                Bắt đầu ngay
+              </Button>
+              <Button size="large" className="h-12 px-8 rounded-lg text-base text-gray-700">
+                Xem Demo
+              </Button>
+            </Space>
+          </Col>
+
+          {/* Hero Image / Graphic Slot */}
+          <Col xs={24} md={12} className="flex justify-center">
+            <div className="w-full max-w-md md:max-w-full aspect-square bg-green-100 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center border border-green-200">
+              {/* Đặt ảnh hoặc hình minh họa blockchain/farm tại đây */}
+              <span className="text-gray-400 font-medium">Dashboard Preview / Illustration</span>
+            </div>
+          </Col>
+        </Row>
+      </section>
+
+      {/* ─── FEATURES SECTION ─── */}
+      <section id="features" className="bg-gray-50/50 py-20 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <h2 className="text-3xl font-bold text-gray-900">Tính năng cốt lõi</h2>
+            <p className="text-gray-600">Nền tảng công nghệ toàn diện phục vụ cho mọi tác vụ trong chuỗi giá trị nông nghiệp.</p>
+          </div>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} sm={12} lg={8}>
+              <Card hoverable className="h-full border-none shadow-sm rounded-2xl p-4">
+                <div className="w-12 h-12 bg-green-100 text-green-700 rounded-xl flex items-center justify-center text-xl mb-4">
+                  <SafetyCertificateOutlined />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Chống giả mạo</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Mọi dữ liệu về lô hàng được ký số trực tiếp lên Smart Contract, đảm bảo không một ai có thể thay đổi lịch sử sau khi đã ghi nhận.
+                </p>
+              </Card>
+            </Col>
+
+            <Col xs={24} sm={12} lg={8}>
+              <Card hoverable className="h-full border-none shadow-sm rounded-2xl p-4">
+                <div className="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center text-xl mb-4">
+                  <DeploymentUnitOutlined />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Lưu trữ phi tập trung</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Hình ảnh, chứng nhận chất lượng và file metadata lớn được lưu trữ trên mạng lưới IPFS, tối ưu chi phí on-chain mà vẫn an toàn.
+                </p>
+              </Card>
+            </Col>
+
+            <Col xs={24} sm={12} lg={8}>
+              <Card hoverable className="h-full border-none shadow-sm rounded-2xl p-4">
+                <div className="w-12 h-12 bg-orange-100 text-orange-700 rounded-xl flex items-center justify-center text-xl mb-4">
+                  <BarChartOutlined />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Vận hành tinh gọn</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Phân quyền thông minh cho Farmer, Shipper, Retailer giúp luồng cập nhật trạng thái lô hàng diễn ra chỉ với một thao tác quét QR.
+                </p>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </section>
+
     </div>
   );
-};
-
-export default BasicLayout;
+}
