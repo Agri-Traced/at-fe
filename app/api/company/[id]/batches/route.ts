@@ -40,7 +40,6 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
         },
         qualityTest: {
           include: { retailer: true },
-          orderBy: { inspectedAt: 'desc' } // Lấy kiểm định mới nhất lên đầu
         },
         shipperCompany: {
           select: { companyName: true, location: true }
@@ -50,14 +49,13 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
         }
       },
       orderBy: {
-        createdAt: 'desc'
+        updatedAt: 'desc'
       }
     });
 
     return NextResponse.json({ success: true, data: batches }, { status: 200 });
 
   } catch (error: unknown) {
-    console.error("❌ Lỗi API GetBatchesByCompany:", error);
     return NextResponse.json(
       { success: false, error: error instanceof Error ? error.message : 'An error occurred' },
       { status: 500 }

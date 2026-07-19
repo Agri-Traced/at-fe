@@ -15,6 +15,10 @@ export async function GET(
           include: { company: true }
         },
 
+        activities: {
+          orderBy: { timestamp: 'asc' }
+        },
+
         // 2. Sửa lại: transits (trước đó bạn viết sai thành trasits)
         transits: {
           include: { shipper: true },

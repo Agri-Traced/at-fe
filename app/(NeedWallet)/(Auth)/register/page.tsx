@@ -37,7 +37,6 @@ export default function RegisterPage() {
   }, [user])
 
   if (!account) {
-    console.log('account', account, 'user', user);
     return <Loading message={t('Connecting to wallet...')} />;
   }
 

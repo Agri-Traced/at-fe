@@ -4,7 +4,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { I18nProvider } from "@/contexts/i18n";
 import { ConfigProvider } from "antd";
 import Mounting from "./components/Mouting";
-import ReactQueryProvider from "@/lib/reactQueryProvider";
+import ReactQueryProvider from "@/contexts/reactQueryProvider";
 import { App } from "antd";
 import { Metadata } from "next";
 

@@ -18,7 +18,7 @@ export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','l
 
 export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','txHash','productName','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime','arrivalTime']);
 
@@ -104,8 +104,10 @@ export const BatchSchema = z.object({
   status: BatchStatusSchema,
   id: z.uuid(),
   blockchainId: z.string(),
-  txHash: z.string().nullable(),
+  plantTxHash: z.string().nullable(),
+  harvestTxHash: z.string().nullable(),
   productName: z.string(),
+  productVariety: z.string(),
   quantity: z.number().nullable(),
   unit: z.string(),
   minTemperature: z.number(),

@@ -3,12 +3,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
-export default function ReactQueryProvider({ children }) {
+export default function ReactQueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
-        retry: (failureCount, error) => {
+        retry: (failureCount, error: any) => {
           const isUserRejected = error?.code === 4001 || error?.message?.includes('rejected');
           if (isUserRejected) return false;
           const status = error?.status || error?.response?.status;
@@ -16,9 +16,9 @@ export default function ReactQueryProvider({ children }) {
           if (failureCount < 2) return true;
           return false;
         },
+        refetchOnWindowFocus: false,
       },
     },
-    refetchOnWindowFocus: false,
   }));
 
   return (

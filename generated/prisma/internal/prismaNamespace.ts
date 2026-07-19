@@ -931,8 +931,10 @@ export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[key
 export const BatchScalarFieldEnum = {
   id: 'id',
   blockchainId: 'blockchainId',
-  txHash: 'txHash',
+  plantTxHash: 'plantTxHash',
+  harvestTxHash: 'harvestTxHash',
   productName: 'productName',
+  productVariety: 'productVariety',
   category: 'category',
   quantity: 'quantity',
   unit: 'unit',

@@ -19,7 +19,7 @@ export const PATCH = withRole(Role.RETAILER, async (req, user, context) => {
     const validation = shipperSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json({ success: false, errors: validation.error.format() }, { status: 400 });
+      return NextResponse.json({ success: false, errors: validation.error }, { status: 400 });
     }
 
     const { shipperCompanyId } = validation.data;

@@ -17,7 +17,7 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
 
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, errors: validation.error.format() },
+        { success: false, errors: validation.error },
         { status: 400 }
       );
     }
@@ -57,7 +57,6 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
     );
 
   } catch (error: unknown) {
-    console.error("❌ Lỗi API ActivityLog:", error);
     return NextResponse.json(
       {
         success: false,

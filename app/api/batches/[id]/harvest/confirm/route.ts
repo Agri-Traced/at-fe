@@ -6,7 +6,7 @@ import { withRole } from '@/lib/auth';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const confirmSchema = z.object({
-  plantTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
+  harvestTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
 export const POST = withRole(Role.FARMER, async (req, user, context) => {
@@ -46,9 +46,9 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    if (batch.plantTxHash !== null) {
+    if (batch.harvestTxHash !== null) {
       return NextResponse.json(
-        { success: false, error: "This batch has already been confirmed." },
+        { success: false, error: "This batch has already been harvested." },
         { status: 400 }
       );
     }

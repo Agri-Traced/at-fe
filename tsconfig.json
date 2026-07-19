@@ -38,7 +38,7 @@
     "lib/prisma.ts",
     "app/api/batches/route.ts",
     "lib/axios.ts",
-    "lib/reactQueryProvider.js"
+    "lib/reactQueryProvider.ts"
   ],
   "exclude": [
     "node_modules"

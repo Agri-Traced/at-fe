@@ -37,7 +37,6 @@ export async function POST(request: Request) {
     });
 
   } catch (error: any) {
-    console.error("Lỗi gán quyền Blockchain:", error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
       { status: 500 }

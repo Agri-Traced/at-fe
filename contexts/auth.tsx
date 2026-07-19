@@ -50,16 +50,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isAuthError = error && ((error as any)?.response?.status === 401 || (error as any)?.response?.status === 403);
 
   useEffect(() => {
-    if (account && isAuthError && pathname === '/login') {
+    if (account && user === undefined && isAuthError && pathname === '/login') {
       login(account.address);
     }
-  }, [account, isAuthError, pathname, login]);
+  }, [account, isAuthError, pathname, login, user]);
 
   useEffect(() => {
-    if (!account) {
+    if (!account && pathname !== '/login') {
       logout();
     }
-  }, [account, logout]);
+  }, [account, logout, pathname]);
 
     useEffect(() => {
       if (account && user === null) {

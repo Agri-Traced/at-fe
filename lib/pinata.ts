@@ -10,9 +10,8 @@ const pinata = new PinataSDK({
 export async function createIPFSHash(data: any) {
   try {
     const upload = await pinata.upload.json(data);
-    console.log("IPFS Hash của bạn:", upload.IpfsHash);
     return upload.IpfsHash;
   } catch (error) {
-    console.error("Lỗi upload IPFS:", error);
+    throw new Error(`Lỗi khi tạo IPFS Hash: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

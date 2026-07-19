@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const validation = transitSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ success: false, errors: validation.error.format() }, { status: 400 });
+      return NextResponse.json({ success: false, errors: validation.error}, { status: 400 });
     }
 
     const data = validation.data;

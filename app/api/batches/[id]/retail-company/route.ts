@@ -15,7 +15,7 @@ export const PATCH = withRole(Role.FARMER, async (req, user, context) => {
     const validation = retailerSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json({ success: false, errors: validation.error.format() }, { status: 400 });
+      return NextResponse.json({ success: false, errors: validation.error }, { status: 400 });
     }
 
     const { retailCompanyId } = validation.data;

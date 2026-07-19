@@ -8,7 +8,7 @@ import { withRole } from '@/lib/auth';
 const harvestSchema = z.object({
   expiryDate: z.coerce.date({ message: "Ngày hết hạn không hợp lệ!" }),
   retailCompanyId: z.string().min(1, "Vui lòng chọn siêu thị nhận hàng!"),
-  ipfsHash: z.string().min(1, "Vui lòng nhập IPFS Hash!"),
+  quantity: z.number().min(1, "Số lượng sản phẩm không hợp lệ!"),
 });
 
 export const POST = withRole(Role.FARMER, async (req, user, context) => {
@@ -22,7 +22,7 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
 
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, errors: validation.error.format() },
+        { success: false, errors: z.treeifyError(validation.error) },
         { status: 400 }
       );
     }
@@ -42,8 +42,8 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       throw new Error("You have no permission to interact with this batch!");
     }
 
-    if (batch.status !== BatchStatus.PLANTED) {
-      throw new Error(`Cannot add harvest information to batch with status: ${batch.status}`);
+    if (batch.harvestTxHash !== null) {
+      throw new Error("This batch has already been harvested.");
     }
 
     const harvest = await prisma.batch.update({
@@ -58,14 +58,12 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
     return NextResponse.json(
       {
         success: true,
-        message: "Ghi nhật ký canh tác thành công và đã được xác thực mã Hash.",
         data: harvest
       },
       { status: 201 }
     );
 
   } catch (error: unknown) {
-    console.error("❌ Lỗi API ActivityLog:", error);
     return NextResponse.json(
       {
         success: false,

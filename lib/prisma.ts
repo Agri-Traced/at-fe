@@ -1,9 +1,13 @@
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg'; // Cần cài đặt gói 'pg'
+import { Pool } from 'pg';
+import "dotenv/config";
 
 const prismaClientSingleton = () => {
-  // Tạo một instance của Pool từ 'pg' (postgres driver)
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL biến môi trường chưa được nạp!");
+  }
+
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter: adapter});

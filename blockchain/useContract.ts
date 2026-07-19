@@ -32,8 +32,6 @@ export function useContract() {
       });
       return txHash;
     } catch (error: any) {
-      console.error("Blockchain Write Error:", error);
-
       const isRejected = error?.message?.includes('User rejected') || error?.code === 4001;
 
       if (isRejected) {
@@ -44,7 +42,7 @@ export function useContract() {
         });
       } else {
         notification.error({
-          message: t('An error occurred while interacting with the blockchain.'),
+          message: `${t('An error occurred while interacting with the blockchain. ')} ${error.message}`,
           showProgress: true,
           placement: 'bottomRight'
         });
@@ -67,7 +65,6 @@ export function useContract() {
       });
       return data;
     } catch (error) {
-      console.error("Blockchain Read Error:", error);
       throw error;
     }
   };

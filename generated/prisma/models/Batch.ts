@@ -45,8 +45,10 @@ export type BatchSumAggregateOutputType = {
 export type BatchMinAggregateOutputType = {
   id: string | null
   blockchainId: string | null
-  txHash: string | null
+  plantTxHash: string | null
+  harvestTxHash: string | null
   productName: string | null
+  productVariety: string | null
   category: $Enums.Category | null
   quantity: number | null
   unit: string | null
@@ -68,8 +70,10 @@ export type BatchMinAggregateOutputType = {
 export type BatchMaxAggregateOutputType = {
   id: string | null
   blockchainId: string | null
-  txHash: string | null
+  plantTxHash: string | null
+  harvestTxHash: string | null
   productName: string | null
+  productVariety: string | null
   category: $Enums.Category | null
   quantity: number | null
   unit: string | null
@@ -91,8 +95,10 @@ export type BatchMaxAggregateOutputType = {
 export type BatchCountAggregateOutputType = {
   id: number
   blockchainId: number
-  txHash: number
+  plantTxHash: number
+  harvestTxHash: number
   productName: number
+  productVariety: number
   category: number
   quantity: number
   unit: number
@@ -132,8 +138,10 @@ export type BatchSumAggregateInputType = {
 export type BatchMinAggregateInputType = {
   id?: true
   blockchainId?: true
-  txHash?: true
+  plantTxHash?: true
+  harvestTxHash?: true
   productName?: true
+  productVariety?: true
   category?: true
   quantity?: true
   unit?: true
@@ -155,8 +163,10 @@ export type BatchMinAggregateInputType = {
 export type BatchMaxAggregateInputType = {
   id?: true
   blockchainId?: true
-  txHash?: true
+  plantTxHash?: true
+  harvestTxHash?: true
   productName?: true
+  productVariety?: true
   category?: true
   quantity?: true
   unit?: true
@@ -178,8 +188,10 @@ export type BatchMaxAggregateInputType = {
 export type BatchCountAggregateInputType = {
   id?: true
   blockchainId?: true
-  txHash?: true
+  plantTxHash?: true
+  harvestTxHash?: true
   productName?: true
+  productVariety?: true
   category?: true
   quantity?: true
   unit?: true
@@ -288,8 +300,10 @@ export type BatchGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type BatchGroupByOutputType = {
   id: string
   blockchainId: string
-  txHash: string | null
+  plantTxHash: string | null
+  harvestTxHash: string | null
   productName: string
+  productVariety: string
   category: $Enums.Category
   quantity: number | null
   unit: string
@@ -334,8 +348,10 @@ export type BatchWhereInput = {
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
   blockchainId?: Prisma.StringFilter<"Batch"> | string
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  plantTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  harvestTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
+  productVariety?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
@@ -363,8 +379,10 @@ export type BatchWhereInput = {
 export type BatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  plantTxHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  harvestTxHash?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrder
+  productVariety?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
@@ -395,8 +413,10 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   OR?: Prisma.BatchWhereInput[]
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  plantTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  harvestTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
+  productVariety?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
@@ -424,8 +444,10 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
 export type BatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  plantTxHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  harvestTxHash?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrder
+  productVariety?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
@@ -455,8 +477,10 @@ export type BatchScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BatchScalarWhereWithAggregatesInput | Prisma.BatchScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   blockchainId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  txHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  plantTxHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  harvestTxHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   productName?: Prisma.StringWithAggregatesFilter<"Batch"> | string
+  productVariety?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatNullableWithAggregatesFilter<"Batch"> | number | null
   unit?: Prisma.StringWithAggregatesFilter<"Batch"> | string
@@ -478,8 +502,10 @@ export type BatchScalarWhereWithAggregatesInput = {
 export type BatchCreateInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -504,8 +530,10 @@ export type BatchCreateInput = {
 export type BatchUncheckedCreateInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -530,8 +558,10 @@ export type BatchUncheckedCreateInput = {
 export type BatchUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -556,8 +586,10 @@ export type BatchUpdateInput = {
 export type BatchUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -582,8 +614,10 @@ export type BatchUncheckedUpdateInput = {
 export type BatchCreateManyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -605,8 +639,10 @@ export type BatchCreateManyInput = {
 export type BatchUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -625,8 +661,10 @@ export type BatchUpdateManyMutationInput = {
 export type BatchUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -663,8 +701,10 @@ export type BatchScalarRelationFilter = {
 export type BatchCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  plantTxHash?: Prisma.SortOrder
+  harvestTxHash?: Prisma.SortOrder
   productName?: Prisma.SortOrder
+  productVariety?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
@@ -694,8 +734,10 @@ export type BatchAvgOrderByAggregateInput = {
 export type BatchMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  plantTxHash?: Prisma.SortOrder
+  harvestTxHash?: Prisma.SortOrder
   productName?: Prisma.SortOrder
+  productVariety?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
@@ -717,8 +759,10 @@ export type BatchMaxOrderByAggregateInput = {
 export type BatchMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  plantTxHash?: Prisma.SortOrder
+  harvestTxHash?: Prisma.SortOrder
   productName?: Prisma.SortOrder
+  productVariety?: Prisma.SortOrder
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
@@ -944,8 +988,10 @@ export type BatchUpdateOneRequiredWithoutQualityTestNestedInput = {
 export type BatchCreateWithoutFarmerInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -969,8 +1015,10 @@ export type BatchCreateWithoutFarmerInput = {
 export type BatchUncheckedCreateWithoutFarmerInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1023,8 +1071,10 @@ export type BatchScalarWhereInput = {
   NOT?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
   blockchainId?: Prisma.StringFilter<"Batch"> | string
-  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  plantTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
+  harvestTxHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
+  productVariety?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
@@ -1046,8 +1096,10 @@ export type BatchScalarWhereInput = {
 export type BatchCreateWithoutShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1071,8 +1123,10 @@ export type BatchCreateWithoutShipperCompanyInput = {
 export type BatchUncheckedCreateWithoutShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1106,8 +1160,10 @@ export type BatchCreateManyShipperCompanyInputEnvelope = {
 export type BatchCreateWithoutRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1131,8 +1187,10 @@ export type BatchCreateWithoutRetailCompanyInput = {
 export type BatchUncheckedCreateWithoutRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1198,8 +1256,10 @@ export type BatchUpdateManyWithWhereWithoutRetailCompanyInput = {
 export type BatchCreateWithoutActivitiesInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1223,8 +1283,10 @@ export type BatchCreateWithoutActivitiesInput = {
 export type BatchUncheckedCreateWithoutActivitiesInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1264,8 +1326,10 @@ export type BatchUpdateToOneWithWhereWithoutActivitiesInput = {
 export type BatchUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1289,8 +1353,10 @@ export type BatchUpdateWithoutActivitiesInput = {
 export type BatchUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1314,8 +1380,10 @@ export type BatchUncheckedUpdateWithoutActivitiesInput = {
 export type BatchCreateWithoutTransitsInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1339,8 +1407,10 @@ export type BatchCreateWithoutTransitsInput = {
 export type BatchUncheckedCreateWithoutTransitsInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1380,8 +1450,10 @@ export type BatchUpdateToOneWithWhereWithoutTransitsInput = {
 export type BatchUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1405,8 +1477,10 @@ export type BatchUpdateWithoutTransitsInput = {
 export type BatchUncheckedUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1430,8 +1504,10 @@ export type BatchUncheckedUpdateWithoutTransitsInput = {
 export type BatchCreateWithoutQualityTestInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1455,8 +1531,10 @@ export type BatchCreateWithoutQualityTestInput = {
 export type BatchUncheckedCreateWithoutQualityTestInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1496,8 +1574,10 @@ export type BatchUpdateToOneWithWhereWithoutQualityTestInput = {
 export type BatchUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1521,8 +1601,10 @@ export type BatchUpdateWithoutQualityTestInput = {
 export type BatchUncheckedUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1546,8 +1628,10 @@ export type BatchUncheckedUpdateWithoutQualityTestInput = {
 export type BatchCreateManyFarmerInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1568,8 +1652,10 @@ export type BatchCreateManyFarmerInput = {
 export type BatchUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1593,8 +1679,10 @@ export type BatchUpdateWithoutFarmerInput = {
 export type BatchUncheckedUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1618,8 +1706,10 @@ export type BatchUncheckedUpdateWithoutFarmerInput = {
 export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1640,8 +1730,10 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
 export type BatchCreateManyShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1662,8 +1754,10 @@ export type BatchCreateManyShipperCompanyInput = {
 export type BatchCreateManyRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash?: string | null
+  plantTxHash?: string | null
+  harvestTxHash?: string | null
   productName: string
+  productVariety: string
   category?: $Enums.Category
   quantity?: number | null
   unit: string
@@ -1684,8 +1778,10 @@ export type BatchCreateManyRetailCompanyInput = {
 export type BatchUpdateWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1709,8 +1805,10 @@ export type BatchUpdateWithoutShipperCompanyInput = {
 export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1734,8 +1832,10 @@ export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
 export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1756,8 +1856,10 @@ export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
 export type BatchUpdateWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1781,8 +1883,10 @@ export type BatchUpdateWithoutRetailCompanyInput = {
 export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1806,8 +1910,10 @@ export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
 export type BatchUncheckedUpdateManyWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
+  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1868,8 +1974,10 @@ export type BatchCountOutputTypeCountTransitsArgs<ExtArgs extends runtime.Types.
 export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   blockchainId?: boolean
-  txHash?: boolean
+  plantTxHash?: boolean
+  harvestTxHash?: boolean
   productName?: boolean
+  productVariety?: boolean
   category?: boolean
   quantity?: boolean
   unit?: boolean
@@ -1898,8 +2006,10 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   blockchainId?: boolean
-  txHash?: boolean
+  plantTxHash?: boolean
+  harvestTxHash?: boolean
   productName?: boolean
+  productVariety?: boolean
   category?: boolean
   quantity?: boolean
   unit?: boolean
@@ -1924,8 +2034,10 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   blockchainId?: boolean
-  txHash?: boolean
+  plantTxHash?: boolean
+  harvestTxHash?: boolean
   productName?: boolean
+  productVariety?: boolean
   category?: boolean
   quantity?: boolean
   unit?: boolean
@@ -1950,8 +2062,10 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type BatchSelectScalar = {
   id?: boolean
   blockchainId?: boolean
-  txHash?: boolean
+  plantTxHash?: boolean
+  harvestTxHash?: boolean
   productName?: boolean
+  productVariety?: boolean
   category?: boolean
   quantity?: boolean
   unit?: boolean
@@ -1970,7 +2084,7 @@ export type BatchSelectScalar = {
   shipperCompanyId?: boolean
 }
 
-export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "status" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "imageUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
+export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "plantTxHash" | "harvestTxHash" | "productName" | "productVariety" | "category" | "quantity" | "unit" | "status" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "imageUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
 export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2004,8 +2118,10 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     blockchainId: string
-    txHash: string | null
+    plantTxHash: string | null
+    harvestTxHash: string | null
     productName: string
+    productVariety: string
     category: $Enums.Category
     quantity: number | null
     unit: string
@@ -2453,8 +2569,10 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface BatchFieldRefs {
   readonly id: Prisma.FieldRef<"Batch", 'String'>
   readonly blockchainId: Prisma.FieldRef<"Batch", 'String'>
-  readonly txHash: Prisma.FieldRef<"Batch", 'String'>
+  readonly plantTxHash: Prisma.FieldRef<"Batch", 'String'>
+  readonly harvestTxHash: Prisma.FieldRef<"Batch", 'String'>
   readonly productName: Prisma.FieldRef<"Batch", 'String'>
+  readonly productVariety: Prisma.FieldRef<"Batch", 'String'>
   readonly category: Prisma.FieldRef<"Batch", 'Category'>
   readonly quantity: Prisma.FieldRef<"Batch", 'Float'>
   readonly unit: Prisma.FieldRef<"Batch", 'String'>

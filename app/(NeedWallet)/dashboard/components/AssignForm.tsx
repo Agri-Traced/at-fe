@@ -49,21 +49,9 @@ export const AssignModal = ({ open, onClose }: { open: boolean; onClose: () => v
     }
     const randomNumber = Math.floor(100 + Math.random() * 900);
     const blockchainId = `${Date.now()}${randomNumber}`;
-    const txHash = await executeWrite(async (contract) => {
-      const tx = await contract.createBatch(
-        BigInt(blockchainId),
-        values.expiryDate ? Math.floor(new Date(values.expiryDate).getTime() / 1000) : 0,
-        values.harvestDate ? Math.floor(new Date(values.harvestDate).getTime() / 1000) : 0,
-        ipfsHash
-      );
-      await tx.wait();
-      return tx.hash
-    });
     mutate({
       ...values,
-      txHash,
       blockchainId,
-      ipfsHash,
     }, {
       onSuccess: async (data: Batch) => {
         modal.success({
@@ -72,7 +60,6 @@ export const AssignModal = ({ open, onClose }: { open: boolean; onClose: () => v
           content:
             <div className="flex flex-col gap-2">
               <QRBlock id={data.id} />
-              <Typography.Text copyable>ipfsHash: {data.ipfsHash}</Typography.Text>
             </div>,
         });
         onClose();

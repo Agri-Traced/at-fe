@@ -7,8 +7,10 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+
     const batch = await prisma.batch.findMany({
-      where: { farmerId: id },
+      where: { farmerId: id, NOT: { plantTxHash: null } },
+      orderBy: { updatedAt: 'desc' },
       include: {
         farmer: {
           select: {
@@ -18,7 +20,6 @@ export async function GET(
         },
         qualityTest: {
           include: { retailer: true },
-          orderBy: { inspectedAt: 'desc' } // Lấy kiểm định mới nhất lên đầu
         },
         shipperCompany: {
           select: { companyName: true, location: true }

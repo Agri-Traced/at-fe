@@ -95,8 +95,10 @@ model ActivityLog {
 model Batch {
   id             String        @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
   blockchainId   String        @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
-  txHash         String? // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
+  plantTxHash    String? // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
+  harvestTxHash  String? // Transaction Hash lúc thu hoạch để đối chiếu e-etherscan
   productName    String
+  productVariety String // Giống cây trồng
   category       Category      @default(VEGETABLE)
   quantity       Float? // Khối lượng / Số lượng lô hàng
   unit           String // Đơn vị tính (KG, Tấn, Thùng...)

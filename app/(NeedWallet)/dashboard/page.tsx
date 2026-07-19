@@ -24,6 +24,7 @@ export default function BatchPage() {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [selectedBatchId, setSelectedBatchId] = useState<string | null>(null);
+  const [unit, setUnit] = useState<string | null>(null);
   const [openAddLogModal, setOpenAddLogModal] = useState(false);
   const [openHarvestModal, setOpenHarvestModal] = useState(false);
   const { modal } = App.useApp();
@@ -66,8 +67,10 @@ export default function BatchPage() {
       key: 'harvest',
       icon: <SnippetsFilled />,
       hidden: user.role !== 'FARMER',
+      disabled: data.status !== 'PLANTED',
       onClick: () => {
         setSelectedBatchId(data.id);
+        setUnit(data.unit);
         setOpenHarvestModal(true);
       }
     },
@@ -92,7 +95,6 @@ export default function BatchPage() {
       dataIndex: 'productName',
       key: 'productName',
       className: 'font-medium text-neutral-800',
-      fixed: 'left',
       render: (_, record) => (
         <Tooltip title={record.productName}>
           <Link href={`trace/${record.id}`} className="truncate max-w-50">
@@ -105,7 +107,7 @@ export default function BatchPage() {
       title: t('Category'),
       dataIndex: 'category',
       key: 'category',
-      render: (category: Batch['category']) => {
+      render: (_, record) => {
         // Vì đã có Union Type sẵn từ IntelliSense, ta dùng thẳng String để so sánh cực kỳ sạch sẽ
         const colors: Record<Batch['category'], string> = {
           VEGETABLE: 'green',
@@ -115,7 +117,7 @@ export default function BatchPage() {
           HERB: 'lime',
           OTHER: 'default',
         };
-        return <Tag color={colors[category]}>{category}</Tag>;
+        return <Tag color={colors[record.category]}>{record.category}</Tag>;
       },
     },
     {
@@ -123,9 +125,9 @@ export default function BatchPage() {
       dataIndex: 'quantity',
       key: 'quantity',
       align: 'right', // Cột số luôn luôn căn phải theo UI/UX chuẩn
-      render: (quantity: number, record) => (
+      render: (_, record) => (
         <span>
-          {quantity.toLocaleString()} <span className="text-xs text-neutral-400">{record.unit}</span>
+          {record.quantity} <span className="text-xs text-neutral-400">{record.unit}</span>
         </span>
       ),
     },
@@ -133,7 +135,7 @@ export default function BatchPage() {
       title: t('Status'),
       dataIndex: 'status',
       key: 'status',
-      render: (status: Batch['status']) => {
+      render: (_, record) => {
         const statusConfig: Record<Batch['status'], { color: string; text: string }> = {
           PLANTED: { color: 'processing', text: 'Đã gieo trồng' },
           HARVESTED: { color: 'warning', text: 'Đã thu hoạch' },
@@ -143,7 +145,7 @@ export default function BatchPage() {
           SOLD: { color: 'success', text: 'Đã bán hết' },
           ABORTED: { color: 'error', text: 'Hết hạn sử dụng' },
         };
-        return <Tag color={statusConfig[status]?.color}>{statusConfig[status]?.text}</Tag>;
+        return <Tag color={statusConfig[record.status]?.color}>{statusConfig[record.status]?.text}</Tag>;
       },
     },
     {
@@ -214,7 +216,7 @@ export default function BatchPage() {
           columns={columns}
           dataSource={filteredData}
           sticky={{ offsetHeader: 0 }}
-          scroll={{ y: 'calc(100vh - 330px)' }}
+          scroll={{ x: 800 }}
           locale={{
             emptyText: <Empty description={t('No data')} />
           }}
@@ -232,7 +234,7 @@ export default function BatchPage() {
       <HarvestForm open={openHarvestModal} onClose={() => {
         setOpenHarvestModal(false)
         setSelectedBatchId(null)
-      }} id={selectedBatchId} />
+      }} id={selectedBatchId} unit={unit} />
     </>
   )
 }

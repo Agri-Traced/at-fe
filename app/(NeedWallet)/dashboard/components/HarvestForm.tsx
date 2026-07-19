@@ -1,25 +1,23 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Modal, Select, Typography, App, DatePicker } from "antd"
-import { Batch } from '@/generated/zod';
+import { Button, Form, InputNumber, Modal, Select, Typography, App, DatePicker, Result } from "antd"
 import { useTranslation } from "react-i18next";
 import { useContract } from "@/blockchain/useContract";
-import { BatchHarvest, usePostBatchConfirm, usePostBatchHarvest } from "@/hooks/batchs";
+import { BatchHarvest, usePostBatchHarvest, usePostBatchHarvestConfirm } from "@/hooks/batchs";
 import { createIPFSHash } from "@/lib/pinata";
-import { QRBlock } from "@/app/components/QRBlock";
 import { useState } from "react";
 import { useCompaniesRetail } from "@/hooks/company";
 import { TransactionLoading } from "./TransactionLoading";
 
-export const HarvestForm = ({ open, onClose, id }: { open: boolean; onClose: () => void; id: string | null }) => {
+export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClose: () => void; id: string | null; unit: string | null }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<BatchHarvest>();
   const { mutate, isPending } = usePostBatchHarvest()
   const { executeWrite, loading, } = useContract();
-  const { modal } = App.useApp();
+  const { modal, notification } = App.useApp();
   const [loadingIPFS, setLoadingIPFS] = useState(false);
   const { data: companies } = useCompaniesRetail();
-  const { mutate: confirm, isPending: isConfirming } = usePostBatchConfirm();
+  const { mutate: confirm, isPending: isConfirming } = usePostBatchHarvestConfirm();
 
   const RETAIL_COMPANY_OPTIONS = companies?.map((company) => ({
     label: company.companyName,
@@ -28,62 +26,57 @@ export const HarvestForm = ({ open, onClose, id }: { open: boolean; onClose: () 
 
   const onFinish = async (values: BatchHarvest) => {
     if (!id) return null;
-    const randomNumber = Math.floor(100 + Math.random() * 900);
-    const blockchainId = `${Date.now()}${randomNumber}`;
     mutate({ id, data: values }, {
-      onSuccess: async (data: Batch) => {
+      onSuccess: async (data) => {
         setLoadingIPFS(true);
         const ipfsHash = await createIPFSHash(values);
         setLoadingIPFS(false);
         if (!ipfsHash) {
-          modal.error({
+          notification.error({
             title: t('Error'),
-            content: t('Failed to create IPFS hash for the batch. Please try again.'),
+            description: `${t('Action failed. Please try again.')}`,
+            showProgress: true,
+            placement: 'bottomRight',
           });
           return;
         }
         const txHash = await executeWrite('harvestBatch', [
-          BigInt(blockchainId),
+          BigInt(data.blockchainId),
           Math.floor(new Date(data.expiryDate!).getTime() / 1000),
           data.retailCompanyId!,
           ipfsHash,
         ]);
         confirm({
           id: data.id,
-          data: txHash,
+          data: { harvestTxHash: String(txHash) },
         }, {
-          onSuccess: async (data: Batch) => {
+          onSuccess: async () => {
             modal.success({
               icon: null,
               title: t('Batch Created Successfully'),
               content:
-                <div className="flex flex-col gap-2">
-                  <QRBlock id={data.id} />
-                  <Typography.Text copyable>ipfsHash: {ipfsHash}</Typography.Text>
-                </div>,
+                <Result
+                  status="success"
+                  title={t('Batch Harvested Successfully')}
+                  subTitle={t('The activity log has been created successfully.')}
+                />
             });
             onClose();
           }, onError: (error) => {
-            modal.error({
+            notification.error({
               title: t('Error'),
-              content: t('Failed to create batch. Please try again.', { error: error.message }),
+              description: `${t('Action failed. Please try again.')} ${error.message}`,
+              showProgress: true,
+              placement: 'bottomRight',
             });
           }
         });
-        modal.success({
-          icon: null,
-          title: t('Batch Created Successfully'),
-          content:
-            <div className="flex flex-col gap-2">
-              <QRBlock id={data.id} />
-              <Typography.Text copyable>ipfsHash: {ipfsHash}</Typography.Text>
-            </div>,
-        });
-        onClose();
       }, onError: (error) => {
-        modal.error({
+        notification.error({
           title: t('Error'),
-          content: t('Failed to create batch. Please try again.', { error: error.message }),
+          description: `${t('Action failed. Please try again. ')} ${error.message}`,
+          showProgress: true,
+          placement: 'bottomRight',
         });
       }
     });
@@ -108,7 +101,6 @@ export const HarvestForm = ({ open, onClose, id }: { open: boolean; onClose: () 
         onFinish={onFinish}
         initialValues={{
           quantity: 1,
-          unit: 'kg',
         }}
       >
         <Form.Item
@@ -120,7 +112,6 @@ export const HarvestForm = ({ open, onClose, id }: { open: boolean; onClose: () 
         </Form.Item>
         <div className="grid grid-cols-2 gap-4">
           <Form.Item
-            className="w-full"
             label={t('Quantity')}
             name="quantity"
             rules={[
@@ -128,15 +119,23 @@ export const HarvestForm = ({ open, onClose, id }: { open: boolean; onClose: () 
               { type: 'number', min: 1, message: t('Quantity must be greater than 0') }
             ]}
           >
-            <InputNumber className="w-full" placeholder={t('Enter quantity')} />
+            <InputNumber suffix={unit || '???'} className="!w-full" min={1} placeholder={t('Enter quantity')} />
           </Form.Item>
           <Form.Item
             label={t('Expiry Date (estimate)')}
             name="expiryDate"
+            rules={[
+              { required: true, message: t('Please enter expiry date') },
+              { type: 'date', message: t('Please select a valid date') }]}
           >
             <DatePicker className="w-full" placeholder={t('Select date')} format="YYYY-MM-DD" />
           </Form.Item>
         </div>
+        <Form.Item className="flex justify-center mt-6">
+          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || loadingIPFS || isConfirming}>
+            {t('Submit')}
+          </Button>
+        </Form.Item>
       </Form>
       <TransactionLoading loadingIPFS={loadingIPFS} loading={loading} isPending={isPending} isConfirming={isConfirming} />
     </Modal>

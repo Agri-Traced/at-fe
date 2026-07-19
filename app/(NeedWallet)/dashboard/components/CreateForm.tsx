@@ -74,7 +74,7 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
         ]);
         confirm({
           id: data.id,
-          data: txHash,
+          data: { plantTxHash: String(txHash) },
         }, {
           onSuccess: async (data: Batch) => {
             modal.success({
@@ -90,7 +90,7 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
           }, onError: (error) => {
             notification.error({
               title: t('Error'),
-              description: t('Failed to create batch. Please try again.', { error: error.message }),
+              description: `${t('Action failed. Please try again.')} ${error.message}`,
               showProgress: true,
               placement: 'bottomRight',
             });
@@ -99,7 +99,7 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
       }, onError: (error) => {
         notification.error({
           title: t('Error'),
-          description: t('Failed to create batch. Please try again.', { error: error.message }),
+          description: `${t('Action failed. Please try again.')} ${error.message}`,
           showProgress: true,
           placement: 'bottomRight',
         });
@@ -129,13 +129,22 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
           unit: 'kg',
         }}
       >
-        <Form.Item
-          label={t('Product Name')}
-          name="productName"
-          rules={[{ required: true, message: t('Please enter product name'), max: 100 }]}
-        >
-          <Input placeholder={t('Enter product name')} />
-        </Form.Item>
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Item
+            label={t('Product name')}
+            name="productName"
+            rules={[{ required: true, message: t('Please enter product name'), max: 100 }]}
+          >
+            <Input placeholder={t('Enter product name')} />
+          </Form.Item>
+          <Form.Item
+            label={t('Product variety')}
+            name="productVariety"
+            rules={[{ required: true, message: t('Please enter product variety'), max: 100 }]}
+          >
+            <Input placeholder={t('Enter product variety')} />
+          </Form.Item>
+        </div>
         <div className="grid grid-cols-2 gap-4">
           {/* Tên sản phẩm */}
           <Form.Item
@@ -197,14 +206,15 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
           >
             <InputNumber min={0} max={100} suffix="%" className="!w-full" />
           </Form.Item>
-          <Form.Item>
-            <UploadWidget imageUrl={(url) => setImageUrl(url)} />
-          </Form.Item>
         </div>
+        <Form.Item
+          className="w-full">
+          <UploadWidget imageUrl={(url) => setImageUrl(url)} />
+        </Form.Item>
         {/* Nút gửi */}
         <Form.Item className="flex justify-center mt-6">
-          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || loadingIPFS}>
-            {t('Submit Batch')}
+          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || loadingIPFS || isConfirming}>
+            {t('Submit')}
           </Button>
         </Form.Item>
       </Form>

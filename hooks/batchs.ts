@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { Batch, User, StepTransit, ActivityLog, QualityTest } from '@/generated/zod';
+import { Batch, User, StepTransit, ActivityLog, QualityTest, Company } from '@/generated/zod';
+
+export type UserRelation = User & {
+  company: Company
+}
 
 export type TransitsRelation = StepTransit & {
   shipper: User;
@@ -17,13 +21,13 @@ export type ActivityLogRelation = ActivityLog & {
 }
 
 export type BatchRelation = Batch & {
-  farmer: User;
+  farmer: UserRelation;
   transits: TransitsRelation[];
   activities: ActivityLogRelation[];
   qualityTest: QualityTestRelation | null;
 }
 
-export type BatchHarvest = Pick<Batch, 'expiryDate' | 'retailCompanyId' | 'quantity' | 'txHash'>
+export type BatchHarvest = Pick<Batch, 'expiryDate' | 'retailCompanyId' | 'quantity'>
 
 export const useCompanyBatches = (id: string) => {
   return useQuery({
@@ -38,7 +42,23 @@ export const useCompanyBatches = (id: string) => {
 export const usePostBatchConfirm = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: string }) => api.post<Batch, Batch>(`/batches/${id}/confirm`, data),
+    mutationFn: async ({ id, data }: { id: string; data: { plantTxHash: string } }) => {
+      const res = await api.post<Batch>(`/batches/${id}/confirm`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+}
+
+export const usePostBatchHarvestConfirm = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: { harvestTxHash: string } }) => {
+      const res = await api.post<Batch>(`/batches/${id}/harvest/confirm`, data);
+      return res.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['batches'] });
     }
@@ -46,15 +66,25 @@ export const usePostBatchConfirm = () => {
 }
 
 export const usePostBatchHarvest = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: BatchHarvest }) => api.post<Batch, Batch>(`/batches/${id}/harvest`, data),
+    mutationFn: async ({ id, data }: { id: string; data: BatchHarvest }) => {
+      const res = await api.post<Batch>(`/batches/${id}/harvest`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
   });
 }
 
 export const usePostBatchActivityLog = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => api.post<ActivityLog, ActivityLog>(`/batches/${id}/activity-logs`, data),
+    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => {
+      const res = await api.post<ActivityLog>(`/batches/${id}/log`, data);
+      return res.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['batches'] });
     }
