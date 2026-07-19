@@ -4,18 +4,22 @@ import { Button, Form, Input, InputNumber, Modal, Select, Typography, App } from
 import { Batch } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
 import { useContract } from "@/blockchain/useContract";
-import { usePostBatch } from "@/hooks/batchs";
+import { usePostBatch, usePostBatchConfirm } from "@/hooks/batchs";
 import { createIPFSHash } from "@/lib/pinata";
 import { QRBlock } from "@/app/components/QRBlock";
 import { useState } from "react";
+import { TransactionLoading } from "./TransactionLoading";
+import { UploadWidget } from "@/app/components/UploadWiget";
 
 export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<Batch>();
   const { mutate, isPending } = usePostBatch()
+  const { mutate: confirm, isPending: isConfirming } = usePostBatchConfirm()
   const { executeWrite, loading, } = useContract();
-  const { modal } = App.useApp();
+  const { modal, notification } = App.useApp();
   const [loadingIPFS, setLoadingIPFS] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
   const UNIT_OPTIONS = [
     { label: t('Kilogram (kg)'), value: 'kg' },
     { label: t('Gram (g)'), value: 'g' },
@@ -34,44 +38,70 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
   ];
 
   const onFinish = async (values: Batch) => {
-    setLoadingIPFS(true);
-    const ipfsHash = await createIPFSHash(values);
-    setLoadingIPFS(false);
-    if (!ipfsHash) {
-      modal.error({
-        title: t('Error'),
-        content: t('Failed to create IPFS hash for the batch. Please try again.'),
+    const randomNumber = Math.floor(100 + Math.random() * 900);
+    const blockchainId = `${Date.now()}${randomNumber}`;
+    if (!imageUrl) {
+      notification.warning({
+        title: t('Missing Image'),
+        description: t('Please upload an image for the batch before submitting.'),
+        showProgress: true,
+        placement: 'bottomRight',
       });
       return;
     }
-    const randomNumber = Math.floor(100 + Math.random() * 900);
-    const blockchainId = `${Date.now()}${randomNumber}`;
-    const txHash = await executeWrite('createBatch', [
-      BigInt(blockchainId),
-      [values.minTemperature, values.maxTemperature, values.minHumidity, values.maxHumidity],
-      ipfsHash,
-    ]);
     mutate({
       ...values,
-      txHash,
       blockchainId,
-      ipfsHash,
+      imageUrl,
     }, {
       onSuccess: async (data: Batch) => {
-        modal.success({
-          icon: null,
-          title: t('Batch Created Successfully'),
-          content:
-            <div className="flex flex-col gap-2">
-              <QRBlock id={data.id} />
-              <Typography.Text copyable>ipfsHash: {data.ipfsHash}</Typography.Text>
-            </div>,
+        setLoadingIPFS(true);
+        const ipfsHash = await createIPFSHash(values);
+        setLoadingIPFS(false);
+        if (!ipfsHash) {
+          notification.error({
+            title: t('Error'),
+            description: t('Failed to create IPFS hash for the batch. Please try again.'),
+            showProgress: true,
+            placement: 'bottomRight',
+          });
+          return;
+        }
+        const txHash = await executeWrite('createBatch', [
+          BigInt(blockchainId),
+          [values.minTemperature, values.maxTemperature, values.minHumidity, values.maxHumidity],
+          ipfsHash,
+        ]);
+        confirm({
+          id: data.id,
+          data: txHash,
+        }, {
+          onSuccess: async (data: Batch) => {
+            modal.success({
+              icon: null,
+              title: t('Batch Created Successfully'),
+              content:
+                <div className="flex flex-col gap-2">
+                  <QRBlock id={data.id} />
+                  <Typography.Text copyable>ipfsHash: {ipfsHash}</Typography.Text>
+                </div>,
+            });
+            onClose();
+          }, onError: (error) => {
+            notification.error({
+              title: t('Error'),
+              description: t('Failed to create batch. Please try again.', { error: error.message }),
+              showProgress: true,
+              placement: 'bottomRight',
+            });
+          }
         });
-        onClose();
       }, onError: (error) => {
-        modal.error({
+        notification.error({
           title: t('Error'),
-          content: t('Failed to create batch. Please try again.', { error: error.message }),
+          description: t('Failed to create batch. Please try again.', { error: error.message }),
+          showProgress: true,
+          placement: 'bottomRight',
         });
       }
     });
@@ -167,6 +197,9 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
           >
             <InputNumber min={0} max={100} suffix="%" className="!w-full" />
           </Form.Item>
+          <Form.Item>
+            <UploadWidget imageUrl={(url) => setImageUrl(url)} />
+          </Form.Item>
         </div>
         {/* Nút gửi */}
         <Form.Item className="flex justify-center mt-6">
@@ -175,9 +208,7 @@ export const CreateForm = ({ open, onClose }: { open: boolean; onClose: () => vo
           </Button>
         </Form.Item>
       </Form>
-      {loadingIPFS && <Typography.Text type="secondary" className="text-center block mt-4">{t('Uploading batch data to IPFS...')}</Typography.Text>}
-      {loading && <Typography.Text type="secondary" className="text-center block mt-4">{t('Submitting transaction to blockchain...')}</Typography.Text>}
-      {isPending && <Typography.Text type="secondary" className="text-center block mt-4">{t('Submitting batch to server...')}</Typography.Text>}
+      <TransactionLoading loadingIPFS={loadingIPFS} loading={loading} isPending={isPending} isConfirming={isConfirming} />
     </Modal>
   )
 }

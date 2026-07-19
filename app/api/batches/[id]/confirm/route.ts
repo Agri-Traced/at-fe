@@ -4,16 +4,19 @@ import { z } from "zod";
 import { BatchStatus, Role } from '@/generated/prisma/enums';
 import { withRole } from '@/lib/auth';
 
-const activitySchema = z.object({
-  description: z.string().min(1, "Vui lòng nhập mô tả hoạt động canh tác (ví dụ: Bón phân đợt 1)"),
+// 1. Validate Schema bằng Zod cho dữ liệu đầu vào
+const harvestSchema = z.object({
+  txHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
 export const POST = withRole(Role.FARMER, async (req, user, context) => {
   try {
+    // A. Lấy batchId từ URL params
     const { id } = await context.params;
 
+    // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
-    const validation = activitySchema.safeParse(body);
+    const validation = harvestSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -22,14 +25,15 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    const { description } = validation.data;
+    const data = validation.data;
 
+    // Bước 1: Kiểm tra xem lô hàng (Batch) này có tồn tại hay không
     const batch = await prisma.batch.findUnique({
       where: { id }
     });
 
     if (!batch) {
-      throw new Error("Không tìm thấy lô hàng tương ứng trên hệ thống!");
+      throw new Error("Cannot find batch with the provided ID.");
     }
 
     if (batch.farmerId !== user.id) {
@@ -37,21 +41,19 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
     }
 
     if (batch.status !== BatchStatus.PLANTED) {
-      throw new Error(`Cannot add activity log to batch with status: ${batch.status}`);
+      throw new Error(`Cannot do this action batch with status: ${batch.status}`);
     }
 
-    const log = await prisma.activityLog.create({
-      data: {
-        batchId: id,
-        description,
-      }
+    const txHash = await prisma.batch.update({
+      where: { id },
+      data,
     });
 
     return NextResponse.json(
       {
         success: true,
         message: "Ghi nhật ký canh tác thành công và đã được xác thực mã Hash.",
-        data: log
+        data: txHash
       },
       { status: 201 }
     );

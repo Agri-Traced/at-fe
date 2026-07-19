@@ -50,12 +50,12 @@ export type BatchMinAggregateOutputType = {
   category: $Enums.Category | null
   quantity: number | null
   unit: string | null
-  ipfsHash: string | null
   status: $Enums.BatchStatus | null
   minTemperature: number | null
   maxTemperature: number | null
   minHumidity: number | null
   maxHumidity: number | null
+  imageUrl: string | null
   farmerId: string | null
   harvestDate: Date | null
   expiryDate: Date | null
@@ -73,12 +73,12 @@ export type BatchMaxAggregateOutputType = {
   category: $Enums.Category | null
   quantity: number | null
   unit: string | null
-  ipfsHash: string | null
   status: $Enums.BatchStatus | null
   minTemperature: number | null
   maxTemperature: number | null
   minHumidity: number | null
   maxHumidity: number | null
+  imageUrl: string | null
   farmerId: string | null
   harvestDate: Date | null
   expiryDate: Date | null
@@ -96,12 +96,12 @@ export type BatchCountAggregateOutputType = {
   category: number
   quantity: number
   unit: number
-  ipfsHash: number
   status: number
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl: number
   farmerId: number
   harvestDate: number
   expiryDate: number
@@ -137,12 +137,12 @@ export type BatchMinAggregateInputType = {
   category?: true
   quantity?: true
   unit?: true
-  ipfsHash?: true
   status?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
   maxHumidity?: true
+  imageUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -160,12 +160,12 @@ export type BatchMaxAggregateInputType = {
   category?: true
   quantity?: true
   unit?: true
-  ipfsHash?: true
   status?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
   maxHumidity?: true
+  imageUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -183,12 +183,12 @@ export type BatchCountAggregateInputType = {
   category?: true
   quantity?: true
   unit?: true
-  ipfsHash?: true
   status?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
   maxHumidity?: true
+  imageUrl?: true
   farmerId?: true
   harvestDate?: true
   expiryDate?: true
@@ -288,17 +288,17 @@ export type BatchGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type BatchGroupByOutputType = {
   id: string
   blockchainId: string
-  txHash: string
+  txHash: string | null
   productName: string
   category: $Enums.Category
-  quantity: number
+  quantity: number | null
   unit: string
-  ipfsHash: string
   status: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl: string
   farmerId: string
   harvestDate: Date | null
   expiryDate: Date | null
@@ -334,17 +334,17 @@ export type BatchWhereInput = {
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
   blockchainId?: Prisma.StringFilter<"Batch"> | string
-  txHash?: Prisma.StringFilter<"Batch"> | string
+  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
-  quantity?: Prisma.FloatFilter<"Batch"> | number
+  quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
   maxHumidity?: Prisma.FloatFilter<"Batch"> | number
+  imageUrl?: Prisma.StringFilter<"Batch"> | string
   farmerId?: Prisma.StringFilter<"Batch"> | string
   harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
@@ -363,17 +363,17 @@ export type BatchWhereInput = {
 export type BatchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
+  quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
   maxHumidity?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrderInput | Prisma.SortOrder
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -395,17 +395,17 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
   OR?: Prisma.BatchWhereInput[]
   NOT?: Prisma.BatchWhereInput | Prisma.BatchWhereInput[]
-  txHash?: Prisma.StringFilter<"Batch"> | string
+  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
-  quantity?: Prisma.FloatFilter<"Batch"> | number
+  quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
   maxHumidity?: Prisma.FloatFilter<"Batch"> | number
+  imageUrl?: Prisma.StringFilter<"Batch"> | string
   farmerId?: Prisma.StringFilter<"Batch"> | string
   harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
@@ -424,17 +424,17 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
 export type BatchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   blockchainId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
+  quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
   maxHumidity?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrderInput | Prisma.SortOrder
   expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -455,17 +455,17 @@ export type BatchScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BatchScalarWhereWithAggregatesInput | Prisma.BatchScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   blockchainId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  txHash?: Prisma.StringWithAggregatesFilter<"Batch"> | string
+  txHash?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   productName?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Batch"> | $Enums.Category
-  quantity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
+  quantity?: Prisma.FloatNullableWithAggregatesFilter<"Batch"> | number | null
   unit?: Prisma.StringWithAggregatesFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusWithAggregatesFilter<"Batch"> | $Enums.BatchStatus
   minTemperature?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   minHumidity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   maxHumidity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
+  imageUrl?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   farmerId?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   harvestDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Batch"> | Date | string | null
@@ -478,17 +478,17 @@ export type BatchScalarWhereWithAggregatesInput = {
 export type BatchCreateInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -504,17 +504,17 @@ export type BatchCreateInput = {
 export type BatchUncheckedCreateInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -530,17 +530,17 @@ export type BatchUncheckedCreateInput = {
 export type BatchUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -556,17 +556,17 @@ export type BatchUpdateInput = {
 export type BatchUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -582,17 +582,17 @@ export type BatchUncheckedUpdateInput = {
 export type BatchCreateManyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -605,17 +605,17 @@ export type BatchCreateManyInput = {
 export type BatchUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -625,17 +625,17 @@ export type BatchUpdateManyMutationInput = {
 export type BatchUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -668,12 +668,12 @@ export type BatchCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
   maxHumidity?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -699,12 +699,12 @@ export type BatchMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
   maxHumidity?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -722,12 +722,12 @@ export type BatchMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  ipfsHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
   maxHumidity?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   farmerId?: Prisma.SortOrder
   harvestDate?: Prisma.SortOrder
   expiryDate?: Prisma.SortOrder
@@ -889,8 +889,8 @@ export type EnumCategoryFieldUpdateOperationsInput = {
   set?: $Enums.Category
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -899,6 +899,14 @@ export type FloatFieldUpdateOperationsInput = {
 
 export type EnumBatchStatusFieldUpdateOperationsInput = {
   set?: $Enums.BatchStatus
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -936,17 +944,17 @@ export type BatchUpdateOneRequiredWithoutQualityTestNestedInput = {
 export type BatchCreateWithoutFarmerInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -961,17 +969,17 @@ export type BatchCreateWithoutFarmerInput = {
 export type BatchUncheckedCreateWithoutFarmerInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1015,17 +1023,17 @@ export type BatchScalarWhereInput = {
   NOT?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
   id?: Prisma.StringFilter<"Batch"> | string
   blockchainId?: Prisma.StringFilter<"Batch"> | string
-  txHash?: Prisma.StringFilter<"Batch"> | string
+  txHash?: Prisma.StringNullableFilter<"Batch"> | string | null
   productName?: Prisma.StringFilter<"Batch"> | string
   category?: Prisma.EnumCategoryFilter<"Batch"> | $Enums.Category
-  quantity?: Prisma.FloatFilter<"Batch"> | number
+  quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
-  ipfsHash?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
   maxHumidity?: Prisma.FloatFilter<"Batch"> | number
+  imageUrl?: Prisma.StringFilter<"Batch"> | string
   farmerId?: Prisma.StringFilter<"Batch"> | string
   harvestDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
   expiryDate?: Prisma.DateTimeNullableFilter<"Batch"> | Date | string | null
@@ -1038,17 +1046,17 @@ export type BatchScalarWhereInput = {
 export type BatchCreateWithoutShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1063,17 +1071,17 @@ export type BatchCreateWithoutShipperCompanyInput = {
 export type BatchUncheckedCreateWithoutShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1098,17 +1106,17 @@ export type BatchCreateManyShipperCompanyInputEnvelope = {
 export type BatchCreateWithoutRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1123,17 +1131,17 @@ export type BatchCreateWithoutRetailCompanyInput = {
 export type BatchUncheckedCreateWithoutRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1190,17 +1198,17 @@ export type BatchUpdateManyWithWhereWithoutRetailCompanyInput = {
 export type BatchCreateWithoutActivitiesInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1215,17 +1223,17 @@ export type BatchCreateWithoutActivitiesInput = {
 export type BatchUncheckedCreateWithoutActivitiesInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1256,17 +1264,17 @@ export type BatchUpdateToOneWithWhereWithoutActivitiesInput = {
 export type BatchUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1281,17 +1289,17 @@ export type BatchUpdateWithoutActivitiesInput = {
 export type BatchUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1306,17 +1314,17 @@ export type BatchUncheckedUpdateWithoutActivitiesInput = {
 export type BatchCreateWithoutTransitsInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1331,17 +1339,17 @@ export type BatchCreateWithoutTransitsInput = {
 export type BatchUncheckedCreateWithoutTransitsInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1372,17 +1380,17 @@ export type BatchUpdateToOneWithWhereWithoutTransitsInput = {
 export type BatchUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1397,17 +1405,17 @@ export type BatchUpdateWithoutTransitsInput = {
 export type BatchUncheckedUpdateWithoutTransitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1422,17 +1430,17 @@ export type BatchUncheckedUpdateWithoutTransitsInput = {
 export type BatchCreateWithoutQualityTestInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1447,17 +1455,17 @@ export type BatchCreateWithoutQualityTestInput = {
 export type BatchUncheckedCreateWithoutQualityTestInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1488,17 +1496,17 @@ export type BatchUpdateToOneWithWhereWithoutQualityTestInput = {
 export type BatchUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1513,17 +1521,17 @@ export type BatchUpdateWithoutQualityTestInput = {
 export type BatchUncheckedUpdateWithoutQualityTestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1538,17 +1546,17 @@ export type BatchUncheckedUpdateWithoutQualityTestInput = {
 export type BatchCreateManyFarmerInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
   createdAt?: Date | string
@@ -1560,17 +1568,17 @@ export type BatchCreateManyFarmerInput = {
 export type BatchUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1585,17 +1593,17 @@ export type BatchUpdateWithoutFarmerInput = {
 export type BatchUncheckedUpdateWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1610,17 +1618,17 @@ export type BatchUncheckedUpdateWithoutFarmerInput = {
 export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1632,17 +1640,17 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
 export type BatchCreateManyShipperCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1654,17 +1662,17 @@ export type BatchCreateManyShipperCompanyInput = {
 export type BatchCreateManyRetailCompanyInput = {
   id?: string
   blockchainId: string
-  txHash: string
+  txHash?: string | null
   productName: string
   category?: $Enums.Category
-  quantity: number
+  quantity?: number | null
   unit: string
-  ipfsHash: string
   status?: $Enums.BatchStatus
   minTemperature: number
   maxTemperature: number
   minHumidity: number
   maxHumidity: number
+  imageUrl?: string
   farmerId: string
   harvestDate?: Date | string | null
   expiryDate?: Date | string | null
@@ -1676,17 +1684,17 @@ export type BatchCreateManyRetailCompanyInput = {
 export type BatchUpdateWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1701,17 +1709,17 @@ export type BatchUpdateWithoutShipperCompanyInput = {
 export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1726,17 +1734,17 @@ export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
 export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1748,17 +1756,17 @@ export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
 export type BatchUpdateWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1773,17 +1781,17 @@ export type BatchUpdateWithoutRetailCompanyInput = {
 export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1798,17 +1806,17 @@ export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
 export type BatchUncheckedUpdateManyWithoutRetailCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  ipfsHash?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
   maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   farmerId?: Prisma.StringFieldUpdateOperationsInput | string
   harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1865,12 +1873,12 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   category?: boolean
   quantity?: boolean
   unit?: boolean
-  ipfsHash?: boolean
   status?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
   maxHumidity?: boolean
+  imageUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1895,12 +1903,12 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   category?: boolean
   quantity?: boolean
   unit?: boolean
-  ipfsHash?: boolean
   status?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
   maxHumidity?: boolean
+  imageUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1921,12 +1929,12 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   category?: boolean
   quantity?: boolean
   unit?: boolean
-  ipfsHash?: boolean
   status?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
   maxHumidity?: boolean
+  imageUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1947,12 +1955,12 @@ export type BatchSelectScalar = {
   category?: boolean
   quantity?: boolean
   unit?: boolean
-  ipfsHash?: boolean
   status?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
   maxHumidity?: boolean
+  imageUrl?: boolean
   farmerId?: boolean
   harvestDate?: boolean
   expiryDate?: boolean
@@ -1962,7 +1970,7 @@ export type BatchSelectScalar = {
   shipperCompanyId?: boolean
 }
 
-export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "ipfsHash" | "status" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
+export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "txHash" | "productName" | "category" | "quantity" | "unit" | "status" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "imageUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
 export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1996,17 +2004,17 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     blockchainId: string
-    txHash: string
+    txHash: string | null
     productName: string
     category: $Enums.Category
-    quantity: number
+    quantity: number | null
     unit: string
-    ipfsHash: string
     status: $Enums.BatchStatus
     minTemperature: number
     maxTemperature: number
     minHumidity: number
     maxHumidity: number
+    imageUrl: string
     farmerId: string
     harvestDate: Date | null
     expiryDate: Date | null
@@ -2450,12 +2458,12 @@ export interface BatchFieldRefs {
   readonly category: Prisma.FieldRef<"Batch", 'Category'>
   readonly quantity: Prisma.FieldRef<"Batch", 'Float'>
   readonly unit: Prisma.FieldRef<"Batch", 'String'>
-  readonly ipfsHash: Prisma.FieldRef<"Batch", 'String'>
   readonly status: Prisma.FieldRef<"Batch", 'BatchStatus'>
   readonly minTemperature: Prisma.FieldRef<"Batch", 'Float'>
   readonly maxTemperature: Prisma.FieldRef<"Batch", 'Float'>
   readonly minHumidity: Prisma.FieldRef<"Batch", 'Float'>
   readonly maxHumidity: Prisma.FieldRef<"Batch", 'Float'>
+  readonly imageUrl: Prisma.FieldRef<"Batch", 'String'>
   readonly farmerId: Prisma.FieldRef<"Batch", 'String'>
   readonly harvestDate: Prisma.FieldRef<"Batch", 'DateTime'>
   readonly expiryDate: Prisma.FieldRef<"Batch", 'DateTime'>

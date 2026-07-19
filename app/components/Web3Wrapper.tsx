@@ -20,6 +20,7 @@ export default function Web3ProviderWrapper({ children }: { children: React.Reac
   return (
     <WagmiWeb3ConfigProvider
       config={config}
+      chains={[sepolia]}
       eip6963={{
         autoAddInjectedWallets: true,
       }}

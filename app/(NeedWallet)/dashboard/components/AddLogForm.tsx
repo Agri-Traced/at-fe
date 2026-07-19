@@ -3,13 +3,13 @@
 import { Button, Form, Input, Modal, Typography, Space, Result } from "antd"
 import { ActivityLog } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
-import { postBatchActivityLog } from "@/hooks/batchs";
+import { usePostBatchActivityLog } from "@/hooks/batchs";
 
 export const AddLogForm = ({ open, onClose, id }: { open: boolean; onClose: () => void; id: string | null }) => {
   if (!id) return null;
   const { t } = useTranslation();
   const [form] = Form.useForm<ActivityLog>();
-  const { mutate, isPending, isSuccess } = postBatchActivityLog()
+  const { mutate, isPending, isSuccess } = usePostBatchActivityLog();
   const onFinish = async (values: ActivityLog) => {
     mutate({
       id,
@@ -26,7 +26,7 @@ export const AddLogForm = ({ open, onClose, id }: { open: boolean; onClose: () =
         <Typography.Text
           style={{ display: 'block', letterSpacing: '0.08em', textTransform: 'uppercase' }}
         >
-          {t('Create New Batch')}
+          {t('Add Activity Log')}
         </Typography.Text>}
     >
       {isSuccess ? (
@@ -47,11 +47,6 @@ export const AddLogForm = ({ open, onClose, id }: { open: boolean; onClose: () =
           onFinish={onFinish}
           className="max-w-xl mx-auto p-4 bg-white rounded-xl"
         >
-          <h2 className="text-xl font-bold mb-6 text-center flex items-center justify-center gap-2">
-            {t('Create Activity Log')}
-          </h2>
-
-          {/* Nội dung hoạt động */}
           <Form.Item
             label={t('Activity Description')}
             name="description"

@@ -105,8 +105,7 @@ export const ActivityLogScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
   description: 'description',
-  timestamp: 'timestamp',
-  txHash: 'txHash'
+  timestamp: 'timestamp'
 } as const
 
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
@@ -120,12 +119,12 @@ export const BatchScalarFieldEnum = {
   category: 'category',
   quantity: 'quantity',
   unit: 'unit',
-  ipfsHash: 'ipfsHash',
   status: 'status',
   minTemperature: 'minTemperature',
   maxTemperature: 'maxTemperature',
   minHumidity: 'minHumidity',
   maxHumidity: 'maxHumidity',
+  imageUrl: 'imageUrl',
   farmerId: 'farmerId',
   harvestDate: 'harvestDate',
   expiryDate: 'expiryDate',
@@ -148,7 +147,6 @@ export const StepTransitScalarFieldEnum = {
   temperature: 'temperature',
   humidity: 'humidity',
   vehicleNumber: 'vehicleNumber',
-  statusDetails: 'statusDetails',
   departureTime: 'departureTime',
   arrivalTime: 'arrivalTime'
 } as const

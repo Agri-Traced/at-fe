@@ -10,14 +10,21 @@ export async function GET(
     const batch = await prisma.batch.findMany({
       where: { farmerId: id },
       include: {
-        farmer: { include: { company: true } },
-        transits: {
-          include: { shipper: true },
-          orderBy: { departureTime: 'asc' } // Sắp xếp theo chặng từ cũ đến mới
+        farmer: {
+          select: {
+            fullName: true,
+            company: { select: { companyName: true, location: true } }
+          }
         },
         qualityTest: {
           include: { retailer: true },
           orderBy: { inspectedAt: 'desc' } // Lấy kiểm định mới nhất lên đầu
+        },
+        shipperCompany: {
+          select: { companyName: true, location: true }
+        },
+        retailCompany: {
+          select: { companyName: true, location: true }
         }
       }
     });

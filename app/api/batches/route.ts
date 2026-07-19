@@ -8,13 +8,11 @@ const batchCreate = z.object({
   blockchainId: z.string().min(1, "Missing Blockchain ID"),
   productName: z.string().min(1, "Missing Product Name"),
   category: z.enum(["VEGETABLE", "FRUIT", "GRAIN", "BEAN", "HERB", "OTHER"]),
-  quantity: z.number().positive("Quantity must be a positive number"),
   unit: z.string().min(1, "Missing Unit"),
-  harvestDate: z.coerce.date().optional(), // Định dạng ISO 8601
-  expiryDate: z.coerce.date().optional(), // Định dạng ISO 8601
-  txHash: z.string().min(1, "Missing Transaction Hash"),
-  ipfsHash: z.string().min(1, "Missing IPFS Hash"),
-  retailCompanyId: z.string().min(1, "Missing Retail Company ID"),
+  minTemperature: z.number().min(-100).max(100),
+  maxTemperature: z.number().min(-100).max(100),
+  minHumidity: z.number().min(0).max(100),
+  maxHumidity: z.number().min(0).max(100),
 });
 
 export const POST = withRole('FARMER', async (req, user, context) => {
@@ -22,7 +20,7 @@ export const POST = withRole('FARMER', async (req, user, context) => {
     const body = await req.json();
     const validation = batchCreate.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ success: false, errors: z.treeifyError(validation.error) }, { status: 400 });
+      return NextResponse.json({ success: false, errors: validation.error.format() }, { status: 400 });
     }
 
     const data = { ...validation.data, farmerId: user.id, status: BatchStatus.PLANTED };

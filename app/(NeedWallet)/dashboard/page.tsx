@@ -2,11 +2,11 @@
 'use client';
 
 import { App, Table, TableColumnsType, Result, Tooltip, Button, Dropdown, Flex, Space, Input, Empty, Typography, Tag } from 'antd';
-import { BookFilled, CloseOutlined, CopyOutlined, EditOutlined, MoreOutlined, PlusOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
+import { BookFilled, CloseOutlined, CopyOutlined, EditOutlined, MoreOutlined, PlusOutlined, SearchOutlined, SnippetsFilled, SyncOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
 import { useState } from 'react';
 import { Batch } from '@/generated/zod';
-import { useBatchFarm, useBatchRetail, useBatchShip } from '@/hooks/batchs';
+import { useBatchesByUserId, useCompanyBatches } from '@/hooks/batchs';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useAuth } from '@/contexts/auth';
@@ -16,6 +16,7 @@ import { Loading } from '@/app/components/Loading';
 import Link from 'next/link';
 import { QRBlock } from '@/app/components/QRBlock';
 import { AddLogForm } from './components/AddLogForm';
+import { HarvestForm } from './components/HarvestForm';
 export default function BatchPage() {
   const { user } = useAuth();
   if (!user) return <div className="flex items-center justify-center h-full"><Loading message="Loading user data..." /></div>;
@@ -24,36 +25,17 @@ export default function BatchPage() {
   const [searchInput, setSearchInput] = useState('');
   const [selectedBatchId, setSelectedBatchId] = useState<string | null>(null);
   const [openAddLogModal, setOpenAddLogModal] = useState(false);
+  const [openHarvestModal, setOpenHarvestModal] = useState(false);
   const { modal } = App.useApp();
   const { data, isLoading, isError, error } = user.role === 'FARMER'
-    ? useBatchFarm(user.companyId)
-    : user.role === 'SHIPPER'
-      ? useBatchShip(user.companyId)
-      : user.role === 'RETAILER'
-        ? useBatchRetail(user.companyId)
-        : { data: undefined, isLoading: false, isError: false, error: null };
+    ? useBatchesByUserId(user.id)
+    : useCompanyBatches(user.companyId)
 
   const filteredData = data ? data.filter((item) =>
     item.productName.toLowerCase().includes(searchInput.toLowerCase())
   ) : [];
 
   const action = (data: Batch): MenuProps['items'] => [
-    {
-      label: t('Add activity log'),
-      key: 'add-log',
-      icon: <BookFilled />,
-      hidden: user.role !== 'FARMER',
-      onClick: () => {
-        setSelectedBatchId(data.id);
-        setOpenAddLogModal(true);
-      }
-    },
-    {
-      label: t('Assign'),
-      key: 'assign-shipper',
-      icon: <EditOutlined />,
-      hidden: user.role !== 'RETAILER',
-    },
     {
       label: t('Get QR Code'),
       key: 'qr',
@@ -65,11 +47,36 @@ export default function BatchPage() {
           content:
             <div className="flex flex-col gap-2">
               <QRBlock id={data.id} />
-              <Typography.Text copyable>ipfsHash: {data.ipfsHash}</Typography.Text>
             </div>,
         });
       }
-    }
+    },
+    {
+      label: t('Add activity log'),
+      key: 'add-log',
+      icon: <BookFilled />,
+      hidden: user.role !== 'FARMER',
+      onClick: () => {
+        setSelectedBatchId(data.id);
+        setOpenAddLogModal(true);
+      }
+    },
+    {
+      label: t('Harvest batch'),
+      key: 'harvest',
+      icon: <SnippetsFilled />,
+      hidden: user.role !== 'FARMER',
+      onClick: () => {
+        setSelectedBatchId(data.id);
+        setOpenHarvestModal(true);
+      }
+    },
+    {
+      label: t('Assign'),
+      key: 'assign-shipper',
+      icon: <EditOutlined />,
+      hidden: user.role !== 'RETAILER',
+    },
   ].filter(item => !item.hidden);
 
   const columns: TableColumnsType<Batch> = [
@@ -220,6 +227,10 @@ export default function BatchPage() {
       <CreateForm open={openCreateModal} onClose={() => setOpenCreateModal(false)} />
       <AddLogForm open={openAddLogModal} onClose={() => {
         setOpenAddLogModal(false)
+        setSelectedBatchId(null)
+      }} id={selectedBatchId} />
+      <HarvestForm open={openHarvestModal} onClose={() => {
+        setOpenHarvestModal(false)
         setSelectedBatchId(null)
       }} id={selectedBatchId} />
     </>

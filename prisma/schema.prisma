@@ -4,11 +4,10 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator zod {
-  provider = "zod-prisma-types"
-  output   = "../generated/zod" // Hoặc nơi bạn muốn xuất ra
-
-  // 1. CHÌA KHÓA ĐỂ LẤY TÊN Y HỆT: Bỏ hậu tố Schema mặc định
-  modelSuffix = ""
+  provider         = "zod-prisma-types"
+  output           = "../generated/zod"
+  createInputTypes = false
+  modelSuffix      = ""
 }
 
 generator client {
@@ -91,36 +90,37 @@ model ActivityLog {
   batch       Batch    @relation(fields: [batchId], references: [id])
   description String // "Bón phân đợt 1"
   timestamp   DateTime @default(now())
-  txHash      String
 }
 
 model Batch {
   id             String        @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
   blockchainId   String        @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
-  txHash         String // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
+  txHash         String? // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
   productName    String
   category       Category      @default(VEGETABLE)
-  quantity       Float // Khối lượng / Số lượng lô hàng
+  quantity       Float? // Khối lượng / Số lượng lô hàng
   unit           String // Đơn vị tính (KG, Tấn, Thùng...)
-  ipfsHash       String // Mã CID lưu toàn bộ metadata gốc của lô hàng trên IPFS
   status         BatchStatus   @default(PLANTED)
   activities     ActivityLog[] // Lưu lịch sử canh tác
   minTemperature Float // Nhiệt độ bảo quản tối thiểu (°C)
   maxTemperature Float // Nhiệt độ bảo quản tối đa (°C)
   minHumidity    Float // Độ ẩm bảo quản tối thiểu (%)
   maxHumidity    Float // Độ ẩm bảo quản tối đa (%)
+  imageUrl       String        @default("/logo.png")
 
   // Quan hệ tác nhân gieo trồng
   farmerId String
   farmer   User   @relation("FarmerBatches", fields: [farmerId], references: [id])
 
   // Lịch sử thời gian
-  harvestDate     DateTime? // Ngày thu hoạch dự kiến
-  expiryDate      DateTime? // Hạn sử dụng dự kiến
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  harvestDate DateTime? // Ngày thu hoạch thực tế
+  expiryDate  DateTime? // Hạn sử dụng dự kiến
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   retailCompanyId String?
-  retailCompany   Company?  @relation("RetailerBatches", fields: [retailCompanyId], references: [id])
+  retailCompany   Company? @relation("RetailerBatches", fields: [retailCompanyId], references: [id])
 
   shipperCompanyId String?
   shipperCompany   Company? @relation("ShipperBatches", fields: [shipperCompanyId], references: [id])
@@ -146,7 +146,6 @@ model StepTransit {
   temperature   Float? // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
   humidity      Float? // Độ ẩm bảo quản
   vehicleNumber String? // Biển số xe vận chuyển
-  statusDetails String? // Ghi chú chi tiết trạng thái (VD: "Đang bốc xếp", "Đã lưu kho trung chuyển")
 
   departureTime DateTime  @default(now())
   arrivalTime   DateTime?
