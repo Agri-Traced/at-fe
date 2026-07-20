@@ -18,9 +18,9 @@ export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','l
 
 export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
 
-export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime','arrivalTime']);
+export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime']);
 
 export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','txHash','isPassed','note','testedAt']);
 
@@ -106,6 +106,7 @@ export const BatchSchema = z.object({
   blockchainId: z.string(),
   plantTxHash: z.string().nullable(),
   harvestTxHash: z.string().nullable(),
+  shipTxHash: z.string().nullable(),
   productName: z.string(),
   productVariety: z.string(),
   quantity: z.number().nullable(),
@@ -134,14 +135,13 @@ export const StepTransitSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
   shipperId: z.string(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   fromLocation: z.string(),
   toLocation: z.string(),
-  temperature: z.number().nullable(),
-  humidity: z.number().nullable(),
-  vehicleNumber: z.string().nullable(),
+  temperature: z.number(),
+  humidity: z.number(),
+  vehicleNumber: z.string(),
   departureTime: z.coerce.date(),
-  arrivalTime: z.coerce.date().nullable(),
 })
 
 export type StepTransit = z.infer<typeof StepTransitSchema>
@@ -154,9 +154,9 @@ export const QualityTestSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
   retailerId: z.string(),
-  txHash: z.string(),
+  txHash: z.string().nullable(),
   isPassed: z.boolean(),
-  note: z.string().nullable(),
+  note: z.string(),
   testedAt: z.coerce.date(),
 })
 

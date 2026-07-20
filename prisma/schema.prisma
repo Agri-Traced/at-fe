@@ -97,6 +97,7 @@ model Batch {
   blockchainId   String        @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
   plantTxHash    String? // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
   harvestTxHash  String? // Transaction Hash lúc thu hoạch để đối chiếu e-etherscan
+  shipTxHash     String? // Transaction Hash lúc giao cho Shipper để đối chiếu e-etherscan
   productName    String
   productVariety String // Giống cây trồng
   category       Category      @default(VEGETABLE)
@@ -142,15 +143,13 @@ model StepTransit {
   shipperId String
   shipper   User   @relation("ShipperTransports", fields: [shipperId], references: [id])
 
-  txHash        String // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
+  txHash        String? // Mã giao dịch trên Blockchain xác nhận chặng vận chuyển này là bất biến
   fromLocation  String
   toLocation    String
-  temperature   Float? // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
-  humidity      Float? // Độ ẩm bảo quản
-  vehicleNumber String? // Biển số xe vận chuyển
-
-  departureTime DateTime  @default(now())
-  arrivalTime   DateTime?
+  temperature   Float // Nhiệt độ bảo quản lúc vận chuyển (Rất quan trọng với chuỗi cung ứng lạnh)
+  humidity      Float // Độ ẩm bảo quản
+  vehicleNumber String // Biển số xe vận chuyển
+  departureTime DateTime @default(now())
 }
 
 model QualityTest {
@@ -161,8 +160,8 @@ model QualityTest {
   retailerId String
   retailer   User   @relation("RetailerTests", fields: [retailerId], references: [id])
 
-  txHash   String // Transaction Hash kiểm định bất biến trên blockchain
-  isPassed Boolean  @default(false)
-  note     String? // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
+  txHash   String? // Transaction Hash kiểm định bất biến trên blockchain
+  isPassed Boolean
+  note     String // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
   testedAt DateTime @default(now())
 }

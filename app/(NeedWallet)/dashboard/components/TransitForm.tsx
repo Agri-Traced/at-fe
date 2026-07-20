@@ -1,32 +1,30 @@
 'use client';
 
-import { Button, Form, InputNumber, Modal, Select, Typography, App, DatePicker, Result } from "antd"
+import { Button, Form, Input, InputNumber, Modal, Typography, App, Result } from "antd";
+import { StepTransit } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
 import { useContract } from "@/blockchain/useContract";
-import { BatchHarvest, usePostBatchHarvest, usePostBatchHarvestConfirm } from "@/hooks/batchs";
 import { createIPFSHash } from "@/lib/pinata";
 import { useState } from "react";
-import { useCompaniesRetail } from "@/hooks/company";
 import { TransactionLoading } from "./TransactionLoading";
+import { usePostTransit, usePostTransitConfirm } from "@/hooks/transits";
 
-export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClose: () => void; id: string | null; unit: string | null }) => {
+export const TransitForm = ({ open, onClose, id, location }: { open: boolean; onClose: () => void; id: string | null; location: string | null }) => {
+  if (!id) {
+    throw new Error('Batch ID is required');
+  }
   const { t } = useTranslation();
-  const [form] = Form.useForm<BatchHarvest>();
-  const { mutate, isPending } = usePostBatchHarvest()
+  const [form] = Form.useForm<StepTransit>();
+  const { mutate, isPending } = usePostTransit()
+  const { mutate: confirm, isPending: isConfirming } = usePostTransitConfirm()
   const { executeWrite, loading, } = useContract();
   const { modal, notification } = App.useApp();
   const [loadingIPFS, setLoadingIPFS] = useState(false);
-  const { data: companies } = useCompaniesRetail();
-  const { mutate: confirm, isPending: isConfirming } = usePostBatchHarvestConfirm();
-
-  const RETAIL_COMPANY_OPTIONS = companies?.map((company) => ({
-    label: company.companyName,
-    value: company.id,
-  })) || [];
-
-  const onFinish = async (values: BatchHarvest) => {
-    if (!id) return null;
-    mutate({ id, data: values }, {
+  const onFinish = async (values: StepTransit) => {
+    mutate({
+      ...values,
+      batchId: id,
+    }, {
       onSuccess: async (data) => {
         setLoadingIPFS(true);
         const ipfsHash = await createIPFSHash(values);
@@ -34,31 +32,31 @@ export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClos
         if (!ipfsHash) {
           notification.error({
             title: t('Error'),
-            description: `${t('Action failed. Please try again.')}`,
+            description: t('Failed to create IPFS hash for the batch. Please try again.'),
             showProgress: true,
             placement: 'bottomRight',
           });
           return;
         }
-        const txHash = await executeWrite('harvestBatch', [
+        const txHash = await executeWrite('createBatch', [
           BigInt(data.blockchainId),
-          Math.floor(new Date(data.expiryDate!).getTime() / 1000),
-          data.retailCompanyId!,
+          data.temperature,
+          data.humidity,
           ipfsHash,
         ]);
         confirm({
           id: data.id,
-          data: { harvestTxHash: String(txHash) },
+          data: { txHash: String(txHash) },
         }, {
           onSuccess: async () => {
             modal.success({
               icon: null,
-              title: t('Batch Harvested Successfully'),
+              title: t('Create Transit Successfully'),
               content:
                 <Result
                   status="success"
-                  title={t('Batch Harvested Successfully')}
-                  subTitle={t('The batch has been harvested successfully.')}
+                  title={t('Create Transit Successfully')}
+                  subTitle={t('The batch has been transited successfully.')}
                 />
             });
             onClose();
@@ -74,7 +72,7 @@ export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClos
       }, onError: (error) => {
         notification.error({
           title: t('Error'),
-          description: `${t('Action failed. Please try again. ')} ${error.message}`,
+          description: `${t('Action failed. Please try again.')} ${error.message}`,
           showProgress: true,
           placement: 'bottomRight',
         });
@@ -91,46 +89,57 @@ export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClos
         <Typography.Text
           style={{ display: 'block', letterSpacing: '0.08em', textTransform: 'uppercase' }}
         >
-          {t('Harvest Batch')}
+          {t('Create New Batch')}
         </Typography.Text>}
     >
-
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
         initialValues={{
-          quantity: 1,
+          temperature: Math.floor(Math.random() * 16),
+          humidity: Math.floor(Math.random() * 36) + 60,
+          toLocation: location,
         }}
       >
         <Form.Item
-          label={t('Retail Company')}
-          name="retailCompanyId"
-          rules={[{ required: true, message: t('Please enter retailer company') }]}
+          label={t('Transit to Location')}
+          name="toLocation"
+          rules={[{ required: true, message: t('Please enter transit location'), max: 200 }]}
         >
-          <Select showSearch placeholder={t('Enter retailer company ID')} options={RETAIL_COMPANY_OPTIONS} />
+          <Input placeholder={t('Enter transit location')} />
         </Form.Item>
         <div className="grid grid-cols-2 gap-4">
           <Form.Item
-            label={t('Quantity')}
-            name="quantity"
+            className="w-full"
+            label={t('Temperature')}
+            name="temperature"
             rules={[
-              { required: true, message: t('Please enter quantity') },
-              { type: 'number', min: 1, message: t('Quantity must be greater than 0') }
+              { required: true, message: t('Please enter temperature') },
+              { type: 'number', min: -100, max: 100, message: t('Temperature must be a valid value') }
             ]}
           >
-            <InputNumber suffix={unit || '???'} className="!w-full" min={1} placeholder={t('Enter quantity')} />
+            <InputNumber min={-100} max={100} className="!w-full" suffix="°C" />
           </Form.Item>
           <Form.Item
-            label={t('Expiry Date (estimate)')}
-            name="expiryDate"
+            className="w-full"
+            label={t('Humidity')}
+            name="humidity"
             rules={[
-              { required: true, message: t('Please enter expiry date') },
-              { type: 'date', message: t('Please select a valid date') }]}
+              { required: true, message: t('Please enter humidity') },
+              { type: 'number', min: 0, max: 100, message: t('Humidity must be a valid value') }
+            ]}
           >
-            <DatePicker className="w-full" placeholder={t('Select date')} format="YYYY-MM-DD" />
+            <InputNumber min={0} max={100} className="!w-full" suffix="%" />
           </Form.Item>
         </div>
+        <Form.Item
+          label={t('Vehicle number')}
+          name="vehicleNumber"
+          rules={[{ required: true, message: t('Please enter vehicle number'), max: 100 }]}
+        >
+          <Input placeholder={t('Enter vehicle number')} />
+        </Form.Item>
         <Form.Item className="flex justify-center mt-6">
           <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || loadingIPFS || isConfirming}>
             {t('Submit')}

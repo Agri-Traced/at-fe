@@ -5,29 +5,28 @@ import { BatchStatus, Role } from '@/generated/prisma/enums';
 import { withRole } from '@/lib/auth';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
-const confirmSchema = z.object({
-  plantTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
+const assignShipSchema = z.object({
+  shipperCompanyId: z.string().min(1, "Vui lòng chọn đơn vị vận chuyển!"),
 });
 
-export const POST = withRole(Role.FARMER, async (req, user, context) => {
+export const POST = withRole(Role.RETAILER, async (req, user, context) => {
   try {
     // A. Lấy batchId từ URL params
     const { id } = await context.params;
 
     // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
-    const validation = confirmSchema.safeParse(body);
+    const validation = assignShipSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(
-        { success: false, errors: validation.error },
+        { success: false, errors: z.treeifyError(validation.error) },
         { status: 400 }
       );
     }
 
     const data = validation.data;
 
-    // Bước 1: Kiểm tra xem lô hàng (Batch) này có tồn tại hay không
     const batch = await prisma.batch.findUnique({
       where: { id }
     });
@@ -39,29 +38,45 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    if (batch.farmerId !== user.id) {
+    const userData = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: { company: true }
+    });
+
+    if (!userData) {
+      return NextResponse.json(
+        { success: false, error: "Cannot find user data." },
+        { status: 404 }
+      );
+    }
+
+    if (batch.retailCompanyId !== userData.company.id) {
       return NextResponse.json(
         { success: false, error: "You have no permission to interact with this batch!" },
         { status: 403 }
       );
     }
 
-    if (batch.plantTxHash !== null) {
+    if (batch.shipTxHash !== null) {
       return NextResponse.json(
-        { success: false, error: "This batch has already been confirmed." },
+        { success: false, error: "This batch has already been assigned to a shipper." },
         { status: 400 }
       );
     }
 
-    const txHash = await prisma.batch.update({
+    const assigned = await prisma.batch.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        status: BatchStatus.IN_TRANSIT,
+        shipperCompanyId: data.shipperCompanyId,
+      }
     });
 
     return NextResponse.json(
       {
         success: true,
-        data: txHash
+        data: assigned
       },
       { status: 201 }
     );

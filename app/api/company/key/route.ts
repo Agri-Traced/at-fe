@@ -4,7 +4,8 @@ import z from 'zod'
 
 const ProtectedKeySchema = z.object({
   id: z.string().min(1, "Missing Company ID"),
-  key: z.string().min(6, "Protected Key must be at least 6 characters long")
+  key: z.string().min(6, "Protected Key must be at least 6 characters long"),
+  role: z.enum(["FARMER", "SHIPPER", "RETAILER", "CONSUMER"]),
 });
 
 export async function POST(
@@ -24,8 +25,15 @@ export async function POST(
       where: { id: data.id },
     });
 
+    if (!company) {
+      return NextResponse.json({ success: false, error: "Company not found" }, { status: 404 });
+    }
 
-    if (!company || company.protectedKey !== data.key) {
+    if (!company.type.includes(data.role)) {
+      return NextResponse.json({ success: false, error: "Role does not match the company's organization type" }, { status: 403 });
+    }
+
+    if (company.protectedKey !== data.key) {
       return NextResponse.json({ success: false, error: "Invalid protected key" }, { status: 401 });
     }
 

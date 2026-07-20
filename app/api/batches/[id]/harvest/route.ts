@@ -35,15 +35,24 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
     });
 
     if (!batch) {
-      throw new Error("Cannot find batch with the provided ID.");
+      return NextResponse.json(
+        { success: false, error: "Cannot find batch with the provided ID." },
+        { status: 404 }
+      );
     }
 
     if (batch.farmerId !== user.id) {
-      throw new Error("You have no permission to interact with this batch!");
+      return NextResponse.json(
+        { success: false, error: "You have no permission to interact with this batch!" },
+        { status: 403 }
+      );
     }
 
     if (batch.harvestTxHash !== null) {
-      throw new Error("This batch has already been harvested.");
+      return NextResponse.json(
+        { success: false, error: "This batch has already been harvested." },
+        { status: 400 }
+      );
     }
 
     const harvest = await prisma.batch.update({

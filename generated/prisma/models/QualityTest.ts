@@ -163,9 +163,9 @@ export type QualityTestGroupByOutputType = {
   id: string
   batchId: string
   retailerId: string
-  txHash: string
+  txHash: string | null
   isPassed: boolean
-  note: string | null
+  note: string
   testedAt: Date
   _count: QualityTestCountAggregateOutputType | null
   _min: QualityTestMinAggregateOutputType | null
@@ -194,9 +194,9 @@ export type QualityTestWhereInput = {
   id?: Prisma.StringFilter<"QualityTest"> | string
   batchId?: Prisma.StringFilter<"QualityTest"> | string
   retailerId?: Prisma.StringFilter<"QualityTest"> | string
-  txHash?: Prisma.StringFilter<"QualityTest"> | string
+  txHash?: Prisma.StringNullableFilter<"QualityTest"> | string | null
   isPassed?: Prisma.BoolFilter<"QualityTest"> | boolean
-  note?: Prisma.StringNullableFilter<"QualityTest"> | string | null
+  note?: Prisma.StringFilter<"QualityTest"> | string
   testedAt?: Prisma.DateTimeFilter<"QualityTest"> | Date | string
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
   retailer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -206,9 +206,9 @@ export type QualityTestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
   retailerId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   isPassed?: Prisma.SortOrder
-  note?: Prisma.SortOrderInput | Prisma.SortOrder
+  note?: Prisma.SortOrder
   testedAt?: Prisma.SortOrder
   batch?: Prisma.BatchOrderByWithRelationInput
   retailer?: Prisma.UserOrderByWithRelationInput
@@ -221,9 +221,9 @@ export type QualityTestWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.QualityTestWhereInput[]
   NOT?: Prisma.QualityTestWhereInput | Prisma.QualityTestWhereInput[]
   retailerId?: Prisma.StringFilter<"QualityTest"> | string
-  txHash?: Prisma.StringFilter<"QualityTest"> | string
+  txHash?: Prisma.StringNullableFilter<"QualityTest"> | string | null
   isPassed?: Prisma.BoolFilter<"QualityTest"> | boolean
-  note?: Prisma.StringNullableFilter<"QualityTest"> | string | null
+  note?: Prisma.StringFilter<"QualityTest"> | string
   testedAt?: Prisma.DateTimeFilter<"QualityTest"> | Date | string
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
   retailer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -233,9 +233,9 @@ export type QualityTestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
   retailerId?: Prisma.SortOrder
-  txHash?: Prisma.SortOrder
+  txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   isPassed?: Prisma.SortOrder
-  note?: Prisma.SortOrderInput | Prisma.SortOrder
+  note?: Prisma.SortOrder
   testedAt?: Prisma.SortOrder
   _count?: Prisma.QualityTestCountOrderByAggregateInput
   _max?: Prisma.QualityTestMaxOrderByAggregateInput
@@ -249,17 +249,17 @@ export type QualityTestScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"QualityTest"> | string
   batchId?: Prisma.StringWithAggregatesFilter<"QualityTest"> | string
   retailerId?: Prisma.StringWithAggregatesFilter<"QualityTest"> | string
-  txHash?: Prisma.StringWithAggregatesFilter<"QualityTest"> | string
+  txHash?: Prisma.StringNullableWithAggregatesFilter<"QualityTest"> | string | null
   isPassed?: Prisma.BoolWithAggregatesFilter<"QualityTest"> | boolean
-  note?: Prisma.StringNullableWithAggregatesFilter<"QualityTest"> | string | null
+  note?: Prisma.StringWithAggregatesFilter<"QualityTest"> | string
   testedAt?: Prisma.DateTimeWithAggregatesFilter<"QualityTest"> | Date | string
 }
 
 export type QualityTestCreateInput = {
   id?: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
   batch: Prisma.BatchCreateNestedOneWithoutQualityTestInput
   retailer: Prisma.UserCreateNestedOneWithoutQualityTestsInput
@@ -269,17 +269,17 @@ export type QualityTestUncheckedCreateInput = {
   id?: string
   batchId: string
   retailerId: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
 }
 
 export type QualityTestUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batch?: Prisma.BatchUpdateOneRequiredWithoutQualityTestNestedInput
   retailer?: Prisma.UserUpdateOneRequiredWithoutQualityTestsNestedInput
@@ -289,9 +289,9 @@ export type QualityTestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   retailerId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,17 +299,17 @@ export type QualityTestCreateManyInput = {
   id?: string
   batchId: string
   retailerId: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
 }
 
 export type QualityTestUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -317,9 +317,9 @@ export type QualityTestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   retailerId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -448,9 +448,9 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type QualityTestCreateWithoutRetailerInput = {
   id?: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
   batch: Prisma.BatchCreateNestedOneWithoutQualityTestInput
 }
@@ -458,9 +458,9 @@ export type QualityTestCreateWithoutRetailerInput = {
 export type QualityTestUncheckedCreateWithoutRetailerInput = {
   id?: string
   batchId: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
 }
 
@@ -497,17 +497,17 @@ export type QualityTestScalarWhereInput = {
   id?: Prisma.StringFilter<"QualityTest"> | string
   batchId?: Prisma.StringFilter<"QualityTest"> | string
   retailerId?: Prisma.StringFilter<"QualityTest"> | string
-  txHash?: Prisma.StringFilter<"QualityTest"> | string
+  txHash?: Prisma.StringNullableFilter<"QualityTest"> | string | null
   isPassed?: Prisma.BoolFilter<"QualityTest"> | boolean
-  note?: Prisma.StringNullableFilter<"QualityTest"> | string | null
+  note?: Prisma.StringFilter<"QualityTest"> | string
   testedAt?: Prisma.DateTimeFilter<"QualityTest"> | Date | string
 }
 
 export type QualityTestCreateWithoutBatchInput = {
   id?: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
   retailer: Prisma.UserCreateNestedOneWithoutQualityTestsInput
 }
@@ -515,9 +515,9 @@ export type QualityTestCreateWithoutBatchInput = {
 export type QualityTestUncheckedCreateWithoutBatchInput = {
   id?: string
   retailerId: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
 }
 
@@ -539,9 +539,9 @@ export type QualityTestUpdateToOneWithWhereWithoutBatchInput = {
 
 export type QualityTestUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   retailer?: Prisma.UserUpdateOneRequiredWithoutQualityTestsNestedInput
 }
@@ -549,26 +549,26 @@ export type QualityTestUpdateWithoutBatchInput = {
 export type QualityTestUncheckedUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   retailerId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type QualityTestCreateManyRetailerInput = {
   id?: string
   batchId: string
-  txHash: string
-  isPassed?: boolean
-  note?: string | null
+  txHash?: string | null
+  isPassed: boolean
+  note: string
   testedAt?: Date | string
 }
 
 export type QualityTestUpdateWithoutRetailerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   batch?: Prisma.BatchUpdateOneRequiredWithoutQualityTestNestedInput
 }
@@ -576,18 +576,18 @@ export type QualityTestUpdateWithoutRetailerInput = {
 export type QualityTestUncheckedUpdateWithoutRetailerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type QualityTestUncheckedUpdateManyWithoutRetailerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.StringFieldUpdateOperationsInput | string
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPassed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.StringFieldUpdateOperationsInput | string
   testedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -663,9 +663,9 @@ export type $QualityTestPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     batchId: string
     retailerId: string
-    txHash: string
+    txHash: string | null
     isPassed: boolean
-    note: string | null
+    note: string
     testedAt: Date
   }, ExtArgs["result"]["qualityTest"]>
   composites: {}

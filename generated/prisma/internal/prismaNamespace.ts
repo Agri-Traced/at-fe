@@ -933,6 +933,7 @@ export const BatchScalarFieldEnum = {
   blockchainId: 'blockchainId',
   plantTxHash: 'plantTxHash',
   harvestTxHash: 'harvestTxHash',
+  shipTxHash: 'shipTxHash',
   productName: 'productName',
   productVariety: 'productVariety',
   category: 'category',
@@ -966,8 +967,7 @@ export const StepTransitScalarFieldEnum = {
   temperature: 'temperature',
   humidity: 'humidity',
   vehicleNumber: 'vehicleNumber',
-  departureTime: 'departureTime',
-  arrivalTime: 'arrivalTime'
+  departureTime: 'departureTime'
 } as const
 
 export type StepTransitScalarFieldEnum = (typeof StepTransitScalarFieldEnum)[keyof typeof StepTransitScalarFieldEnum]

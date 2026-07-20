@@ -2,11 +2,11 @@
 'use client';
 
 import { App, Table, TableColumnsType, Result, Tooltip, Button, Dropdown, Flex, Space, Input, Empty, Typography, Tag } from 'antd';
-import { BookFilled, CloseOutlined, CopyOutlined, EditOutlined, MoreOutlined, PlusOutlined, SearchOutlined, SnippetsFilled, SyncOutlined } from '@ant-design/icons';
+import { BookFilled, CarOutlined, CloseOutlined, CopyOutlined, EditOutlined, MoreOutlined, PlusOutlined, SafetyOutlined, SearchOutlined, SnippetsFilled, SyncOutlined, TruckOutlined, UploadOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
 import { useState } from 'react';
 import { Batch } from '@/generated/zod';
-import { useBatchesByUserId, useCompanyBatches } from '@/hooks/batchs';
+import { BatchRelation, useBatchesByUserId, useCompanyBatches } from '@/hooks/batchs';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useAuth } from '@/contexts/auth';
@@ -17,6 +17,9 @@ import Link from 'next/link';
 import { QRBlock } from '@/app/components/QRBlock';
 import { AddLogForm } from './components/AddLogForm';
 import { HarvestForm } from './components/HarvestForm';
+import { AssignForm } from './components/AssignForm';
+import { TransitForm } from './components/TransitForm';
+import { QualityTestForm } from './components/QualityTestForm';
 export default function BatchPage() {
   const { user } = useAuth();
   if (!user) return <div className="flex items-center justify-center h-full"><Loading message="Loading user data..." /></div>;
@@ -27,6 +30,10 @@ export default function BatchPage() {
   const [unit, setUnit] = useState<string | null>(null);
   const [openAddLogModal, setOpenAddLogModal] = useState(false);
   const [openHarvestModal, setOpenHarvestModal] = useState(false);
+  const [openAssignModal, setOpenAssignModal] = useState(false);
+  const [openTransitModal, setOpenTransitModal] = useState(false);
+  const [openQualityTestModal, setOpenQualityTestModal] = useState(false);
+  const [location, setLocation] = useState<string | null>(null);
   const { modal } = App.useApp();
   const { data, isLoading, isError, error } = user.role === 'FARMER'
     ? useBatchesByUserId(user.id)
@@ -36,7 +43,7 @@ export default function BatchPage() {
     item.productName.toLowerCase().includes(searchInput.toLowerCase())
   ) : [];
 
-  const action = (data: Batch): MenuProps['items'] => [
+  const action = (data: BatchRelation): MenuProps['items'] => [
     {
       label: t('Get QR Code'),
       key: 'qr',
@@ -55,8 +62,9 @@ export default function BatchPage() {
     {
       label: t('Add activity log'),
       key: 'add-log',
-      icon: <BookFilled />,
+      icon: <UploadOutlined />,
       hidden: user.role !== 'FARMER',
+      disabled: data.status !== 'PLANTED',
       onClick: () => {
         setSelectedBatchId(data.id);
         setOpenAddLogModal(true);
@@ -75,14 +83,42 @@ export default function BatchPage() {
       }
     },
     {
-      label: t('Assign'),
+      label: t('Confirm & Assign Shipper'),
       key: 'assign-shipper',
-      icon: <EditOutlined />,
+      icon: <TruckOutlined />,
       hidden: user.role !== 'RETAILER',
+      onClick: () => {
+        setSelectedBatchId(data.id);
+        setOpenAssignModal(true);
+      },
+      disabled: data.status !== 'HARVESTED',
     },
+    {
+      label: t('Create Quality Test'),
+      key: 'create-quality-test',
+      icon: <SafetyOutlined />,
+      hidden: user.role !== 'FARMER',
+      onClick: () => {
+        setSelectedBatchId(data.id);
+        setOpenQualityTestModal(true);
+      },
+      disabled: data.status !== 'HARVESTED',
+    },
+    {
+      label: t('Transit batch'),
+      key: 'transit',
+      icon: <CarOutlined />,
+      hidden: user.role !== 'FARMER',
+      onClick: () => {
+        setSelectedBatchId(data.id);
+        setLocation(data.farmer.company.location);
+        setOpenTransitModal(true);
+      },
+      disabled: data.status !== 'HARVESTED',
+    }
   ].filter(item => !item.hidden);
 
-  const columns: TableColumnsType<Batch> = [
+  const columns: TableColumnsType<BatchRelation> = [
     {
       title: t('No'),
       dataIndex: 'key',
@@ -211,7 +247,7 @@ export default function BatchPage() {
           title={error?.message || t('Failed to load data')}
         />
       ) : (
-        <Table<Batch>
+        <Table<BatchRelation>
           loading={isLoading}
           columns={columns}
           dataSource={filteredData}
@@ -221,6 +257,7 @@ export default function BatchPage() {
             emptyText: <Empty description={t('No data')} />
           }}
           pagination={{
+            defaultPageSize: 10,
             pageSizeOptions: [10, 20, 50, 100],
             showSizeChanger: true,
           }}
@@ -235,6 +272,18 @@ export default function BatchPage() {
         setOpenHarvestModal(false)
         setSelectedBatchId(null)
       }} id={selectedBatchId} unit={unit} />
+      <AssignForm open={openAssignModal} onClose={() => {
+        setOpenAssignModal(false)
+        setSelectedBatchId(null)
+      }} id={selectedBatchId} />
+      <TransitForm open={openTransitModal} onClose={() => {
+        setOpenTransitModal(false)
+        setSelectedBatchId(null)
+      }} id={selectedBatchId} location={location} />
+      <QualityTestForm open={openQualityTestModal} onClose={() => {
+        setOpenQualityTestModal(false)
+        setSelectedBatchId(null)
+      }} id={selectedBatchId} />
     </>
   )
 }

@@ -69,7 +69,7 @@ export const AddLogForm = ({ open, onClose, id }: { open: boolean; onClose: () =
                 htmlType="submit"
                 loading={isPending}
               >
-                {t('Submit Log')}
+                {t('Submit')}
               </Button>
             </Space>
           </Form.Item>

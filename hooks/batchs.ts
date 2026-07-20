@@ -29,6 +29,32 @@ export type BatchRelation = Batch & {
 
 export type BatchHarvest = Pick<Batch, 'expiryDate' | 'retailCompanyId' | 'quantity'>
 
+export const usePostBatchAssignShipConfirm= () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: { shipTxHash: string } }) => {
+      const res = await api.post<Batch>(`/batches/${id}/assign-ship/confirm`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+}
+
+export const usePostBatchAssignShip = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: { shipperCompanyId: string } }) => {
+      const res = await api.post<Batch>(`/batches/${id}/assign-ship`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+}
+
 export const useCompanyBatches = (id: string) => {
   return useQuery({
     queryKey: ['batches', id],

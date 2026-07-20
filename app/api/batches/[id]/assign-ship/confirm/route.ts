@@ -6,10 +6,10 @@ import { withRole } from '@/lib/auth';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const confirmSchema = z.object({
-  plantTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
+  shipTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
-export const POST = withRole(Role.FARMER, async (req, user, context) => {
+export const POST = withRole(Role.RETAILER, async (req, user, context) => {
   try {
     // A. Lấy batchId từ URL params
     const { id } = await context.params;
@@ -39,16 +39,28 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    if (batch.farmerId !== user.id) {
+    const userData = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: { company: true }
+    });
+
+    if (!userData) {
+      return NextResponse.json(
+        { success: false, error: "Cannot find user data." },
+        { status: 404 }
+      );
+    }
+
+    if (batch.retailCompanyId !== userData.company.id) {
       return NextResponse.json(
         { success: false, error: "You have no permission to interact with this batch!" },
         { status: 403 }
       );
     }
 
-    if (batch.plantTxHash !== null) {
+    if (batch.shipTxHash !== null) {
       return NextResponse.json(
-        { success: false, error: "This batch has already been confirmed." },
+        { success: false, error: "This batch has already been assigned to a shipper." },
         { status: 400 }
       );
     }

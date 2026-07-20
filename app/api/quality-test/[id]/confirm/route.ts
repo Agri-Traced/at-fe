@@ -1,20 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { BatchStatus, Role } from '@/generated/prisma/enums';
+import { Role } from '@/generated/prisma/enums';
 import { withRole } from '@/lib/auth';
 
-// 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const confirmSchema = z.object({
-  plantTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
+  txHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
-export const POST = withRole(Role.FARMER, async (req, user, context) => {
+export const POST = withRole(Role.SHIPPER, async (req, user, context) => {
   try {
-    // A. Lấy batchId từ URL params
     const { id } = await context.params;
-
-    // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
     const validation = confirmSchema.safeParse(body);
 
@@ -27,33 +23,32 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
 
     const data = validation.data;
 
-    // Bước 1: Kiểm tra xem lô hàng (Batch) này có tồn tại hay không
-    const batch = await prisma.batch.findUnique({
+    const qualityTest = await prisma.qualityTest.findUnique({
       where: { id }
     });
 
-    if (!batch) {
+    if (!qualityTest) {
       return NextResponse.json(
-        { success: false, error: "Cannot find batch with the provided ID." },
+        { success: false, error: "Cannot find quality test with the provided ID." },
         { status: 404 }
       );
     }
 
-    if (batch.farmerId !== user.id) {
+    if (qualityTest.retailerId !== user.id) {
       return NextResponse.json(
-        { success: false, error: "You have no permission to interact with this batch!" },
+        { success: false, error: "You have no permission to interact with this quality test!" },
         { status: 403 }
       );
     }
 
-    if (batch.plantTxHash !== null) {
+    if (qualityTest.txHash !== null) {
       return NextResponse.json(
-        { success: false, error: "This batch has already been confirmed." },
+        { success: false, error: "This quality test has already been confirmed." },
         { status: 400 }
       );
     }
 
-    const txHash = await prisma.batch.update({
+    const txHash = await prisma.qualityTest.update({
       where: { id },
       data,
     });
