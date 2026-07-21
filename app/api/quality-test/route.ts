@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { Role } from '@/generated/prisma/enums';
+import { BatchStatus, Role } from '@/generated/prisma/enums';
 import { withRole } from '@/lib/auth';
 
 const qualityTestSchema = z.object({
@@ -57,6 +57,11 @@ export const POST = withRole(Role.RETAILER, async (req, user, context) => {
         { status: 403 }
       );
     }
+
+    await prisma.batch.update({
+      where: { id: data.batchId },
+      data: { status: BatchStatus.RETAILING }
+    });
 
     const qualityTest = await prisma.qualityTest.create({ data: { ...data, retailerId: user.id } });
 
