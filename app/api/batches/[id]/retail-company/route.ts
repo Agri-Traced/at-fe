@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { withRole } from '@/lib/auth';
-import { Role } from '@/app/generated/prisma/client';
+import { Role } from '@/generated/prisma/enums';
 
 const retailerSchema = z.object({
   retailCompanyId: z.string().min(1, "Missing Retail Company ID")
