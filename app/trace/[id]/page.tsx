@@ -56,14 +56,14 @@ export default function TracePage() {
 
   const current =
     data.status === "PLANTED"
-      ? 2
+      ? 1
       : data.status === "HARVESTED"
-        ? 3
+        ? 2
         : data.status === "IN_TRANSIT"
-          ? 4
+          ? 3
           : data.status === "RETAILING"
-            ? 5
-            : 1;
+            ? 4
+            : 0;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-green-50 to-white pb-12">
@@ -80,7 +80,7 @@ export default function TracePage() {
         </p>
 
         <div className="mt-6 inline-flex items-center gap-2 bg-white text-green-700 px-5 py-2.5 rounded-full shadow-md font-semibold text-base">
-          {current !== 5 ? (
+          {data.status !== 'HARVESTED' ? (
             <>
               <Typography.Text>
                 {t(
