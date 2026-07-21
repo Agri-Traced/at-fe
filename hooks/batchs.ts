@@ -25,6 +25,8 @@ export type BatchRelation = Batch & {
   transits: TransitsRelation[];
   activities: ActivityLogRelation[];
   qualityTest: QualityTestRelation | null;
+  shipperCompany: Company | null;
+  retailCompany: Company | null;
 }
 
 export type BatchHarvest = Pick<Batch, 'expiryDate' | 'retailCompanyId' | 'quantity'>

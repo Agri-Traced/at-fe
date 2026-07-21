@@ -1,25 +1,22 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   CheckCircleOutlined,
-  SafetyCertificateOutlined,
-  EnvironmentOutlined,
-  CalendarOutlined,
-  LoadingOutlined,
-  DashboardOutlined,
-  DeploymentUnitOutlined
+  SafetyCertificateOutlined, CalendarOutlined, DashboardOutlined,
+  DeploymentUnitOutlined,
+  EditOutlined
 } from '@ant-design/icons';
-import { Badge, Steps, Card, Progress, Typography, Space, Tooltip, Image } from 'antd';
+import { Badge, Steps, Card, Typography, Tooltip, Image, Button } from 'antd';
 import { Loading } from '@/app/components/Loading';
 import { useTranslation } from 'react-i18next';
 import { useBatch } from '@/hooks/batchs';
-import { useTransaction } from 'wagmi';
 import Link from 'next/link';
 
 export default function TracePage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
   const { t } = useTranslation();
 
@@ -29,16 +26,10 @@ export default function TracePage() {
 
   const transportSummary = useMemo(() => {
     if (!data || !data.transits || data.transits.length === 0) return null;
-    // Tính nhiệt độ trung bình
     const avgTemp = data.transits.reduce((acc, curr) => acc + (curr.temperature ?? 0), 0) / data.transits.length;
-    // Tìm nhiệt độ cao nhất
-    const maxTemp = Math.max(...data.transits.map(t => t.temperature ?? 0));
-
     const avgHumidity = data.transits.reduce((acc, curr) => acc + (curr.humidity ?? 0), 0) / data.transits.length;
-    const maxHumidity = Math.max(...data.transits.map(t => t.humidity ?? 0));
-    // Kiểm tra xem tất cả các chặng có "đạt ngưỡng an toàn" không
-    const isAllSafe = data.transits.every(t => (t.temperature ?? 0) >= 2 && (t.temperature ?? 0) <= 8);
-    return { avgTemp, maxTemp, avgHumidity, maxHumidity, isAllSafe };
+    const isAllSafe = data.transits.every(t => (t.temperature ?? 0) >= data.maxTemperature && (t.temperature ?? 0) <= data.minTemperature && (t.humidity ?? 0) >= data.minHumidity && (t.humidity ?? 0) <= data.maxHumidity);
+    return { avgTemp, avgHumidity, isAllSafe };
   }, [data?.transits]);
 
   if (loading) {
@@ -55,30 +46,38 @@ export default function TracePage() {
     );
   }
 
-  const current = data.status === 'PLANTED' ? 0 :
-    data.status === 'HARVESTED' ? 1 :
-      data.status === 'IN_TRANSIT' ? 2 :
-        data.status === 'TESTING' ? 3 :
-          data.status === 'RETAILING' ? 4 : 0;
+  const current = data.status === 'PLANTED' ? 1 :
+    data.status === 'HARVESTED' ? 2 :
+      data.status === 'IN_TRANSIT' ? 3 :
+        data.status === 'RETAILING' ? 4 : 0;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-green-50 to-white pb-12">
       {/* HEADER: Thương hiệu & Chứng thực Blockchain */}
-      <div className="bg-green-600 text-white p-6 rounded-b-[2.5rem] shadow-lg text-center relative">
+      <div className={`bg-green-600 text-white p-6 rounded-b-[2.5rem] shadow-lg text-center relative`}>
         <div className="absolute top-4 right-4 bg-white/20 px-3 py-1 rounded-full text-sm flex items-center gap-1 backdrop-blur-sm">
           <SafetyCertificateOutlined /> Sepolia Testnet
         </div>
         <h1 className="text-2xl font-bold tracking-wide mt-4">AGRI TRACE</h1>
         <p className="text-green-100 text-sm mt-1">{t('Transparent Agri Trace for Agricultural Products')}</p>
 
-        {/* Huy hiệu Verified cực kỳ uy tín */}
         <div className="mt-6 inline-flex items-center gap-2 bg-white text-green-700 px-5 py-2.5 rounded-full shadow-md font-semibold text-base">
-          <CheckCircleOutlined className="text-green-500 text-lg animate-pulse" />
-          {t('Origin Verified')}
+          {current !== 4 ? (
+            <>
+              <Typography.Text>{t('This batch is still in progress, are you an agri chain attendance?')}</Typography.Text>
+              <Button onClick={() => { router.push(`/dashboard/batch/${data.id}`) }} type="primary" shape="round" icon={<EditOutlined />} >
+                {t('Action')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <CheckCircleOutlined className="text-green-500 text-lg animate-pulse" />
+              {t('Origin Verified')}
+            </>
+          )}
         </div>
       </div>
 
-      {/* THÔNG TIN SẢN PHẨM CHÍNH */}
       <div className="px-4 -mt-4">
         <Card className="shadow-md border-0 rounded-2xl overflow-hidden">
           <div className="flex justify-between items-start mb-2">
@@ -246,7 +245,7 @@ export default function TracePage() {
 
       {/* BLOCKCHAIN METADATA FOOTER */}
       <div className="px-4 mt-6 text-center">
-        <p className="text-gray-300 text-[9px] mt-4">{t('Agri-Trace • Security by Smart Contract')}</p>
+        <p className="text-gray-300 text-[9px] mt-1">{t('Powered by Sepolia Testnet • For Demonstration Purposes Only')}</p>
         <p className="text-gray-300 text-[9px] mt-4">Đỗ Minh Nhật & Nguyễn Thành Dương</p>
       </div>
     </div>

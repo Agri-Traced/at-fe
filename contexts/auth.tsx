@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw error;
       }
     },
+    retry: false,
     enabled: !!account,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -50,23 +51,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isAuthError = error && ((error as any)?.response?.status === 401 || (error as any)?.response?.status === 403);
 
   useEffect(() => {
-    if (account && user === undefined && isAuthError && pathname === '/login') {
+    if (account && user === undefined && isAuthError && pathname === '/login' && !isPending) {
       login(account.address);
     }
-  }, [account, isAuthError, pathname, login, user]);
+  }, [account, isAuthError, pathname, login, user, isPending]);
 
   useEffect(() => {
-    if (!account && pathname !== '/login') {
+    if (!account && pathname !== '/login' || (user && account && user.walletAddress !== account.address && !isPending)) {
       logout();
     }
-  }, [account, logout, pathname]);
+  }, [account, logout, user, pathname, isPending]);
 
-    useEffect(() => {
-      if (account && user === null) {
-        router.push('/register');
-      }
-    }, [account, user]);
-  
+  useEffect(() => {
+    if (account && user === null) {
+      router.push('/register');
+    }
+  }, [account, user]);
+
 
   if (isLoading || isPending) {
     return <Loading message={t('Connecting to your wallet...')} />

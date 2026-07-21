@@ -34,7 +34,12 @@ export const useLogin = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth-user'] });
-      router.push('/dashboard');
+      const redirectUrl = new URL(window.location.href).searchParams.get('redirect');
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push('/dashboard');
+      }
     },
     onError: (error: any) => {
       if (error?.status === 404 || error.response?.status === 404) {

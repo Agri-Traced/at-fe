@@ -12,7 +12,9 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token && protectedRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (token && guestRoutes.some(route => pathname.startsWith(route))) {
