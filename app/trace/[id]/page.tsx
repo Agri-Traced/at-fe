@@ -80,7 +80,7 @@ export default function TracePage() {
         </p>
 
         <div className="mt-6 inline-flex items-center gap-2 bg-white text-green-700 px-5 py-2.5 rounded-full shadow-md font-semibold text-base">
-          {data.status !== 'HARVESTED' ? (
+          {data.status !== 'RETAILING' ? (
             <>
               <Typography.Text>
                 {t(
