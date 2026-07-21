@@ -114,7 +114,7 @@ export default function BatchPage() {
         setLocation(data.farmer.company.location);
         setOpenTransitModal(true);
       },
-      disabled: data.status !== 'HARVESTED',
+      disabled: data.status !== 'IN_TRANSIT',
     }
   ].filter(item => !item.hidden);
 

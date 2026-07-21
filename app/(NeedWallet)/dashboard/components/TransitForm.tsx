@@ -36,7 +36,7 @@ export const TransitForm = ({ open, onClose, id, location }: { open: boolean; on
           });
           return;
         }
-        const txHash = await executeWrite('createBatch', [
+        const txHash = await executeWrite('updateTransit', [
           BigInt(data.blockchainId),
           data.temperature,
           data.humidity,

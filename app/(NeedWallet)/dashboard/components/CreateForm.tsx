@@ -9,7 +9,6 @@ import {
   Select,
   Typography,
   App,
-  Tooltip,
 } from "antd";
 import { Batch } from "@/generated/zod";
 import { useTranslation } from "react-i18next";

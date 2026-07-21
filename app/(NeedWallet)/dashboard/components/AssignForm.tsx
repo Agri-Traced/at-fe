@@ -21,6 +21,8 @@ export const AssignForm = ({ open, onClose, id, }: { open: boolean; onClose: () 
     value: company.id,
   })) || [];
 
+  console.log('SHIPPER_COMPANY_OPTIONS', SHIPPER_COMPANY_OPTIONS);
+
   const onFinish = async (values: { shipperCompanyId: string }) => {
     if (!id) return null;
     mutate({ id, data: values }, {

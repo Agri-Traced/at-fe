@@ -4,7 +4,7 @@ import { Company } from '@/generated/zod';
 
 export const useCompaniesRetail = () => {
   return useQuery({
-    queryKey: ['companies'],
+    queryKey: ['companies-retail'],
     queryFn: async () => {
       const { data } = await api.get<Company[]>('/company/retail');
       return data;
@@ -14,7 +14,7 @@ export const useCompaniesRetail = () => {
 
 export const useCompaniesShip = () => {
   return useQuery({
-    queryKey: ['companies'],
+    queryKey: ['companies-ship'],
     queryFn: async () => {
       const { data } = await api.get<Company[]>('/company/ship');
       return data;

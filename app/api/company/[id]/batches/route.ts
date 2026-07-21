@@ -26,7 +26,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       whereCondition.shipperCompanyId = id;
     }
     else if (company.type === OrganizationType.RETAILER) {
-      whereCondition.retailerCompanyId = id;
+      whereCondition.retailCompanyId = id;
     }
 
     const batches = await prisma.batch.findMany({
