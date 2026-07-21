@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
   const menuData = [
     {
       path: '/dashboard',
-      name: 'Welcome',
+      name: 'Dashboard',
       icon: <HomeOutlined />,
     },
   ];
