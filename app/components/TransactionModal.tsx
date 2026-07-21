@@ -27,12 +27,7 @@ export default function MetaMaskSignModal({ open, onClose, onSign }: MetaMaskSig
       width={390}
       styles={{
         body: { padding: '24px 20px' },
-        wrapper: {
-          borderRadius: 24,
-          boxShadow: '0 12px 36px rgba(0,0,0,0.15)',
-          border: '1px solid #f0f0f0',
-          backgroundColor: '#ffffff'
-        }
+
       }}
     >
       {/* --- HEADER --- */}
