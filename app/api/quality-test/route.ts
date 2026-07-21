@@ -10,7 +10,7 @@ const qualityTestSchema = z.object({
   note: z.string().min(1, "Missing test note"),
 });
 
-export const POST = withRole(Role.SHIPPER, async (req, user, context) => {
+export const POST = withRole(Role.RETAILER, async (req, user, context) => {
   try {
     const body = await req.json();
     const validation = qualityTestSchema.safeParse(body);

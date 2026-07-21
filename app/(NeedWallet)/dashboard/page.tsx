@@ -1,8 +1,8 @@
 
 'use client';
 
-import { App, Table, TableColumnsType, Result, Tooltip, Button, Dropdown, Flex, Space, Input, Empty, Typography, Tag } from 'antd';
-import { BookFilled, CarOutlined, CloseOutlined, CopyOutlined, EditOutlined, MoreOutlined, PlusOutlined, SafetyOutlined, SearchOutlined, SnippetsFilled, SyncOutlined, TruckOutlined, UploadOutlined } from '@ant-design/icons';
+import { App, Table, TableColumnsType, Result, Tooltip, Button, Dropdown, Flex, Space, Input, Empty, Tag } from 'antd';
+import { CarOutlined, CloseOutlined, CopyOutlined, MoreOutlined, PlusOutlined, SafetyOutlined, SnippetsFilled, SyncOutlined, TruckOutlined, UploadOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
 import { useState } from 'react';
 import { Batch } from '@/generated/zod';
@@ -102,7 +102,7 @@ export default function BatchPage() {
         setSelectedBatchId(data.id);
         setOpenQualityTestModal(true);
       },
-      disabled: data.status !== 'HARVESTED',
+      disabled: data.status !== 'IN_TRANSIT',
     },
     {
       label: t('Transit batch'),

@@ -175,10 +175,10 @@ export default function TracePage() {
             title={t("Farmer")}
             className="shadow-sm border-0 text-center rounded-xl"
           >
-            <p className="text-2xl font-bold ">
+            <p className="text-base font-bold ">
               {data.farmer.company.companyName}
             </p>
-            <p className="text-xl text-gray-400">
+            <p className="text-sm text-gray-400">
               {data.farmer.company.location}
             </p>
           </Card>
@@ -186,10 +186,10 @@ export default function TracePage() {
             title={t("Shipper")}
             className="shadow-sm border-0 text-center rounded-xl"
           >
-            <p className="text-2xl text-gray-400">
+            <p className="text-base font-bold">
               {data?.shipperCompany?.companyName || "Chưa xác định"}
             </p>
-            <p className="text-xl font-bold">
+            <p className="text-sm text-gray-400">
               {data?.shipperCompany?.location || "--"}
             </p>
           </Card>
@@ -197,10 +197,10 @@ export default function TracePage() {
             title={t("Retailer")}
             className="shadow-sm border-0 text-center rounded-xl"
           >
-            <p className="text-2xl text-gray-400">
+            <p className="text-base font-bold">
               {data?.retailCompany?.companyName || "Chưa xác định"}
             </p>
-            <p className="text-xl font-bold">
+            <p className="text-sm text-gray-400">
               {data?.retailCompany?.location || "--"}
             </p>
           </Card>
@@ -215,13 +215,13 @@ export default function TracePage() {
         <div className="grid grid-cols-3 gap-4">
           <Card className="shadow-sm border-0 text-center rounded-xl">
             <p className="text-sm text-gray-400">{t("Average Temperature")}</p>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-xl font-bold text-blue-600">
               {`🌡️ ${transportSummary ? transportSummary.avgTemp.toFixed(1) + "°C" : "--"}`}
             </p>
           </Card>
           <Card className="shadow-sm border-0 text-center rounded-xl">
             <p className="text-sm text-gray-400">{t("Average Humidity")}</p>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-xl font-bold text-blue-600">
               {`💧 ${transportSummary ? transportSummary.avgHumidity.toFixed(1) + "%" : "--"}`}
             </p>
           </Card>
