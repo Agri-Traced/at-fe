@@ -121,7 +121,7 @@ export default function BatchPage() {
           <Button
             hidden={user.role !== "RETAILER"}
             type="primary"
-            disabled={!!batch.shipperCompanyId}
+            disabled={!!batch.shipTxHash}
             onClick={() => setOpenAssignModal(true)}
           >
             {t("batch.assign", "Confirm & Assign")}
