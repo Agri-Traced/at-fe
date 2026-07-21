@@ -10,9 +10,7 @@ import { TransactionLoading } from "./TransactionLoading";
 import { usePostTransit, usePostTransitConfirm } from "@/hooks/transits";
 
 export const TransitForm = ({ open, onClose, id, location }: { open: boolean; onClose: () => void; id: string | null; location: string | null }) => {
-  if (!id) {
-    throw new Error('Batch ID is required');
-  }
+  if (!id) return null;
   const { t } = useTranslation();
   const [form] = Form.useForm<StepTransit>();
   const { mutate, isPending } = usePostTransit()

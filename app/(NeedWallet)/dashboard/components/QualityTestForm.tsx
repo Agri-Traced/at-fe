@@ -10,21 +10,17 @@ import { useAuth } from "@/contexts/auth";
 import { usePostQualityTest, usePostQualityTestConfirm } from "@/hooks/quality";
 
 export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose: () => void; id: string | null }) => {
-  if (!id) {
-    throw new Error('Batch ID is required');
-  }
+  if (!id) return null;
   const { t } = useTranslation();
   const [form] = Form.useForm<QualityTest>();
   const { mutate, isPending } = usePostQualityTest()
   const { mutate: confirm, isPending: isConfirming } = usePostQualityTestConfirm()
   const { executeWrite, loading, } = useContract();
   const { modal, notification } = App.useApp();
-  const [loadingIPFS, setLoadingIPFS] = useState(false);
   const { user } = useAuth();
   if (!user) {
     throw new Error('User not found');
   }
-
   const onFinish = async (values: QualityTest) => {
     mutate({
       ...values,
@@ -112,12 +108,12 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
           </Select>
         </Form.Item>
         <Form.Item className="flex justify-center mt-6">
-          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || loadingIPFS || isConfirming}>
+          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || isConfirming}>
             {t('Submit')}
           </Button>
         </Form.Item>
       </Form>
-      <TransactionLoading loadingIPFS={loadingIPFS} loading={loading} isPending={isPending} isConfirming={isConfirming} />
+      <TransactionLoading loading={loading} isPending={isPending} isConfirming={isConfirming} />
     </Modal>
   )
 }

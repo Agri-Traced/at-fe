@@ -36,8 +36,8 @@ export const useCompany = (id: string) => {
 
 export const usePostCompanyKey = () => {
   return useMutation({
-    mutationFn: async ({ id, key }: { id: string, key: string }) => {
-      const { data } = await api.post(`/company/key`, { id, key });
+    mutationFn: async ({ id, key, role }: { id: string, key: string, role: string }) => {
+      const { data } = await api.post(`/company/key`, { id, key, role });
       return data;
     }
   });

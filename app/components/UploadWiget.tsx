@@ -39,8 +39,8 @@ export const UploadWidget = ({ imageUrl }: { imageUrl: (url: string) => void }) 
       </CldUploadWidget>
 
       {imgUrl && (
-        <div className="mt-4">
-          <Image src={imgUrl} alt="Preview" className="w-full h-auto rounded" />
+        <div className="mt-4 w-full">
+          <Image src={imgUrl} style={{ objectFit: 'contain' }} alt="Preview" className="!w-full h-auto rounded" />
         </div>
       )}
     </div>

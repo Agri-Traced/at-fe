@@ -1,60 +1,70 @@
-'use client';
+"use client";
 
-import api from '@/lib/axios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
-import { App } from 'antd'
-import { useRouter } from 'next/navigation';
-import { useConnection } from '@ant-design/web3';
-import { useSignMessage } from 'wagmi';
+import api from "@/lib/axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { App } from "antd";
+import { useRouter, useSearchParams } from "next/navigation"; // 🎯 Dùng useSearchParams
+import { useSignMessage, useDisconnect } from "wagmi";
+import { useAccount } from "@ant-design/web3";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const { notification } = App.useApp();
   const router = useRouter();
-  const { disconnect } = useConnection();
+  const searchParams = useSearchParams();
+  const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
-
+  const { account } = useAccount();
   return useMutation({
     mutationFn: async (address: string) => {
-      const message = `${t('Verify access for your wallet to login')}`;
+      const message = `${t("Verify access for your wallet to login")} - ${Date.now()}`;
       const signature = await signMessageAsync({ message });
-      const res = await api.post<{ token: string }>('/user/login', {
+
+      const res = await api.post<{ token: string }>("/user/login", {
         address,
         message,
-        signature
+        signature,
       });
-      notification.success({
-        title: t('Welcome to Agri-Trace.'),
-        showProgress: true,
-        placement: 'bottomRight'
-      })
-      return res.data; // Trả về { token: 'ey...' }
+
+      return res.data;
     },
+    retry: false,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth-user'] });
-      const redirectUrl = new URL(window.location.href).searchParams.get('redirect');
+      notification.success({
+        message: t("Welcome to Agri-Trace."),
+        showProgress: true,
+        placement: "bottomRight",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
+
+      const redirectUrl = searchParams.get("redirect");
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push('/dashboard');
+        router.push("/dashboard");
       }
     },
-    onError: (error: any) => {
-      if (error?.status === 404 || error.response?.status === 404) {
-        router.replace('/register');
-        return;
+    onError: async (error: any) => {
+      const statusCode = error?.status || error?.response?.status;
+      if (statusCode === 404) {
+        return router.push("/register");
+      }
+      if (account?.address) {
+        disconnect();
       }
 
-      if (disconnect) disconnect();
-      router.replace('/login');
       notification.error({
-        title: t('Login failed.'),
-        description: error?.response?.data?.message || error?.message,
+        message: t("Login failed."),
+        description:
+          error?.response?.data?.message ||
+          error?.message ||
+          t("An unknown error occurred"),
         showProgress: true,
-        placement: 'bottomRight'
-      })
-    }
+        placement: "bottomRight",
+      });
+    },
   });
 };

@@ -16,7 +16,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
     }
 
     let whereCondition: any = {
-      NOT: { txHash: null }
+      NOT: { plantTxHash: null }
     };
 
     if (company.type === OrganizationType.FARMER) {

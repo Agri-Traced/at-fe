@@ -97,7 +97,7 @@ export default function BatchPage() {
       label: t('Create Quality Test'),
       key: 'create-quality-test',
       icon: <SafetyOutlined />,
-      hidden: user.role !== 'FARMER',
+      hidden: user.role !== 'RETAILER',
       onClick: () => {
         setSelectedBatchId(data.id);
         setOpenQualityTestModal(true);
@@ -108,7 +108,7 @@ export default function BatchPage() {
       label: t('Transit batch'),
       key: 'transit',
       icon: <CarOutlined />,
-      hidden: user.role !== 'FARMER',
+      hidden: user.role !== 'SHIPPER',
       onClick: () => {
         setSelectedBatchId(data.id);
         setLocation(data.farmer.company.location);

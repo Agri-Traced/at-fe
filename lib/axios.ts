@@ -9,13 +9,10 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Interceptor: Xử lý trước khi request gửi đi
 api.interceptors.request.use((config) => {
-  // Nếu có token lưu trong cookie/localStorage, thêm vào header
   return config;
 });
 
-// Interceptor: Xử lý lỗi toàn cục
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {

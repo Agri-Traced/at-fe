@@ -33,7 +33,7 @@ const RoleForm = ({ selectedRole }: { selectedRole: Role }) => {
       return (
         <Form.Item
           label={t('Store id')}
-          name="storeId"
+          name="companyId"
           rules={[{ required: true, message: t('Please enter your store id') }]}
         >
           <Input placeholder={t('Enter your store id')} />
@@ -53,7 +53,8 @@ export const FormRole = ({ onBack, onNext, form }: { onBack: () => void, onNext:
       const companyId = form.getFieldValue('companyId');
       postCompanyKey({
         id: companyId,
-        key: protectedKey
+        key: protectedKey,
+        role: selectedRole,
       }, {
         onSuccess: () => {
           onNext();

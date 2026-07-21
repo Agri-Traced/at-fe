@@ -1,24 +1,26 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect } from 'react';
-import type { User } from '../generated/zod';
-import { Account, useAccount } from '@ant-design/web3';
-import api from '@/lib/axios';
-import { useQuery } from '@tanstack/react-query';
-import { useLogin } from '@/hooks/login';
-import { usePathname } from 'next/navigation';
-import { Loading } from '@/app/components/Loading';
-import { useTranslation } from 'react-i18next';
-import { useLogout } from '@/hooks/logout';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useRef } from "react";
+import type { User } from "../generated/zod";
+import { Account, useAccount } from "@ant-design/web3";
+import api from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { useLogin } from "@/hooks/login";
+import { usePathname } from "next/navigation";
+import { Loading } from "@/app/components/Loading";
+import { useTranslation } from "react-i18next";
+import { useLogout } from "@/hooks/logout";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: User | null | undefined;
   isLoading: boolean;
-  account: Account | undefined
+  account: Account | undefined;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { account } = useAccount();
@@ -28,11 +30,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { data: user, isLoading, error } = useQuery({
-    queryKey: ['auth-user'],
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["auth-user"],
     queryFn: async () => {
       try {
-        const res = await api.get<User, User>('/user/profile');
+        const res = await api.get<User, User>("/user/profile");
         return res;
       } catch (error: any) {
         const statusCode = error?.response?.status;
@@ -48,29 +50,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     refetchOnWindowFocus: false,
   });
 
-  const isAuthError = error && ((error as any)?.response?.status === 401 || (error as any)?.response?.status === 403);
+  // 4. Logic Auto Logout khi đổi Ví hoặc ngắt kết nối
+  useEffect(() => {
+    if (!account?.address) {
+      if (pathname !== "/login" && pathname !== "/register") {
+        logout();
+      }
+      return;
+    }
+
+    // 🎯 Chuẩn hóa địa chỉ ví về chữ thường để so sánh chính xác
+    if (user && account.address) {
+      const isDifferentWallet =
+        user.walletAddress?.toLowerCase() !== account.address.toLowerCase();
+
+      if (isDifferentWallet && !isPending) {
+        logout();
+      }
+    }
+  }, [account?.address, user, pathname, isPending, logout]);
 
   useEffect(() => {
-    if (account && user === undefined && isAuthError && pathname === '/login' && !isPending) {
-      login(account.address);
+    if (account?.address && user === null && pathname !== "/register") {
+      router.push("/register");
     }
-  }, [account, isAuthError, pathname, login, user, isPending]);
-
-  useEffect(() => {
-    if (!account && pathname !== '/login' || (user && account && user.walletAddress !== account.address && !isPending)) {
-      logout();
-    }
-  }, [account, logout, user, pathname, isPending]);
-
-  useEffect(() => {
-    if (account && user === null) {
-      router.push('/register');
-    }
-  }, [account, user]);
-
+  }, [account?.address, user, pathname, router]);
 
   if (isLoading || isPending) {
-    return <Loading message={t('Connecting to your wallet...')} />
+    return <Loading message={t("Connecting to your wallet...")} />;
   }
 
   return (
@@ -82,6 +89,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
