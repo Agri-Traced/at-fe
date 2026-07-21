@@ -8,7 +8,7 @@ const confirmSchema = z.object({
   txHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
-export const POST = withRole(Role.SHIPPER, async (req, user, context) => {
+export const POST = withRole(Role.RETAILER, async (req, user, context) => {
   try {
     const { id } = await context.params;
     const body = await req.json();
