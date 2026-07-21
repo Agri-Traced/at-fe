@@ -343,22 +343,26 @@ export default function TracePage() {
                   data.transits && data.transits.length > 0 ? (
                     data.transits.map((transit) => (
                       <div className="text-sm text-gray-500 mt-1 space-y-1">
-                        <p>{`${t("Shipped By")}: ${transit.shipper.fullName}`}</p>
-                        <p>{`${t("Vehicle")}: ${transit.vehicleNumber}`}</p>
-                        <p>{`${t("From Location")}: ${transit.fromLocation}`}</p>
-                        <p>{`${t("To Location")}: ${transit.toLocation}`}</p>
-                        <Tooltip title={transit.txHash}>
-                          <Typography.Text copyable>
-                            <Link
-                              href={`https://sepolia.etherscan.io/tx/${transit.txHash}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {transit.txHash?.slice(0, 6)}...
-                              {transit.txHash?.slice(-4)}
-                            </Link>
-                          </Typography.Text>
-                        </Tooltip>
+                        <div className="flex items-center gap-2">
+                          <Typography.Text>{`${t("Shipped By")}: ${transit.shipper.fullName}`}</Typography.Text>
+                          <Tooltip title={transit.txHash}>
+                            <Typography.Text copyable>
+                              <Link
+                                href={`https://sepolia.etherscan.io/tx/${transit.txHash}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {transit.txHash?.slice(0, 6)}...
+                                {transit.txHash?.slice(-4)}
+                              </Link>
+                            </Typography.Text>
+                          </Tooltip>
+                        </div>
+                        <ul className="list-disc list-inside mt-1 space-y-1">
+                          <li>{`${t("Vehicle")}: ${transit.vehicleNumber}`}</li>
+                          <li>{`${t("From Location")}: ${transit.fromLocation}`}</li>
+                          <li>{`${t("To Location")}: ${transit.toLocation}`}</li>
+                        </ul>
                       </div>
                     ))
                   ) : (
