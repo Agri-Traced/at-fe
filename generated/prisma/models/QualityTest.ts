@@ -442,10 +442,6 @@ export type QualityTestUncheckedUpdateOneWithoutBatchNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.QualityTestUpdateToOneWithWhereWithoutBatchInput, Prisma.QualityTestUpdateWithoutBatchInput>, Prisma.QualityTestUncheckedUpdateWithoutBatchInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type QualityTestCreateWithoutRetailerInput = {
   id?: string
   txHash?: string | null

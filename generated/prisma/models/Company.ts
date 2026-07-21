@@ -182,6 +182,7 @@ export type CompanyWhereInput = {
   companyName?: Prisma.StringFilter<"Company"> | string
   location?: Prisma.StringFilter<"Company"> | string
   protectedKey?: Prisma.StringFilter<"Company"> | string
+  processTemplates?: Prisma.ProcessTemplateListRelationFilter
   members?: Prisma.UserListRelationFilter
   shippedBatches?: Prisma.BatchListRelationFilter
   retailedBatches?: Prisma.BatchListRelationFilter
@@ -193,6 +194,7 @@ export type CompanyOrderByWithRelationInput = {
   companyName?: Prisma.SortOrder
   location?: Prisma.SortOrder
   protectedKey?: Prisma.SortOrder
+  processTemplates?: Prisma.ProcessTemplateOrderByRelationAggregateInput
   members?: Prisma.UserOrderByRelationAggregateInput
   shippedBatches?: Prisma.BatchOrderByRelationAggregateInput
   retailedBatches?: Prisma.BatchOrderByRelationAggregateInput
@@ -207,6 +209,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   companyName?: Prisma.StringFilter<"Company"> | string
   location?: Prisma.StringFilter<"Company"> | string
   protectedKey?: Prisma.StringFilter<"Company"> | string
+  processTemplates?: Prisma.ProcessTemplateListRelationFilter
   members?: Prisma.UserListRelationFilter
   shippedBatches?: Prisma.BatchListRelationFilter
   retailedBatches?: Prisma.BatchListRelationFilter
@@ -240,6 +243,7 @@ export type CompanyCreateInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchCreateNestedManyWithoutShipperCompanyInput
   retailedBatches?: Prisma.BatchCreateNestedManyWithoutRetailCompanyInput
@@ -251,6 +255,7 @@ export type CompanyUncheckedCreateInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateUncheckedCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperCompanyInput
   retailedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailCompanyInput
@@ -262,6 +267,7 @@ export type CompanyUpdateInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUpdateManyWithoutShipperCompanyNestedInput
   retailedBatches?: Prisma.BatchUpdateManyWithoutRetailCompanyNestedInput
@@ -273,6 +279,7 @@ export type CompanyUncheckedUpdateInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUncheckedUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput
   retailedBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput
@@ -307,6 +314,11 @@ export type CompanyScalarRelationFilter = {
   isNot?: Prisma.CompanyWhereInput
 }
 
+export type CompanyNullableScalarRelationFilter = {
+  is?: Prisma.CompanyWhereInput | null
+  isNot?: Prisma.CompanyWhereInput | null
+}
+
 export type CompanyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -331,11 +343,6 @@ export type CompanyMinOrderByAggregateInput = {
   protectedKey?: Prisma.SortOrder
 }
 
-export type CompanyNullableScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput | null
-  isNot?: Prisma.CompanyWhereInput | null
-}
-
 export type CompanyCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutMembersInput, Prisma.CompanyUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutMembersInput
@@ -348,10 +355,6 @@ export type CompanyUpdateOneRequiredWithoutMembersNestedInput = {
   upsert?: Prisma.CompanyUpsertWithoutMembersInput
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutMembersInput, Prisma.CompanyUpdateWithoutMembersInput>, Prisma.CompanyUncheckedUpdateWithoutMembersInput>
-}
-
-export type EnumOrganizationTypeFieldUpdateOperationsInput = {
-  set?: $Enums.OrganizationType
 }
 
 export type CompanyCreateNestedOneWithoutRetailedBatchesInput = {
@@ -386,12 +389,31 @@ export type CompanyUpdateOneWithoutShippedBatchesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutShippedBatchesInput, Prisma.CompanyUpdateWithoutShippedBatchesInput>, Prisma.CompanyUncheckedUpdateWithoutShippedBatchesInput>
 }
 
+export type EnumOrganizationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.OrganizationType
+}
+
+export type CompanyCreateNestedOneWithoutProcessTemplatesInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedCreateWithoutProcessTemplatesInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutProcessTemplatesInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedCreateWithoutProcessTemplatesInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutProcessTemplatesInput
+  upsert?: Prisma.CompanyUpsertWithoutProcessTemplatesInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutProcessTemplatesInput, Prisma.CompanyUpdateWithoutProcessTemplatesInput>, Prisma.CompanyUncheckedUpdateWithoutProcessTemplatesInput>
+}
+
 export type CompanyCreateWithoutMembersInput = {
   id?: string
   type: $Enums.OrganizationType
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchCreateNestedManyWithoutShipperCompanyInput
   retailedBatches?: Prisma.BatchCreateNestedManyWithoutRetailCompanyInput
 }
@@ -402,6 +424,7 @@ export type CompanyUncheckedCreateWithoutMembersInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateUncheckedCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperCompanyInput
   retailedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailCompanyInput
 }
@@ -428,6 +451,7 @@ export type CompanyUpdateWithoutMembersInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUpdateManyWithoutShipperCompanyNestedInput
   retailedBatches?: Prisma.BatchUpdateManyWithoutRetailCompanyNestedInput
 }
@@ -438,6 +462,7 @@ export type CompanyUncheckedUpdateWithoutMembersInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUncheckedUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput
   retailedBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput
 }
@@ -448,6 +473,7 @@ export type CompanyCreateWithoutRetailedBatchesInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchCreateNestedManyWithoutShipperCompanyInput
 }
@@ -458,6 +484,7 @@ export type CompanyUncheckedCreateWithoutRetailedBatchesInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateUncheckedCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   shippedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperCompanyInput
 }
@@ -473,6 +500,7 @@ export type CompanyCreateWithoutShippedBatchesInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserCreateNestedManyWithoutCompanyInput
   retailedBatches?: Prisma.BatchCreateNestedManyWithoutRetailCompanyInput
 }
@@ -483,6 +511,7 @@ export type CompanyUncheckedCreateWithoutShippedBatchesInput = {
   companyName: string
   location: string
   protectedKey: string
+  processTemplates?: Prisma.ProcessTemplateUncheckedCreateNestedManyWithoutCompanyInput
   members?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
   retailedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailCompanyInput
 }
@@ -509,6 +538,7 @@ export type CompanyUpdateWithoutRetailedBatchesInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUpdateManyWithoutShipperCompanyNestedInput
 }
@@ -519,6 +549,7 @@ export type CompanyUncheckedUpdateWithoutRetailedBatchesInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUncheckedUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
   shippedBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput
 }
@@ -540,6 +571,7 @@ export type CompanyUpdateWithoutShippedBatchesInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUpdateManyWithoutCompanyNestedInput
   retailedBatches?: Prisma.BatchUpdateManyWithoutRetailCompanyNestedInput
 }
@@ -550,7 +582,68 @@ export type CompanyUncheckedUpdateWithoutShippedBatchesInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  processTemplates?: Prisma.ProcessTemplateUncheckedUpdateManyWithoutCompanyNestedInput
   members?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  retailedBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput
+}
+
+export type CompanyCreateWithoutProcessTemplatesInput = {
+  id?: string
+  type: $Enums.OrganizationType
+  companyName: string
+  location: string
+  protectedKey: string
+  members?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  shippedBatches?: Prisma.BatchCreateNestedManyWithoutShipperCompanyInput
+  retailedBatches?: Prisma.BatchCreateNestedManyWithoutRetailCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutProcessTemplatesInput = {
+  id?: string
+  type: $Enums.OrganizationType
+  companyName: string
+  location: string
+  protectedKey: string
+  members?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  shippedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperCompanyInput
+  retailedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutProcessTemplatesInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedCreateWithoutProcessTemplatesInput>
+}
+
+export type CompanyUpsertWithoutProcessTemplatesInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedUpdateWithoutProcessTemplatesInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedCreateWithoutProcessTemplatesInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutProcessTemplatesInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutProcessTemplatesInput, Prisma.CompanyUncheckedUpdateWithoutProcessTemplatesInput>
+}
+
+export type CompanyUpdateWithoutProcessTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  shippedBatches?: Prisma.BatchUpdateManyWithoutShipperCompanyNestedInput
+  retailedBatches?: Prisma.BatchUpdateManyWithoutRetailCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutProcessTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  protectedKey?: Prisma.StringFieldUpdateOperationsInput | string
+  members?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  shippedBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperCompanyNestedInput
   retailedBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput
 }
 
@@ -560,12 +653,14 @@ export type CompanyUncheckedUpdateWithoutShippedBatchesInput = {
  */
 
 export type CompanyCountOutputType = {
+  processTemplates: number
   members: number
   shippedBatches: number
   retailedBatches: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  processTemplates?: boolean | CompanyCountOutputTypeCountProcessTemplatesArgs
   members?: boolean | CompanyCountOutputTypeCountMembersArgs
   shippedBatches?: boolean | CompanyCountOutputTypeCountShippedBatchesArgs
   retailedBatches?: boolean | CompanyCountOutputTypeCountRetailedBatchesArgs
@@ -579,6 +674,13 @@ export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the CompanyCountOutputType
    */
   select?: Prisma.CompanyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountProcessTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProcessTemplateWhereInput
 }
 
 /**
@@ -609,6 +711,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   companyName?: boolean
   location?: boolean
   protectedKey?: boolean
+  processTemplates?: boolean | Prisma.Company$processTemplatesArgs<ExtArgs>
   members?: boolean | Prisma.Company$membersArgs<ExtArgs>
   shippedBatches?: boolean | Prisma.Company$shippedBatchesArgs<ExtArgs>
   retailedBatches?: boolean | Prisma.Company$retailedBatchesArgs<ExtArgs>
@@ -641,6 +744,7 @@ export type CompanySelectScalar = {
 
 export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "companyName" | "location" | "protectedKey", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  processTemplates?: boolean | Prisma.Company$processTemplatesArgs<ExtArgs>
   members?: boolean | Prisma.Company$membersArgs<ExtArgs>
   shippedBatches?: boolean | Prisma.Company$shippedBatchesArgs<ExtArgs>
   retailedBatches?: boolean | Prisma.Company$retailedBatchesArgs<ExtArgs>
@@ -652,6 +756,7 @@ export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Company"
   objects: {
+    processTemplates: Prisma.$ProcessTemplatePayload<ExtArgs>[]
     members: Prisma.$UserPayload<ExtArgs>[]
     shippedBatches: Prisma.$BatchPayload<ExtArgs>[]
     retailedBatches: Prisma.$BatchPayload<ExtArgs>[]
@@ -1056,6 +1161,7 @@ readonly fields: CompanyFieldRefs;
  */
 export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  processTemplates<T extends Prisma.Company$processTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$processTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   members<T extends Prisma.Company$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shippedBatches<T extends Prisma.Company$shippedBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$shippedBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   retailedBatches<T extends Prisma.Company$retailedBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$retailedBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1483,6 +1589,30 @@ export type CompanyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Companies to delete.
    */
   limit?: number
+}
+
+/**
+ * Company.processTemplates
+ */
+export type Company$processTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProcessTemplate
+   */
+  select?: Prisma.ProcessTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProcessTemplate
+   */
+  omit?: Prisma.ProcessTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProcessTemplateInclude<ExtArgs> | null
+  where?: Prisma.ProcessTemplateWhereInput
+  orderBy?: Prisma.ProcessTemplateOrderByWithRelationInput | Prisma.ProcessTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.ProcessTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProcessTemplateScalarFieldEnum | Prisma.ProcessTemplateScalarFieldEnum[]
 }
 
 /**

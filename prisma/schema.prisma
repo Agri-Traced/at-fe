@@ -46,23 +46,6 @@ model User {
   qualityTests   QualityTest[] @relation("RetailerTests")
 }
 
-enum OrganizationType {
-  FARMER
-  SHIPPER
-  RETAILER
-}
-
-model Company {
-  id              String           @id @default(uuid())
-  type            OrganizationType // Dùng Enum thay cho Boolean
-  companyName     String
-  location        String
-  protectedKey    String // Dùng để gia nhập
-  members         User[]
-  shippedBatches  Batch[]          @relation("ShipperBatches") // Danh sách các lô hàng công ty này đi giao
-  retailedBatches Batch[]          @relation("RetailerBatches") // Danh sách các lô hàng siêu thị này bày bán
-}
-
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
 // Đây là bảng cốt lõi, liên kết trực tiếp với dữ liệu On-chain qua chuỗi định danh Batch ID.
 enum BatchStatus {
@@ -105,11 +88,15 @@ model Batch {
   unit           String // Đơn vị tính (KG, Tấn, Thùng...)
   status         BatchStatus   @default(PLANTED)
   activities     ActivityLog[] // Lưu lịch sử canh tác
+
+  processTemplateId String?
+  processTemplate   ProcessTemplate? @relation("FarmerProcessBatches", fields: [processTemplateId], references: [id])
+
   minTemperature Float // Nhiệt độ bảo quản tối thiểu (°C)
   maxTemperature Float // Nhiệt độ bảo quản tối đa (°C)
   minHumidity    Float // Độ ẩm bảo quản tối thiểu (%)
   maxHumidity    Float // Độ ẩm bảo quản tối đa (%)
-  imageUrl       String        @default("/logo.png")
+  imageUrl       String @default("/logo.png")
 
   // Quan hệ tác nhân gieo trồng
   farmerId String
@@ -131,6 +118,51 @@ model Batch {
   // Mối quan hệ các chặng hành trình
   transits    StepTransit[]
   qualityTest QualityTest?
+}
+
+enum OrganizationType {
+  FARMER
+  SHIPPER
+  RETAILER
+}
+
+model Company {
+  id              String           @id @default(uuid())
+  type            OrganizationType // Dùng Enum thay cho Boolean
+  companyName     String
+  location        String
+  protectedKey    String // Dùng để gia nhập
+  members         User[]
+  shippedBatches  Batch[]          @relation("ShipperBatches") // Danh sách các lô hàng công ty này đi giao
+  retailedBatches Batch[]          @relation("RetailerBatches") // Danh sách các lô hàng siêu thị này bày bán
+}
+
+model ProcessTemplate {
+  id        String @id @default(uuid())
+
+  name        String // Tên quy trình
+  description String?
+  type        OrganizationType // Thuộc về giai đoạn nào (FARMER, SHIPPER, RETAILER)
+
+  steps StepTemplate[] // Các bước mẫu trong quy trình này
+
+  farmerBatches   Batch[] @relation("FarmerProcessBatches")
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  qualityTests QualityTest[] @relation("RetailerProcessQualityTests")
+}
+
+model StepTemplate {
+  id                String          @id @default(uuid())
+  processTemplateId String
+  processTemplate   ProcessTemplate @relation(fields: [processTemplateId], references: [id], onDelete: Cascade)
+
+  stepOrder   Int // Thứ tự bước (1, 2, 3...)
+  title       String // Tên bước (VD: "Kiểm tra nhiệt độ xe", "Phun phân bón đợt 1")
+  description String?
+  dayOffset   Int // Ngày thứ mấy kể từ khi bắt đầu
+  isRequired  Boolean @default(true)
 }
 
 // 3. CHI TIẾT HÀNH TRÌNH VẬN CHUYỂN (TRANSPORT LOGS)
@@ -159,6 +191,9 @@ model QualityTest {
 
   retailerId String
   retailer   User   @relation("RetailerTests", fields: [retailerId], references: [id])
+
+  processTemplateId String
+  processTemplate   ProcessTemplate @relation("RetailerProcessQualityTests", fields: [processTemplateId], references: [id])
 
   txHash   String? // Transaction Hash kiểm định bất biến trên blockchain
   isPassed Boolean

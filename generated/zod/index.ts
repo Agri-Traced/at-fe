@@ -14,11 +14,15 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['id','walletAddress','fullName','email','phone','role','companyId','createdAt','updatedAt']);
 
-export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','location','protectedKey']);
-
 export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','farmerProcessId','shipperProcessId','retailerProcessId','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+
+export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','location','protectedKey']);
+
+export const ProcessTemplateScalarFieldEnumSchema = z.enum(['id','companyId','name','description','type','createdAt','updatedAt']);
+
+export const StepTemplateScalarFieldEnumSchema = z.enum(['id','processTemplateId','stepOrder','title','description','dayOffset','isRequired']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime']);
 
@@ -34,10 +38,6 @@ export const RoleSchema = z.enum(['FARMER','SHIPPER','RETAILER','CONSUMER']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
 
-export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
-
-export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
-
 export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','TESTING','RETAILING','SOLD','ABORTED']);
 
 export type BatchStatusType = `${z.infer<typeof BatchStatusSchema>}`
@@ -45,6 +45,10 @@ export type BatchStatusType = `${z.infer<typeof BatchStatusSchema>}`
 export const CategorySchema = z.enum(['VEGETABLE','FRUIT','GRAIN','BEAN','HERB','OTHER']);
 
 export type CategoryType = `${z.infer<typeof CategorySchema>}`
+
+export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
+
+export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -67,20 +71,6 @@ export const UserSchema = z.object({
 })
 
 export type User = z.infer<typeof UserSchema>
-
-/////////////////////////////////////////
-// COMPANY SCHEMA
-/////////////////////////////////////////
-
-export const CompanySchema = z.object({
-  type: OrganizationTypeSchema,
-  id: z.uuid(),
-  companyName: z.string(),
-  location: z.string(),
-  protectedKey: z.string(),
-})
-
-export type Company = z.infer<typeof CompanySchema>
 
 /////////////////////////////////////////
 // ACTIVITY LOG SCHEMA
@@ -111,6 +101,9 @@ export const BatchSchema = z.object({
   productVariety: z.string(),
   quantity: z.number().nullable(),
   unit: z.string(),
+  farmerProcessId: z.string().nullable(),
+  shipperProcessId: z.string().nullable(),
+  retailerProcessId: z.string().nullable(),
   minTemperature: z.number(),
   maxTemperature: z.number(),
   minHumidity: z.number(),
@@ -126,6 +119,52 @@ export const BatchSchema = z.object({
 })
 
 export type Batch = z.infer<typeof BatchSchema>
+
+/////////////////////////////////////////
+// COMPANY SCHEMA
+/////////////////////////////////////////
+
+export const CompanySchema = z.object({
+  type: OrganizationTypeSchema,
+  id: z.uuid(),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+})
+
+export type Company = z.infer<typeof CompanySchema>
+
+/////////////////////////////////////////
+// PROCESS TEMPLATE SCHEMA
+/////////////////////////////////////////
+
+export const ProcessTemplateSchema = z.object({
+  type: OrganizationTypeSchema,
+  id: z.uuid(),
+  companyId: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ProcessTemplate = z.infer<typeof ProcessTemplateSchema>
+
+/////////////////////////////////////////
+// STEP TEMPLATE SCHEMA
+/////////////////////////////////////////
+
+export const StepTemplateSchema = z.object({
+  id: z.uuid(),
+  processTemplateId: z.string(),
+  stepOrder: z.number().int(),
+  title: z.string(),
+  description: z.string().nullable(),
+  dayOffset: z.number().int(),
+  isRequired: z.boolean(),
+})
+
+export type StepTemplate = z.infer<typeof StepTemplateSchema>
 
 /////////////////////////////////////////
 // STEP TRANSIT SCHEMA

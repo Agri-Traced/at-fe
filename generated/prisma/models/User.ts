@@ -416,6 +416,11 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
 export type UserListRelationFilter = {
   every?: Prisma.UserWhereInput
   some?: Prisma.UserWhereInput
@@ -424,11 +429,6 @@ export type UserListRelationFilter = {
 
 export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -445,6 +445,20 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutBatchesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBatchesCreatedInput, Prisma.UserUncheckedCreateWithoutBatchesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBatchesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBatchesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBatchesCreatedInput, Prisma.UserUncheckedCreateWithoutBatchesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBatchesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutBatchesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBatchesCreatedInput, Prisma.UserUpdateWithoutBatchesCreatedInput>, Prisma.UserUncheckedUpdateWithoutBatchesCreatedInput>
 }
 
 export type UserCreateNestedManyWithoutCompanyInput = {
@@ -489,20 +503,6 @@ export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
-export type UserCreateNestedOneWithoutBatchesCreatedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBatchesCreatedInput, Prisma.UserUncheckedCreateWithoutBatchesCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBatchesCreatedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutBatchesCreatedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBatchesCreatedInput, Prisma.UserUncheckedCreateWithoutBatchesCreatedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBatchesCreatedInput
-  upsert?: Prisma.UserUpsertWithoutBatchesCreatedInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBatchesCreatedInput, Prisma.UserUpdateWithoutBatchesCreatedInput>, Prisma.UserUncheckedUpdateWithoutBatchesCreatedInput>
-}
-
 export type UserCreateNestedOneWithoutTransportsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTransportsInput, Prisma.UserUncheckedCreateWithoutTransportsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransportsInput
@@ -529,75 +529,6 @@ export type UserUpdateOneRequiredWithoutQualityTestsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutQualityTestsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQualityTestsInput, Prisma.UserUpdateWithoutQualityTestsInput>, Prisma.UserUncheckedUpdateWithoutQualityTestsInput>
-}
-
-export type UserCreateWithoutCompanyInput = {
-  id?: string
-  walletAddress: string
-  fullName: string
-  email?: string | null
-  phone?: string | null
-  role?: $Enums.Role
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
-  transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
-  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
-}
-
-export type UserUncheckedCreateWithoutCompanyInput = {
-  id?: string
-  walletAddress: string
-  fullName: string
-  email?: string | null
-  phone?: string | null
-  role?: $Enums.Role
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
-  transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
-  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
-}
-
-export type UserCreateOrConnectWithoutCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyInput, Prisma.UserUncheckedCreateWithoutCompanyInput>
-}
-
-export type UserCreateManyCompanyInputEnvelope = {
-  data: Prisma.UserCreateManyCompanyInput | Prisma.UserCreateManyCompanyInput[]
-  skipDuplicates?: boolean
-}
-
-export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCompanyInput, Prisma.UserUncheckedUpdateWithoutCompanyInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyInput, Prisma.UserUncheckedCreateWithoutCompanyInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCompanyInput, Prisma.UserUncheckedUpdateWithoutCompanyInput>
-}
-
-export type UserUpdateManyWithWhereWithoutCompanyInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutCompanyInput>
-}
-
-export type UserScalarWhereInput = {
-  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  OR?: Prisma.UserScalarWhereInput[]
-  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
-  walletAddress?: Prisma.StringFilter<"User"> | string
-  fullName?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringNullableFilter<"User"> | string | null
-  phone?: Prisma.StringNullableFilter<"User"> | string | null
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  companyId?: Prisma.StringFilter<"User"> | string
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
 export type UserCreateWithoutBatchesCreatedInput = {
@@ -670,6 +601,75 @@ export type UserUncheckedUpdateWithoutBatchesCreatedInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transports?: Prisma.StepTransitUncheckedUpdateManyWithoutShipperNestedInput
   qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutRetailerNestedInput
+}
+
+export type UserCreateWithoutCompanyInput = {
+  id?: string
+  walletAddress: string
+  fullName: string
+  email?: string | null
+  phone?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  batchesCreated?: Prisma.BatchCreateNestedManyWithoutFarmerInput
+  transports?: Prisma.StepTransitCreateNestedManyWithoutShipperInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutRetailerInput
+}
+
+export type UserUncheckedCreateWithoutCompanyInput = {
+  id?: string
+  walletAddress: string
+  fullName: string
+  email?: string | null
+  phone?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  batchesCreated?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerInput
+  transports?: Prisma.StepTransitUncheckedCreateNestedManyWithoutShipperInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutRetailerInput
+}
+
+export type UserCreateOrConnectWithoutCompanyInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyInput, Prisma.UserUncheckedCreateWithoutCompanyInput>
+}
+
+export type UserCreateManyCompanyInputEnvelope = {
+  data: Prisma.UserCreateManyCompanyInput | Prisma.UserCreateManyCompanyInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCompanyInput, Prisma.UserUncheckedUpdateWithoutCompanyInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyInput, Prisma.UserUncheckedCreateWithoutCompanyInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCompanyInput, Prisma.UserUncheckedUpdateWithoutCompanyInput>
+}
+
+export type UserUpdateManyWithWhereWithoutCompanyInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutCompanyInput>
+}
+
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.StringFilter<"User"> | string
+  walletAddress?: Prisma.StringFilter<"User"> | string
+  fullName?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  companyId?: Prisma.StringFilter<"User"> | string
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
 export type UserCreateWithoutTransportsInput = {

@@ -52,9 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Company: 'Company',
   ActivityLog: 'ActivityLog',
   Batch: 'Batch',
+  Company: 'Company',
+  ProcessTemplate: 'ProcessTemplate',
+  StepTemplate: 'StepTemplate',
   StepTransit: 'StepTransit',
   QualityTest: 'QualityTest'
 } as const
@@ -90,17 +92,6 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const CompanyScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  companyName: 'companyName',
-  location: 'location',
-  protectedKey: 'protectedKey'
-} as const
-
-export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
-
-
 export const ActivityLogScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
@@ -123,6 +114,9 @@ export const BatchScalarFieldEnum = {
   quantity: 'quantity',
   unit: 'unit',
   status: 'status',
+  farmerProcessId: 'farmerProcessId',
+  shipperProcessId: 'shipperProcessId',
+  retailerProcessId: 'retailerProcessId',
   minTemperature: 'minTemperature',
   maxTemperature: 'maxTemperature',
   minHumidity: 'minHumidity',
@@ -138,6 +132,43 @@ export const BatchScalarFieldEnum = {
 } as const
 
 export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]
+
+
+export const CompanyScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  companyName: 'companyName',
+  location: 'location',
+  protectedKey: 'protectedKey'
+} as const
+
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
+export const ProcessTemplateScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProcessTemplateScalarFieldEnum = (typeof ProcessTemplateScalarFieldEnum)[keyof typeof ProcessTemplateScalarFieldEnum]
+
+
+export const StepTemplateScalarFieldEnum = {
+  id: 'id',
+  processTemplateId: 'processTemplateId',
+  stepOrder: 'stepOrder',
+  title: 'title',
+  description: 'description',
+  dayOffset: 'dayOffset',
+  isRequired: 'isRequired'
+} as const
+
+export type StepTemplateScalarFieldEnum = (typeof StepTemplateScalarFieldEnum)[keyof typeof StepTemplateScalarFieldEnum]
 
 
 export const StepTransitScalarFieldEnum = {
