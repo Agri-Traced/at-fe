@@ -54,9 +54,7 @@ export type BatchMinAggregateOutputType = {
   quantity: number | null
   unit: string | null
   status: $Enums.BatchStatus | null
-  farmerProcessId: string | null
-  shipperProcessId: string | null
-  retailerProcessId: string | null
+  processTemplateId: string | null
   minTemperature: number | null
   maxTemperature: number | null
   minHumidity: number | null
@@ -83,9 +81,7 @@ export type BatchMaxAggregateOutputType = {
   quantity: number | null
   unit: string | null
   status: $Enums.BatchStatus | null
-  farmerProcessId: string | null
-  shipperProcessId: string | null
-  retailerProcessId: string | null
+  processTemplateId: string | null
   minTemperature: number | null
   maxTemperature: number | null
   minHumidity: number | null
@@ -112,9 +108,7 @@ export type BatchCountAggregateOutputType = {
   quantity: number
   unit: number
   status: number
-  farmerProcessId: number
-  shipperProcessId: number
-  retailerProcessId: number
+  processTemplateId: number
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -159,9 +153,7 @@ export type BatchMinAggregateInputType = {
   quantity?: true
   unit?: true
   status?: true
-  farmerProcessId?: true
-  shipperProcessId?: true
-  retailerProcessId?: true
+  processTemplateId?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
@@ -188,9 +180,7 @@ export type BatchMaxAggregateInputType = {
   quantity?: true
   unit?: true
   status?: true
-  farmerProcessId?: true
-  shipperProcessId?: true
-  retailerProcessId?: true
+  processTemplateId?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
@@ -217,9 +207,7 @@ export type BatchCountAggregateInputType = {
   quantity?: true
   unit?: true
   status?: true
-  farmerProcessId?: true
-  shipperProcessId?: true
-  retailerProcessId?: true
+  processTemplateId?: true
   minTemperature?: true
   maxTemperature?: true
   minHumidity?: true
@@ -333,9 +321,7 @@ export type BatchGroupByOutputType = {
   quantity: number | null
   unit: string
   status: $Enums.BatchStatus
-  farmerProcessId: string | null
-  shipperProcessId: string | null
-  retailerProcessId: string | null
+  processTemplateId: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -385,9 +371,7 @@ export type BatchWhereInput = {
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  farmerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  shipperProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  retailerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  processTemplateId?: Prisma.StringNullableFilter<"Batch"> | string | null
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
@@ -401,9 +385,7 @@ export type BatchWhereInput = {
   retailCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   shipperCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   activities?: Prisma.ActivityLogListRelationFilter
-  farmerProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
-  shipperProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
-  retailerProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
+  processTemplate?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   retailCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   shipperCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -423,9 +405,7 @@ export type BatchOrderByWithRelationInput = {
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  farmerProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
-  shipperProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
-  retailerProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
+  processTemplateId?: Prisma.SortOrderInput | Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
@@ -439,9 +419,7 @@ export type BatchOrderByWithRelationInput = {
   retailCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   shipperCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   activities?: Prisma.ActivityLogOrderByRelationAggregateInput
-  farmerProcess?: Prisma.ProcessTemplateOrderByWithRelationInput
-  shipperProcess?: Prisma.ProcessTemplateOrderByWithRelationInput
-  retailerProcess?: Prisma.ProcessTemplateOrderByWithRelationInput
+  processTemplate?: Prisma.ProcessTemplateOrderByWithRelationInput
   farmer?: Prisma.UserOrderByWithRelationInput
   retailCompany?: Prisma.CompanyOrderByWithRelationInput
   shipperCompany?: Prisma.CompanyOrderByWithRelationInput
@@ -464,9 +442,7 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  farmerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  shipperProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  retailerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  processTemplateId?: Prisma.StringNullableFilter<"Batch"> | string | null
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
@@ -480,9 +456,7 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   retailCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   shipperCompanyId?: Prisma.StringNullableFilter<"Batch"> | string | null
   activities?: Prisma.ActivityLogListRelationFilter
-  farmerProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
-  shipperProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
-  retailerProcess?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
+  processTemplate?: Prisma.XOR<Prisma.ProcessTemplateNullableScalarRelationFilter, Prisma.ProcessTemplateWhereInput> | null
   farmer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   retailCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   shipperCompany?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -502,9 +476,7 @@ export type BatchOrderByWithAggregationInput = {
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  farmerProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
-  shipperProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
-  retailerProcessId?: Prisma.SortOrderInput | Prisma.SortOrder
+  processTemplateId?: Prisma.SortOrderInput | Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
@@ -539,9 +511,7 @@ export type BatchScalarWhereWithAggregatesInput = {
   quantity?: Prisma.FloatNullableWithAggregatesFilter<"Batch"> | number | null
   unit?: Prisma.StringWithAggregatesFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusWithAggregatesFilter<"Batch"> | $Enums.BatchStatus
-  farmerProcessId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
-  shipperProcessId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
-  retailerProcessId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
+  processTemplateId?: Prisma.StringNullableWithAggregatesFilter<"Batch"> | string | null
   minTemperature?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
   minHumidity?: Prisma.FloatWithAggregatesFilter<"Batch"> | number
@@ -578,9 +548,7 @@ export type BatchCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
@@ -600,9 +568,7 @@ export type BatchUncheckedCreateInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -642,9 +608,7 @@ export type BatchUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
@@ -664,9 +628,7 @@ export type BatchUncheckedUpdateInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -696,9 +658,7 @@ export type BatchCreateManyInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -748,9 +708,7 @@ export type BatchUncheckedUpdateManyInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -792,9 +750,7 @@ export type BatchCountOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  farmerProcessId?: Prisma.SortOrder
-  shipperProcessId?: Prisma.SortOrder
-  retailerProcessId?: Prisma.SortOrder
+  processTemplateId?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
@@ -829,9 +785,7 @@ export type BatchMaxOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  farmerProcessId?: Prisma.SortOrder
-  shipperProcessId?: Prisma.SortOrder
-  retailerProcessId?: Prisma.SortOrder
+  processTemplateId?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
@@ -858,9 +812,7 @@ export type BatchMinOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  farmerProcessId?: Prisma.SortOrder
-  shipperProcessId?: Prisma.SortOrder
-  retailerProcessId?: Prisma.SortOrder
+  processTemplateId?: Prisma.SortOrder
   minTemperature?: Prisma.SortOrder
   maxTemperature?: Prisma.SortOrder
   minHumidity?: Prisma.SortOrder
@@ -1051,129 +1003,45 @@ export type BatchUncheckedUpdateManyWithoutRetailCompanyNestedInput = {
   deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
 }
 
-export type BatchCreateNestedManyWithoutFarmerProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput> | Prisma.BatchCreateWithoutFarmerProcessInput[] | Prisma.BatchUncheckedCreateWithoutFarmerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutFarmerProcessInput | Prisma.BatchCreateOrConnectWithoutFarmerProcessInput[]
-  createMany?: Prisma.BatchCreateManyFarmerProcessInputEnvelope
+export type BatchCreateNestedManyWithoutProcessTemplateInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput> | Prisma.BatchCreateWithoutProcessTemplateInput[] | Prisma.BatchUncheckedCreateWithoutProcessTemplateInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProcessTemplateInput | Prisma.BatchCreateOrConnectWithoutProcessTemplateInput[]
+  createMany?: Prisma.BatchCreateManyProcessTemplateInputEnvelope
   connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
 }
 
-export type BatchCreateNestedManyWithoutShipperProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput> | Prisma.BatchCreateWithoutShipperProcessInput[] | Prisma.BatchUncheckedCreateWithoutShipperProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperProcessInput | Prisma.BatchCreateOrConnectWithoutShipperProcessInput[]
-  createMany?: Prisma.BatchCreateManyShipperProcessInputEnvelope
+export type BatchUncheckedCreateNestedManyWithoutProcessTemplateInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput> | Prisma.BatchCreateWithoutProcessTemplateInput[] | Prisma.BatchUncheckedCreateWithoutProcessTemplateInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProcessTemplateInput | Prisma.BatchCreateOrConnectWithoutProcessTemplateInput[]
+  createMany?: Prisma.BatchCreateManyProcessTemplateInputEnvelope
   connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
 }
 
-export type BatchCreateNestedManyWithoutRetailerProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput> | Prisma.BatchCreateWithoutRetailerProcessInput[] | Prisma.BatchUncheckedCreateWithoutRetailerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailerProcessInput | Prisma.BatchCreateOrConnectWithoutRetailerProcessInput[]
-  createMany?: Prisma.BatchCreateManyRetailerProcessInputEnvelope
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-}
-
-export type BatchUncheckedCreateNestedManyWithoutFarmerProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput> | Prisma.BatchCreateWithoutFarmerProcessInput[] | Prisma.BatchUncheckedCreateWithoutFarmerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutFarmerProcessInput | Prisma.BatchCreateOrConnectWithoutFarmerProcessInput[]
-  createMany?: Prisma.BatchCreateManyFarmerProcessInputEnvelope
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-}
-
-export type BatchUncheckedCreateNestedManyWithoutShipperProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput> | Prisma.BatchCreateWithoutShipperProcessInput[] | Prisma.BatchUncheckedCreateWithoutShipperProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperProcessInput | Prisma.BatchCreateOrConnectWithoutShipperProcessInput[]
-  createMany?: Prisma.BatchCreateManyShipperProcessInputEnvelope
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-}
-
-export type BatchUncheckedCreateNestedManyWithoutRetailerProcessInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput> | Prisma.BatchCreateWithoutRetailerProcessInput[] | Prisma.BatchUncheckedCreateWithoutRetailerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailerProcessInput | Prisma.BatchCreateOrConnectWithoutRetailerProcessInput[]
-  createMany?: Prisma.BatchCreateManyRetailerProcessInputEnvelope
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-}
-
-export type BatchUpdateManyWithoutFarmerProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput> | Prisma.BatchCreateWithoutFarmerProcessInput[] | Prisma.BatchUncheckedCreateWithoutFarmerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutFarmerProcessInput | Prisma.BatchCreateOrConnectWithoutFarmerProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutFarmerProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutFarmerProcessInput[]
-  createMany?: Prisma.BatchCreateManyFarmerProcessInputEnvelope
+export type BatchUpdateManyWithoutProcessTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput> | Prisma.BatchCreateWithoutProcessTemplateInput[] | Prisma.BatchUncheckedCreateWithoutProcessTemplateInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProcessTemplateInput | Prisma.BatchCreateOrConnectWithoutProcessTemplateInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutProcessTemplateInput | Prisma.BatchUpsertWithWhereUniqueWithoutProcessTemplateInput[]
+  createMany?: Prisma.BatchCreateManyProcessTemplateInputEnvelope
   set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutFarmerProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutFarmerProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutFarmerProcessInput | Prisma.BatchUpdateManyWithWhereWithoutFarmerProcessInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutProcessTemplateInput | Prisma.BatchUpdateWithWhereUniqueWithoutProcessTemplateInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutProcessTemplateInput | Prisma.BatchUpdateManyWithWhereWithoutProcessTemplateInput[]
   deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
 }
 
-export type BatchUpdateManyWithoutShipperProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput> | Prisma.BatchCreateWithoutShipperProcessInput[] | Prisma.BatchUncheckedCreateWithoutShipperProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperProcessInput | Prisma.BatchCreateOrConnectWithoutShipperProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutShipperProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutShipperProcessInput[]
-  createMany?: Prisma.BatchCreateManyShipperProcessInputEnvelope
+export type BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput> | Prisma.BatchCreateWithoutProcessTemplateInput[] | Prisma.BatchUncheckedCreateWithoutProcessTemplateInput[]
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutProcessTemplateInput | Prisma.BatchCreateOrConnectWithoutProcessTemplateInput[]
+  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutProcessTemplateInput | Prisma.BatchUpsertWithWhereUniqueWithoutProcessTemplateInput[]
+  createMany?: Prisma.BatchCreateManyProcessTemplateInputEnvelope
   set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
   connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutShipperProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutShipperProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutShipperProcessInput | Prisma.BatchUpdateManyWithWhereWithoutShipperProcessInput[]
-  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
-}
-
-export type BatchUpdateManyWithoutRetailerProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput> | Prisma.BatchCreateWithoutRetailerProcessInput[] | Prisma.BatchUncheckedCreateWithoutRetailerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailerProcessInput | Prisma.BatchCreateOrConnectWithoutRetailerProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutRetailerProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutRetailerProcessInput[]
-  createMany?: Prisma.BatchCreateManyRetailerProcessInputEnvelope
-  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutRetailerProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutRetailerProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutRetailerProcessInput | Prisma.BatchUpdateManyWithWhereWithoutRetailerProcessInput[]
-  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
-}
-
-export type BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput> | Prisma.BatchCreateWithoutFarmerProcessInput[] | Prisma.BatchUncheckedCreateWithoutFarmerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutFarmerProcessInput | Prisma.BatchCreateOrConnectWithoutFarmerProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutFarmerProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutFarmerProcessInput[]
-  createMany?: Prisma.BatchCreateManyFarmerProcessInputEnvelope
-  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutFarmerProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutFarmerProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutFarmerProcessInput | Prisma.BatchUpdateManyWithWhereWithoutFarmerProcessInput[]
-  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
-}
-
-export type BatchUncheckedUpdateManyWithoutShipperProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput> | Prisma.BatchCreateWithoutShipperProcessInput[] | Prisma.BatchUncheckedCreateWithoutShipperProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutShipperProcessInput | Prisma.BatchCreateOrConnectWithoutShipperProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutShipperProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutShipperProcessInput[]
-  createMany?: Prisma.BatchCreateManyShipperProcessInputEnvelope
-  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutShipperProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutShipperProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutShipperProcessInput | Prisma.BatchUpdateManyWithWhereWithoutShipperProcessInput[]
-  deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
-}
-
-export type BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput = {
-  create?: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput> | Prisma.BatchCreateWithoutRetailerProcessInput[] | Prisma.BatchUncheckedCreateWithoutRetailerProcessInput[]
-  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutRetailerProcessInput | Prisma.BatchCreateOrConnectWithoutRetailerProcessInput[]
-  upsert?: Prisma.BatchUpsertWithWhereUniqueWithoutRetailerProcessInput | Prisma.BatchUpsertWithWhereUniqueWithoutRetailerProcessInput[]
-  createMany?: Prisma.BatchCreateManyRetailerProcessInputEnvelope
-  set?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  disconnect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  delete?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  connect?: Prisma.BatchWhereUniqueInput | Prisma.BatchWhereUniqueInput[]
-  update?: Prisma.BatchUpdateWithWhereUniqueWithoutRetailerProcessInput | Prisma.BatchUpdateWithWhereUniqueWithoutRetailerProcessInput[]
-  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutRetailerProcessInput | Prisma.BatchUpdateManyWithWhereWithoutRetailerProcessInput[]
+  update?: Prisma.BatchUpdateWithWhereUniqueWithoutProcessTemplateInput | Prisma.BatchUpdateWithWhereUniqueWithoutProcessTemplateInput[]
+  updateMany?: Prisma.BatchUpdateManyWithWhereWithoutProcessTemplateInput | Prisma.BatchUpdateManyWithWhereWithoutProcessTemplateInput[]
   deleteMany?: Prisma.BatchScalarWhereInput | Prisma.BatchScalarWhereInput[]
 }
 
@@ -1227,9 +1095,7 @@ export type BatchCreateWithoutFarmerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
@@ -1248,9 +1114,7 @@ export type BatchUncheckedCreateWithoutFarmerInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -1308,9 +1172,7 @@ export type BatchScalarWhereInput = {
   quantity?: Prisma.FloatNullableFilter<"Batch"> | number | null
   unit?: Prisma.StringFilter<"Batch"> | string
   status?: Prisma.EnumBatchStatusFilter<"Batch"> | $Enums.BatchStatus
-  farmerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  shipperProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
-  retailerProcessId?: Prisma.StringNullableFilter<"Batch"> | string | null
+  processTemplateId?: Prisma.StringNullableFilter<"Batch"> | string | null
   minTemperature?: Prisma.FloatFilter<"Batch"> | number
   maxTemperature?: Prisma.FloatFilter<"Batch"> | number
   minHumidity?: Prisma.FloatFilter<"Batch"> | number
@@ -1346,9 +1208,7 @@ export type BatchCreateWithoutActivitiesInput = {
   expiryDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
@@ -1368,9 +1228,7 @@ export type BatchUncheckedCreateWithoutActivitiesInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -1424,9 +1282,7 @@ export type BatchUpdateWithoutActivitiesInput = {
   expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
@@ -1446,9 +1302,7 @@ export type BatchUncheckedUpdateWithoutActivitiesInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1487,9 +1341,7 @@ export type BatchCreateWithoutShipperCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
@@ -1508,9 +1360,7 @@ export type BatchUncheckedCreateWithoutShipperCompanyInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -1559,9 +1409,7 @@ export type BatchCreateWithoutRetailCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
   transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
@@ -1580,9 +1428,7 @@ export type BatchUncheckedCreateWithoutRetailCompanyInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -1641,7 +1487,7 @@ export type BatchUpdateManyWithWhereWithoutRetailCompanyInput = {
   data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutRetailCompanyInput>
 }
 
-export type BatchCreateWithoutFarmerProcessInput = {
+export type BatchCreateWithoutProcessTemplateInput = {
   id?: string
   blockchainId: string
   plantTxHash?: string | null
@@ -1663,8 +1509,6 @@ export type BatchCreateWithoutFarmerProcessInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
@@ -1672,7 +1516,7 @@ export type BatchCreateWithoutFarmerProcessInput = {
   qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
 }
 
-export type BatchUncheckedCreateWithoutFarmerProcessInput = {
+export type BatchUncheckedCreateWithoutProcessTemplateInput = {
   id?: string
   blockchainId: string
   plantTxHash?: string | null
@@ -1684,8 +1528,6 @@ export type BatchUncheckedCreateWithoutFarmerProcessInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -1703,206 +1545,30 @@ export type BatchUncheckedCreateWithoutFarmerProcessInput = {
   qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
 }
 
-export type BatchCreateOrConnectWithoutFarmerProcessInput = {
+export type BatchCreateOrConnectWithoutProcessTemplateInput = {
   where: Prisma.BatchWhereUniqueInput
-  create: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput>
 }
 
-export type BatchCreateManyFarmerProcessInputEnvelope = {
-  data: Prisma.BatchCreateManyFarmerProcessInput | Prisma.BatchCreateManyFarmerProcessInput[]
+export type BatchCreateManyProcessTemplateInputEnvelope = {
+  data: Prisma.BatchCreateManyProcessTemplateInput | Prisma.BatchCreateManyProcessTemplateInput[]
   skipDuplicates?: boolean
 }
 
-export type BatchCreateWithoutShipperProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
-  farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
-  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
-  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
-  transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
-  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
-}
-
-export type BatchUncheckedCreateWithoutShipperProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  retailerProcessId?: string | null
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  farmerId: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  retailCompanyId?: string | null
-  shipperCompanyId?: string | null
-  activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
-  transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
-  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
-}
-
-export type BatchCreateOrConnectWithoutShipperProcessInput = {
+export type BatchUpsertWithWhereUniqueWithoutProcessTemplateInput = {
   where: Prisma.BatchWhereUniqueInput
-  create: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput>
+  update: Prisma.XOR<Prisma.BatchUpdateWithoutProcessTemplateInput, Prisma.BatchUncheckedUpdateWithoutProcessTemplateInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutProcessTemplateInput, Prisma.BatchUncheckedCreateWithoutProcessTemplateInput>
 }
 
-export type BatchCreateManyShipperProcessInputEnvelope = {
-  data: Prisma.BatchCreateManyShipperProcessInput | Prisma.BatchCreateManyShipperProcessInput[]
-  skipDuplicates?: boolean
-}
-
-export type BatchCreateWithoutRetailerProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
-  retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
-  shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
-  transits?: Prisma.StepTransitCreateNestedManyWithoutBatchInput
-  qualityTest?: Prisma.QualityTestCreateNestedOneWithoutBatchInput
-}
-
-export type BatchUncheckedCreateWithoutRetailerProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  farmerId: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  retailCompanyId?: string | null
-  shipperCompanyId?: string | null
-  activities?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutBatchInput
-  transits?: Prisma.StepTransitUncheckedCreateNestedManyWithoutBatchInput
-  qualityTest?: Prisma.QualityTestUncheckedCreateNestedOneWithoutBatchInput
-}
-
-export type BatchCreateOrConnectWithoutRetailerProcessInput = {
+export type BatchUpdateWithWhereUniqueWithoutProcessTemplateInput = {
   where: Prisma.BatchWhereUniqueInput
-  create: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput>
+  data: Prisma.XOR<Prisma.BatchUpdateWithoutProcessTemplateInput, Prisma.BatchUncheckedUpdateWithoutProcessTemplateInput>
 }
 
-export type BatchCreateManyRetailerProcessInputEnvelope = {
-  data: Prisma.BatchCreateManyRetailerProcessInput | Prisma.BatchCreateManyRetailerProcessInput[]
-  skipDuplicates?: boolean
-}
-
-export type BatchUpsertWithWhereUniqueWithoutFarmerProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  update: Prisma.XOR<Prisma.BatchUpdateWithoutFarmerProcessInput, Prisma.BatchUncheckedUpdateWithoutFarmerProcessInput>
-  create: Prisma.XOR<Prisma.BatchCreateWithoutFarmerProcessInput, Prisma.BatchUncheckedCreateWithoutFarmerProcessInput>
-}
-
-export type BatchUpdateWithWhereUniqueWithoutFarmerProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  data: Prisma.XOR<Prisma.BatchUpdateWithoutFarmerProcessInput, Prisma.BatchUncheckedUpdateWithoutFarmerProcessInput>
-}
-
-export type BatchUpdateManyWithWhereWithoutFarmerProcessInput = {
+export type BatchUpdateManyWithWhereWithoutProcessTemplateInput = {
   where: Prisma.BatchScalarWhereInput
-  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessInput>
-}
-
-export type BatchUpsertWithWhereUniqueWithoutShipperProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  update: Prisma.XOR<Prisma.BatchUpdateWithoutShipperProcessInput, Prisma.BatchUncheckedUpdateWithoutShipperProcessInput>
-  create: Prisma.XOR<Prisma.BatchCreateWithoutShipperProcessInput, Prisma.BatchUncheckedCreateWithoutShipperProcessInput>
-}
-
-export type BatchUpdateWithWhereUniqueWithoutShipperProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  data: Prisma.XOR<Prisma.BatchUpdateWithoutShipperProcessInput, Prisma.BatchUncheckedUpdateWithoutShipperProcessInput>
-}
-
-export type BatchUpdateManyWithWhereWithoutShipperProcessInput = {
-  where: Prisma.BatchScalarWhereInput
-  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutShipperProcessInput>
-}
-
-export type BatchUpsertWithWhereUniqueWithoutRetailerProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  update: Prisma.XOR<Prisma.BatchUpdateWithoutRetailerProcessInput, Prisma.BatchUncheckedUpdateWithoutRetailerProcessInput>
-  create: Prisma.XOR<Prisma.BatchCreateWithoutRetailerProcessInput, Prisma.BatchUncheckedCreateWithoutRetailerProcessInput>
-}
-
-export type BatchUpdateWithWhereUniqueWithoutRetailerProcessInput = {
-  where: Prisma.BatchWhereUniqueInput
-  data: Prisma.XOR<Prisma.BatchUpdateWithoutRetailerProcessInput, Prisma.BatchUncheckedUpdateWithoutRetailerProcessInput>
-}
-
-export type BatchUpdateManyWithWhereWithoutRetailerProcessInput = {
-  where: Prisma.BatchScalarWhereInput
-  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessInput>
+  data: Prisma.XOR<Prisma.BatchUpdateManyMutationInput, Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateInput>
 }
 
 export type BatchCreateWithoutTransitsInput = {
@@ -1927,9 +1593,7 @@ export type BatchCreateWithoutTransitsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
@@ -1948,9 +1612,7 @@ export type BatchUncheckedCreateWithoutTransitsInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2005,9 +1667,7 @@ export type BatchUpdateWithoutTransitsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
@@ -2026,9 +1686,7 @@ export type BatchUncheckedUpdateWithoutTransitsInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2067,9 +1725,7 @@ export type BatchCreateWithoutQualityTestInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityLogCreateNestedManyWithoutBatchInput
-  farmerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
-  shipperProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutShipperBatchesInput
-  retailerProcess?: Prisma.ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput
+  processTemplate?: Prisma.ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput
   farmer: Prisma.UserCreateNestedOneWithoutBatchesCreatedInput
   retailCompany?: Prisma.CompanyCreateNestedOneWithoutRetailedBatchesInput
   shipperCompany?: Prisma.CompanyCreateNestedOneWithoutShippedBatchesInput
@@ -2088,9 +1744,7 @@ export type BatchUncheckedCreateWithoutQualityTestInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2145,9 +1799,7 @@ export type BatchUpdateWithoutQualityTestInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
@@ -2166,9 +1818,7 @@ export type BatchUncheckedUpdateWithoutQualityTestInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2197,9 +1847,7 @@ export type BatchCreateManyFarmerInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2235,9 +1883,7 @@ export type BatchUpdateWithoutFarmerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
@@ -2256,9 +1902,7 @@ export type BatchUncheckedUpdateWithoutFarmerInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2287,9 +1931,7 @@ export type BatchUncheckedUpdateManyWithoutFarmerInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2315,9 +1957,7 @@ export type BatchCreateManyShipperCompanyInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2343,9 +1983,7 @@ export type BatchCreateManyRetailCompanyInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
+  processTemplateId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2381,9 +2019,7 @@ export type BatchUpdateWithoutShipperCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
@@ -2402,9 +2038,7 @@ export type BatchUncheckedUpdateWithoutShipperCompanyInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2433,9 +2067,7 @@ export type BatchUncheckedUpdateManyWithoutShipperCompanyInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2471,9 +2103,7 @@ export type BatchUpdateWithoutRetailCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
+  processTemplate?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
   transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
@@ -2492,9 +2122,7 @@ export type BatchUncheckedUpdateWithoutRetailCompanyInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2523,9 +2151,7 @@ export type BatchUncheckedUpdateManyWithoutRetailCompanyInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processTemplateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2539,7 +2165,7 @@ export type BatchUncheckedUpdateManyWithoutRetailCompanyInput = {
   shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type BatchCreateManyFarmerProcessInput = {
+export type BatchCreateManyProcessTemplateInput = {
   id?: string
   blockchainId: string
   plantTxHash?: string | null
@@ -2551,8 +2177,6 @@ export type BatchCreateManyFarmerProcessInput = {
   quantity?: number | null
   unit: string
   status?: $Enums.BatchStatus
-  shipperProcessId?: string | null
-  retailerProcessId?: string | null
   minTemperature: number
   maxTemperature: number
   minHumidity: number
@@ -2567,63 +2191,7 @@ export type BatchCreateManyFarmerProcessInput = {
   shipperCompanyId?: string | null
 }
 
-export type BatchCreateManyShipperProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  retailerProcessId?: string | null
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  farmerId: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  retailCompanyId?: string | null
-  shipperCompanyId?: string | null
-}
-
-export type BatchCreateManyRetailerProcessInput = {
-  id?: string
-  blockchainId: string
-  plantTxHash?: string | null
-  harvestTxHash?: string | null
-  shipTxHash?: string | null
-  productName: string
-  productVariety: string
-  category?: $Enums.Category
-  quantity?: number | null
-  unit: string
-  status?: $Enums.BatchStatus
-  farmerProcessId?: string | null
-  shipperProcessId?: string | null
-  minTemperature: number
-  maxTemperature: number
-  minHumidity: number
-  maxHumidity: number
-  imageUrl?: string
-  farmerId: string
-  harvestDate?: Date | string | null
-  expiryDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  retailCompanyId?: string | null
-  shipperCompanyId?: string | null
-}
-
-export type BatchUpdateWithoutFarmerProcessInput = {
+export type BatchUpdateWithoutProcessTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
   plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2645,8 +2213,6 @@ export type BatchUpdateWithoutFarmerProcessInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
   farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
   retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
   shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
@@ -2654,7 +2220,7 @@ export type BatchUpdateWithoutFarmerProcessInput = {
   qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
 }
 
-export type BatchUncheckedUpdateWithoutFarmerProcessInput = {
+export type BatchUncheckedUpdateWithoutProcessTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
   plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2666,8 +2232,6 @@ export type BatchUncheckedUpdateWithoutFarmerProcessInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2685,7 +2249,7 @@ export type BatchUncheckedUpdateWithoutFarmerProcessInput = {
   qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
 }
 
-export type BatchUncheckedUpdateManyWithoutFarmerProcessInput = {
+export type BatchUncheckedUpdateManyWithoutProcessTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
   plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2697,188 +2261,6 @@ export type BatchUncheckedUpdateManyWithoutFarmerProcessInput = {
   quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type BatchUpdateWithoutShipperProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  retailerProcess?: Prisma.ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput
-  farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
-  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
-  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
-  transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
-  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
-}
-
-export type BatchUncheckedUpdateWithoutShipperProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
-  transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
-  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
-}
-
-export type BatchUncheckedUpdateManyWithoutShipperProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  retailerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type BatchUpdateWithoutRetailerProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  activities?: Prisma.ActivityLogUpdateManyWithoutBatchNestedInput
-  farmerProcess?: Prisma.ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput
-  shipperProcess?: Prisma.ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput
-  farmer?: Prisma.UserUpdateOneRequiredWithoutBatchesCreatedNestedInput
-  retailCompany?: Prisma.CompanyUpdateOneWithoutRetailedBatchesNestedInput
-  shipperCompany?: Prisma.CompanyUpdateOneWithoutShippedBatchesNestedInput
-  transits?: Prisma.StepTransitUpdateManyWithoutBatchNestedInput
-  qualityTest?: Prisma.QualityTestUpdateOneWithoutBatchNestedInput
-}
-
-export type BatchUncheckedUpdateWithoutRetailerProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
-  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  farmerId?: Prisma.StringFieldUpdateOperationsInput | string
-  harvestDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  retailCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperCompanyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  activities?: Prisma.ActivityLogUncheckedUpdateManyWithoutBatchNestedInput
-  transits?: Prisma.StepTransitUncheckedUpdateManyWithoutBatchNestedInput
-  qualityTest?: Prisma.QualityTestUncheckedUpdateOneWithoutBatchNestedInput
-}
-
-export type BatchUncheckedUpdateManyWithoutRetailerProcessInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  blockchainId?: Prisma.StringFieldUpdateOperationsInput | string
-  plantTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  harvestTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipTxHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  productName?: Prisma.StringFieldUpdateOperationsInput | string
-  productVariety?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  quantity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
-  farmerProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shipperProcessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   maxTemperature?: Prisma.FloatFieldUpdateOperationsInput | number
   minHumidity?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2945,9 +2327,7 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   quantity?: boolean
   unit?: boolean
   status?: boolean
-  farmerProcessId?: boolean
-  shipperProcessId?: boolean
-  retailerProcessId?: boolean
+  processTemplateId?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
@@ -2961,9 +2341,7 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   retailCompanyId?: boolean
   shipperCompanyId?: boolean
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
@@ -2984,9 +2362,7 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   quantity?: boolean
   unit?: boolean
   status?: boolean
-  farmerProcessId?: boolean
-  shipperProcessId?: boolean
-  retailerProcessId?: boolean
+  processTemplateId?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
@@ -2999,9 +2375,7 @@ export type BatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   updatedAt?: boolean
   retailCompanyId?: boolean
   shipperCompanyId?: boolean
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
@@ -3019,9 +2393,7 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   quantity?: boolean
   unit?: boolean
   status?: boolean
-  farmerProcessId?: boolean
-  shipperProcessId?: boolean
-  retailerProcessId?: boolean
+  processTemplateId?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
@@ -3034,9 +2406,7 @@ export type BatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   updatedAt?: boolean
   retailCompanyId?: boolean
   shipperCompanyId?: boolean
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
@@ -3054,9 +2424,7 @@ export type BatchSelectScalar = {
   quantity?: boolean
   unit?: boolean
   status?: boolean
-  farmerProcessId?: boolean
-  shipperProcessId?: boolean
-  retailerProcessId?: boolean
+  processTemplateId?: boolean
   minTemperature?: boolean
   maxTemperature?: boolean
   minHumidity?: boolean
@@ -3071,12 +2439,10 @@ export type BatchSelectScalar = {
   shipperCompanyId?: boolean
 }
 
-export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "plantTxHash" | "harvestTxHash" | "shipTxHash" | "productName" | "productVariety" | "category" | "quantity" | "unit" | "status" | "farmerProcessId" | "shipperProcessId" | "retailerProcessId" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "imageUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
+export type BatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "blockchainId" | "plantTxHash" | "harvestTxHash" | "shipTxHash" | "productName" | "productVariety" | "category" | "quantity" | "unit" | "status" | "processTemplateId" | "minTemperature" | "maxTemperature" | "minHumidity" | "maxHumidity" | "imageUrl" | "farmerId" | "harvestDate" | "expiryDate" | "createdAt" | "updatedAt" | "retailCompanyId" | "shipperCompanyId", ExtArgs["result"]["batch"]>
 export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activities?: boolean | Prisma.Batch$activitiesArgs<ExtArgs>
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
@@ -3085,17 +2451,13 @@ export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   _count?: boolean | Prisma.BatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
 }
 export type BatchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  farmerProcess?: boolean | Prisma.Batch$farmerProcessArgs<ExtArgs>
-  shipperProcess?: boolean | Prisma.Batch$shipperProcessArgs<ExtArgs>
-  retailerProcess?: boolean | Prisma.Batch$retailerProcessArgs<ExtArgs>
+  processTemplate?: boolean | Prisma.Batch$processTemplateArgs<ExtArgs>
   farmer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   retailCompany?: boolean | Prisma.Batch$retailCompanyArgs<ExtArgs>
   shipperCompany?: boolean | Prisma.Batch$shipperCompanyArgs<ExtArgs>
@@ -3105,9 +2467,7 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Batch"
   objects: {
     activities: Prisma.$ActivityLogPayload<ExtArgs>[]
-    farmerProcess: Prisma.$ProcessTemplatePayload<ExtArgs> | null
-    shipperProcess: Prisma.$ProcessTemplatePayload<ExtArgs> | null
-    retailerProcess: Prisma.$ProcessTemplatePayload<ExtArgs> | null
+    processTemplate: Prisma.$ProcessTemplatePayload<ExtArgs> | null
     farmer: Prisma.$UserPayload<ExtArgs>
     retailCompany: Prisma.$CompanyPayload<ExtArgs> | null
     shipperCompany: Prisma.$CompanyPayload<ExtArgs> | null
@@ -3126,9 +2486,7 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     quantity: number | null
     unit: string
     status: $Enums.BatchStatus
-    farmerProcessId: string | null
-    shipperProcessId: string | null
-    retailerProcessId: string | null
+    processTemplateId: string | null
     minTemperature: number
     maxTemperature: number
     minHumidity: number
@@ -3536,9 +2894,7 @@ readonly fields: BatchFieldRefs;
 export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   activities<T extends Prisma.Batch$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  farmerProcess<T extends Prisma.Batch$farmerProcessArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$farmerProcessArgs<ExtArgs>>): Prisma.Prisma__ProcessTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProcessTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  shipperProcess<T extends Prisma.Batch$shipperProcessArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$shipperProcessArgs<ExtArgs>>): Prisma.Prisma__ProcessTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProcessTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  retailerProcess<T extends Prisma.Batch$retailerProcessArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$retailerProcessArgs<ExtArgs>>): Prisma.Prisma__ProcessTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProcessTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  processTemplate<T extends Prisma.Batch$processTemplateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$processTemplateArgs<ExtArgs>>): Prisma.Prisma__ProcessTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProcessTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   farmer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   retailCompany<T extends Prisma.Batch$retailCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$retailCompanyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   shipperCompany<T extends Prisma.Batch$shipperCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$shipperCompanyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -3584,9 +2940,7 @@ export interface BatchFieldRefs {
   readonly quantity: Prisma.FieldRef<"Batch", 'Float'>
   readonly unit: Prisma.FieldRef<"Batch", 'String'>
   readonly status: Prisma.FieldRef<"Batch", 'BatchStatus'>
-  readonly farmerProcessId: Prisma.FieldRef<"Batch", 'String'>
-  readonly shipperProcessId: Prisma.FieldRef<"Batch", 'String'>
-  readonly retailerProcessId: Prisma.FieldRef<"Batch", 'String'>
+  readonly processTemplateId: Prisma.FieldRef<"Batch", 'String'>
   readonly minTemperature: Prisma.FieldRef<"Batch", 'Float'>
   readonly maxTemperature: Prisma.FieldRef<"Batch", 'Float'>
   readonly minHumidity: Prisma.FieldRef<"Batch", 'Float'>
@@ -4024,47 +3378,9 @@ export type Batch$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Batch.farmerProcess
+ * Batch.processTemplate
  */
-export type Batch$farmerProcessArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProcessTemplate
-   */
-  select?: Prisma.ProcessTemplateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProcessTemplate
-   */
-  omit?: Prisma.ProcessTemplateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProcessTemplateInclude<ExtArgs> | null
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-/**
- * Batch.shipperProcess
- */
-export type Batch$shipperProcessArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProcessTemplate
-   */
-  select?: Prisma.ProcessTemplateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProcessTemplate
-   */
-  omit?: Prisma.ProcessTemplateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProcessTemplateInclude<ExtArgs> | null
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-/**
- * Batch.retailerProcess
- */
-export type Batch$retailerProcessArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Batch$processTemplateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the ProcessTemplate
    */

@@ -114,9 +114,7 @@ export const BatchScalarFieldEnum = {
   quantity: 'quantity',
   unit: 'unit',
   status: 'status',
-  farmerProcessId: 'farmerProcessId',
-  shipperProcessId: 'shipperProcessId',
-  retailerProcessId: 'retailerProcessId',
+  processTemplateId: 'processTemplateId',
   minTemperature: 'minTemperature',
   maxTemperature: 'maxTemperature',
   minHumidity: 'minHumidity',
@@ -147,10 +145,10 @@ export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeo
 
 export const ProcessTemplateScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
   name: 'name',
   description: 'description',
   type: 'type',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -164,6 +162,9 @@ export const StepTemplateScalarFieldEnum = {
   stepOrder: 'stepOrder',
   title: 'title',
   description: 'description',
+  imageUrl: 'imageUrl',
+  keyword: 'keyword',
+  values: 'values',
   dayOffset: 'dayOffset',
   isRequired: 'isRequired'
 } as const
@@ -191,6 +192,7 @@ export const QualityTestScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
   retailerId: 'retailerId',
+  processTemplateId: 'processTemplateId',
   txHash: 'txHash',
   isPassed: 'isPassed',
   note: 'note',

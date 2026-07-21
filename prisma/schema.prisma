@@ -138,19 +138,16 @@ model Company {
 }
 
 model ProcessTemplate {
-  id        String @id @default(uuid())
-
-  name        String // Tên quy trình
-  description String?
-  type        OrganizationType // Thuộc về giai đoạn nào (FARMER, SHIPPER, RETAILER)
-
-  steps StepTemplate[] // Các bước mẫu trong quy trình này
-
-  farmerBatches   Batch[] @relation("FarmerProcessBatches")
-
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  qualityTests QualityTest[] @relation("RetailerProcessQualityTests")
+  id            String           @id @default(uuid())
+  name          String // Tên quy trình
+  description   String?
+  type          OrganizationType // Thuộc về giai đoạn nào (FARMER, SHIPPER, RETAILER)
+  steps         StepTemplate[] // Các bước mẫu trong quy trình này
+  category      Category?        @default(VEGETABLE)
+  farmerBatches Batch[]          @relation("FarmerProcessBatches")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  qualityTests  QualityTest[]    @relation("RetailerProcessQualityTests")
 }
 
 model StepTemplate {
@@ -161,6 +158,9 @@ model StepTemplate {
   stepOrder   Int // Thứ tự bước (1, 2, 3...)
   title       String // Tên bước (VD: "Kiểm tra nhiệt độ xe", "Phun phân bón đợt 1")
   description String?
+  imageUrl    String? // Hình minh họa
+  keyword     String // VD: Bón phân, Phun thuốc, Tưới nước
+  values      String? // giá trị: phân bón, thuốc trừ sâu, nước tưới, nhiệt độ, độ ẩm...
   dayOffset   Int // Ngày thứ mấy kể từ khi bắt đầu
   isRequired  Boolean @default(true)
 }

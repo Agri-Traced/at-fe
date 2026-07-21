@@ -16,17 +16,17 @@ export const UserScalarFieldEnumSchema = z.enum(['id','walletAddress','fullName'
 
 export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','farmerProcessId','shipperProcessId','retailerProcessId','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','processTemplateId','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
 
 export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','location','protectedKey']);
 
-export const ProcessTemplateScalarFieldEnumSchema = z.enum(['id','companyId','name','description','type','createdAt','updatedAt']);
+export const ProcessTemplateScalarFieldEnumSchema = z.enum(['id','name','description','type','category','createdAt','updatedAt']);
 
-export const StepTemplateScalarFieldEnumSchema = z.enum(['id','processTemplateId','stepOrder','title','description','dayOffset','isRequired']);
+export const StepTemplateScalarFieldEnumSchema = z.enum(['id','processTemplateId','stepOrder','title','description','imageUrl','keyword','values','dayOffset','isRequired']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime']);
 
-export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','txHash','isPassed','note','testedAt']);
+export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','processTemplateId','txHash','isPassed','note','testedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -101,9 +101,7 @@ export const BatchSchema = z.object({
   productVariety: z.string(),
   quantity: z.number().nullable(),
   unit: z.string(),
-  farmerProcessId: z.string().nullable(),
-  shipperProcessId: z.string().nullable(),
-  retailerProcessId: z.string().nullable(),
+  processTemplateId: z.string().nullable(),
   minTemperature: z.number(),
   maxTemperature: z.number(),
   minHumidity: z.number(),
@@ -140,8 +138,8 @@ export type Company = z.infer<typeof CompanySchema>
 
 export const ProcessTemplateSchema = z.object({
   type: OrganizationTypeSchema,
+  category: CategorySchema.nullable(),
   id: z.uuid(),
-  companyId: z.string(),
   name: z.string(),
   description: z.string().nullable(),
   createdAt: z.coerce.date(),
@@ -160,6 +158,9 @@ export const StepTemplateSchema = z.object({
   stepOrder: z.number().int(),
   title: z.string(),
   description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  keyword: z.string(),
+  values: z.string().nullable(),
   dayOffset: z.number().int(),
   isRequired: z.boolean(),
 })
@@ -193,6 +194,7 @@ export const QualityTestSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
   retailerId: z.string(),
+  processTemplateId: z.string(),
   txHash: z.string().nullable(),
   isPassed: z.boolean(),
   note: z.string(),

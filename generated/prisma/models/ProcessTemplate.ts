@@ -26,30 +26,30 @@ export type AggregateProcessTemplate = {
 
 export type ProcessTemplateMinAggregateOutputType = {
   id: string | null
-  companyId: string | null
   name: string | null
   description: string | null
   type: $Enums.OrganizationType | null
+  category: $Enums.Category | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProcessTemplateMaxAggregateOutputType = {
   id: string | null
-  companyId: string | null
   name: string | null
   description: string | null
   type: $Enums.OrganizationType | null
+  category: $Enums.Category | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProcessTemplateCountAggregateOutputType = {
   id: number
-  companyId: number
   name: number
   description: number
   type: number
+  category: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,30 +58,30 @@ export type ProcessTemplateCountAggregateOutputType = {
 
 export type ProcessTemplateMinAggregateInputType = {
   id?: true
-  companyId?: true
   name?: true
   description?: true
   type?: true
+  category?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProcessTemplateMaxAggregateInputType = {
   id?: true
-  companyId?: true
   name?: true
   description?: true
   type?: true
+  category?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProcessTemplateCountAggregateInputType = {
   id?: true
-  companyId?: true
   name?: true
   description?: true
   type?: true
+  category?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -161,10 +161,10 @@ export type ProcessTemplateGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 
 export type ProcessTemplateGroupByOutputType = {
   id: string
-  companyId: string
   name: string
   description: string | null
   type: $Enums.OrganizationType
+  category: $Enums.Category | null
   createdAt: Date
   updatedAt: Date
   _count: ProcessTemplateCountAggregateOutputType | null
@@ -192,32 +192,28 @@ export type ProcessTemplateWhereInput = {
   OR?: Prisma.ProcessTemplateWhereInput[]
   NOT?: Prisma.ProcessTemplateWhereInput | Prisma.ProcessTemplateWhereInput[]
   id?: Prisma.StringFilter<"ProcessTemplate"> | string
-  companyId?: Prisma.StringFilter<"ProcessTemplate"> | string
   name?: Prisma.StringFilter<"ProcessTemplate"> | string
   description?: Prisma.StringNullableFilter<"ProcessTemplate"> | string | null
   type?: Prisma.EnumOrganizationTypeFilter<"ProcessTemplate"> | $Enums.OrganizationType
+  category?: Prisma.EnumCategoryNullableFilter<"ProcessTemplate"> | $Enums.Category | null
   createdAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   steps?: Prisma.StepTemplateListRelationFilter
   farmerBatches?: Prisma.BatchListRelationFilter
-  shipperBatches?: Prisma.BatchListRelationFilter
-  retailerBatches?: Prisma.BatchListRelationFilter
+  qualityTests?: Prisma.QualityTestListRelationFilter
 }
 
 export type ProcessTemplateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  company?: Prisma.CompanyOrderByWithRelationInput
   steps?: Prisma.StepTemplateOrderByRelationAggregateInput
   farmerBatches?: Prisma.BatchOrderByRelationAggregateInput
-  shipperBatches?: Prisma.BatchOrderByRelationAggregateInput
-  retailerBatches?: Prisma.BatchOrderByRelationAggregateInput
+  qualityTests?: Prisma.QualityTestOrderByRelationAggregateInput
 }
 
 export type ProcessTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -225,25 +221,23 @@ export type ProcessTemplateWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProcessTemplateWhereInput | Prisma.ProcessTemplateWhereInput[]
   OR?: Prisma.ProcessTemplateWhereInput[]
   NOT?: Prisma.ProcessTemplateWhereInput | Prisma.ProcessTemplateWhereInput[]
-  companyId?: Prisma.StringFilter<"ProcessTemplate"> | string
   name?: Prisma.StringFilter<"ProcessTemplate"> | string
   description?: Prisma.StringNullableFilter<"ProcessTemplate"> | string | null
   type?: Prisma.EnumOrganizationTypeFilter<"ProcessTemplate"> | $Enums.OrganizationType
+  category?: Prisma.EnumCategoryNullableFilter<"ProcessTemplate"> | $Enums.Category | null
   createdAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   steps?: Prisma.StepTemplateListRelationFilter
   farmerBatches?: Prisma.BatchListRelationFilter
-  shipperBatches?: Prisma.BatchListRelationFilter
-  retailerBatches?: Prisma.BatchListRelationFilter
+  qualityTests?: Prisma.QualityTestListRelationFilter
 }, "id">
 
 export type ProcessTemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProcessTemplateCountOrderByAggregateInput
@@ -256,10 +250,10 @@ export type ProcessTemplateScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProcessTemplateScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProcessTemplateScalarWhereWithAggregatesInput | Prisma.ProcessTemplateScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ProcessTemplate"> | string
-  companyId?: Prisma.StringWithAggregatesFilter<"ProcessTemplate"> | string
   name?: Prisma.StringWithAggregatesFilter<"ProcessTemplate"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"ProcessTemplate"> | string | null
   type?: Prisma.EnumOrganizationTypeWithAggregatesFilter<"ProcessTemplate"> | $Enums.OrganizationType
+  category?: Prisma.EnumCategoryNullableWithAggregatesFilter<"ProcessTemplate"> | $Enums.Category | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProcessTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ProcessTemplate"> | Date | string
 }
@@ -269,27 +263,25 @@ export type ProcessTemplateCreateInput = {
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProcessTemplatesInput
   steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchCreateNestedManyWithoutRetailerProcessInput
+  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUncheckedCreateInput = {
   id?: string
-  companyId: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailerProcessInput
+  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUpdateInput = {
@@ -297,35 +289,33 @@ export type ProcessTemplateUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput
   steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUpdateManyWithoutRetailerProcessNestedInput
+  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput
+  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateCreateManyInput = {
   id?: string
-  companyId: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -335,16 +325,17 @@ export type ProcessTemplateUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProcessTemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -354,42 +345,32 @@ export type ProcessTemplateNullableScalarRelationFilter = {
   isNot?: Prisma.ProcessTemplateWhereInput | null
 }
 
-export type ProcessTemplateListRelationFilter = {
-  every?: Prisma.ProcessTemplateWhereInput
-  some?: Prisma.ProcessTemplateWhereInput
-  none?: Prisma.ProcessTemplateWhereInput
-}
-
-export type ProcessTemplateOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type ProcessTemplateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProcessTemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProcessTemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -405,18 +386,6 @@ export type ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput = {
   connect?: Prisma.ProcessTemplateWhereUniqueInput
 }
 
-export type ProcessTemplateCreateNestedOneWithoutShipperBatchesInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutShipperBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutShipperBatchesInput
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-}
-
-export type ProcessTemplateCreateNestedOneWithoutRetailerBatchesInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutRetailerBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutRetailerBatchesInput
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-}
-
 export type ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput = {
   create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
   connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutFarmerBatchesInput
@@ -427,66 +396,8 @@ export type ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutFarmerBatchesInput, Prisma.ProcessTemplateUpdateWithoutFarmerBatchesInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput>
 }
 
-export type ProcessTemplateUpdateOneWithoutShipperBatchesNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutShipperBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutShipperBatchesInput
-  upsert?: Prisma.ProcessTemplateUpsertWithoutShipperBatchesInput
-  disconnect?: Prisma.ProcessTemplateWhereInput | boolean
-  delete?: Prisma.ProcessTemplateWhereInput | boolean
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutShipperBatchesInput, Prisma.ProcessTemplateUpdateWithoutShipperBatchesInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutShipperBatchesInput>
-}
-
-export type ProcessTemplateUpdateOneWithoutRetailerBatchesNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutRetailerBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutRetailerBatchesInput
-  upsert?: Prisma.ProcessTemplateUpsertWithoutRetailerBatchesInput
-  disconnect?: Prisma.ProcessTemplateWhereInput | boolean
-  delete?: Prisma.ProcessTemplateWhereInput | boolean
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutRetailerBatchesInput, Prisma.ProcessTemplateUpdateWithoutRetailerBatchesInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutRetailerBatchesInput>
-}
-
-export type ProcessTemplateCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput> | Prisma.ProcessTemplateCreateWithoutCompanyInput[] | Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput | Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.ProcessTemplateCreateManyCompanyInputEnvelope
-  connect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-}
-
-export type ProcessTemplateUncheckedCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput> | Prisma.ProcessTemplateCreateWithoutCompanyInput[] | Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput | Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.ProcessTemplateCreateManyCompanyInputEnvelope
-  connect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-}
-
-export type ProcessTemplateUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput> | Prisma.ProcessTemplateCreateWithoutCompanyInput[] | Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput | Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.ProcessTemplateUpsertWithWhereUniqueWithoutCompanyInput | Prisma.ProcessTemplateUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.ProcessTemplateCreateManyCompanyInputEnvelope
-  set?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  disconnect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  delete?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  connect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  update?: Prisma.ProcessTemplateUpdateWithWhereUniqueWithoutCompanyInput | Prisma.ProcessTemplateUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.ProcessTemplateUpdateManyWithWhereWithoutCompanyInput | Prisma.ProcessTemplateUpdateManyWithWhereWithoutCompanyInput[]
-  deleteMany?: Prisma.ProcessTemplateScalarWhereInput | Prisma.ProcessTemplateScalarWhereInput[]
-}
-
-export type ProcessTemplateUncheckedUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput> | Prisma.ProcessTemplateCreateWithoutCompanyInput[] | Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput | Prisma.ProcessTemplateCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.ProcessTemplateUpsertWithWhereUniqueWithoutCompanyInput | Prisma.ProcessTemplateUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.ProcessTemplateCreateManyCompanyInputEnvelope
-  set?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  disconnect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  delete?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  connect?: Prisma.ProcessTemplateWhereUniqueInput | Prisma.ProcessTemplateWhereUniqueInput[]
-  update?: Prisma.ProcessTemplateUpdateWithWhereUniqueWithoutCompanyInput | Prisma.ProcessTemplateUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.ProcessTemplateUpdateManyWithWhereWithoutCompanyInput | Prisma.ProcessTemplateUpdateManyWithWhereWithoutCompanyInput[]
-  deleteMany?: Prisma.ProcessTemplateScalarWhereInput | Prisma.ProcessTemplateScalarWhereInput[]
+export type NullableEnumCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.Category | null
 }
 
 export type ProcessTemplateCreateNestedOneWithoutStepsInput = {
@@ -503,97 +414,47 @@ export type ProcessTemplateUpdateOneRequiredWithoutStepsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutStepsInput, Prisma.ProcessTemplateUpdateWithoutStepsInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutStepsInput>
 }
 
+export type ProcessTemplateCreateNestedOneWithoutQualityTestsInput = {
+  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
+  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutQualityTestsInput
+  connect?: Prisma.ProcessTemplateWhereUniqueInput
+}
+
+export type ProcessTemplateUpdateOneRequiredWithoutQualityTestsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
+  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutQualityTestsInput
+  upsert?: Prisma.ProcessTemplateUpsertWithoutQualityTestsInput
+  connect?: Prisma.ProcessTemplateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutQualityTestsInput, Prisma.ProcessTemplateUpdateWithoutQualityTestsInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
+}
+
 export type ProcessTemplateCreateWithoutFarmerBatchesInput = {
   id?: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProcessTemplatesInput
   steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  shipperBatches?: Prisma.BatchCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchCreateNestedManyWithoutRetailerProcessInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput = {
   id?: string
-  companyId: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  shipperBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailerProcessInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateCreateOrConnectWithoutFarmerBatchesInput = {
   where: Prisma.ProcessTemplateWhereUniqueInput
   create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
-}
-
-export type ProcessTemplateCreateWithoutShipperBatchesInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProcessTemplatesInput
-  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutFarmerProcessInput
-  retailerBatches?: Prisma.BatchCreateNestedManyWithoutRetailerProcessInput
-}
-
-export type ProcessTemplateUncheckedCreateWithoutShipperBatchesInput = {
-  id?: string
-  companyId: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerProcessInput
-  retailerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailerProcessInput
-}
-
-export type ProcessTemplateCreateOrConnectWithoutShipperBatchesInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutShipperBatchesInput>
-}
-
-export type ProcessTemplateCreateWithoutRetailerBatchesInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProcessTemplatesInput
-  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchCreateNestedManyWithoutShipperProcessInput
-}
-
-export type ProcessTemplateUncheckedCreateWithoutRetailerBatchesInput = {
-  id?: string
-  companyId: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperProcessInput
-}
-
-export type ProcessTemplateCreateOrConnectWithoutRetailerBatchesInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutRetailerBatchesInput>
 }
 
 export type ProcessTemplateUpsertWithoutFarmerBatchesInput = {
@@ -612,164 +473,23 @@ export type ProcessTemplateUpdateWithoutFarmerBatchesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput
   steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  shipperBatches?: Prisma.BatchUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUpdateManyWithoutRetailerProcessNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  shipperBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput
-}
-
-export type ProcessTemplateUpsertWithoutShipperBatchesInput = {
-  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutShipperBatchesInput>
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutShipperBatchesInput>
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-export type ProcessTemplateUpdateToOneWithWhereWithoutShipperBatchesInput = {
-  where?: Prisma.ProcessTemplateWhereInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutShipperBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutShipperBatchesInput>
-}
-
-export type ProcessTemplateUpdateWithoutShipperBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput
-  steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutFarmerProcessNestedInput
-  retailerBatches?: Prisma.BatchUpdateManyWithoutRetailerProcessNestedInput
-}
-
-export type ProcessTemplateUncheckedUpdateWithoutShipperBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput
-  retailerBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput
-}
-
-export type ProcessTemplateUpsertWithoutRetailerBatchesInput = {
-  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutRetailerBatchesInput>
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutRetailerBatchesInput>
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-export type ProcessTemplateUpdateToOneWithWhereWithoutRetailerBatchesInput = {
-  where?: Prisma.ProcessTemplateWhereInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutRetailerBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutRetailerBatchesInput>
-}
-
-export type ProcessTemplateUpdateWithoutRetailerBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput
-  steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUpdateManyWithoutShipperProcessNestedInput
-}
-
-export type ProcessTemplateUncheckedUpdateWithoutRetailerBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperProcessNestedInput
-}
-
-export type ProcessTemplateCreateWithoutCompanyInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchCreateNestedManyWithoutRetailerProcessInput
-}
-
-export type ProcessTemplateUncheckedCreateWithoutCompanyInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailerProcessInput
-}
-
-export type ProcessTemplateCreateOrConnectWithoutCompanyInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput>
-}
-
-export type ProcessTemplateCreateManyCompanyInputEnvelope = {
-  data: Prisma.ProcessTemplateCreateManyCompanyInput | Prisma.ProcessTemplateCreateManyCompanyInput[]
-  skipDuplicates?: boolean
-}
-
-export type ProcessTemplateUpsertWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedUpdateWithoutCompanyInput>
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedCreateWithoutCompanyInput>
-}
-
-export type ProcessTemplateUpdateWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutCompanyInput, Prisma.ProcessTemplateUncheckedUpdateWithoutCompanyInput>
-}
-
-export type ProcessTemplateUpdateManyWithWhereWithoutCompanyInput = {
-  where: Prisma.ProcessTemplateScalarWhereInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateManyMutationInput, Prisma.ProcessTemplateUncheckedUpdateManyWithoutCompanyInput>
-}
-
-export type ProcessTemplateScalarWhereInput = {
-  AND?: Prisma.ProcessTemplateScalarWhereInput | Prisma.ProcessTemplateScalarWhereInput[]
-  OR?: Prisma.ProcessTemplateScalarWhereInput[]
-  NOT?: Prisma.ProcessTemplateScalarWhereInput | Prisma.ProcessTemplateScalarWhereInput[]
-  id?: Prisma.StringFilter<"ProcessTemplate"> | string
-  companyId?: Prisma.StringFilter<"ProcessTemplate"> | string
-  name?: Prisma.StringFilter<"ProcessTemplate"> | string
-  description?: Prisma.StringNullableFilter<"ProcessTemplate"> | string | null
-  type?: Prisma.EnumOrganizationTypeFilter<"ProcessTemplate"> | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateCreateWithoutStepsInput = {
@@ -777,25 +497,23 @@ export type ProcessTemplateCreateWithoutStepsInput = {
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProcessTemplatesInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchCreateNestedManyWithoutRetailerProcessInput
+  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
+  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUncheckedCreateWithoutStepsInput = {
   id?: string
-  companyId: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutFarmerProcessInput
-  shipperBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutShipperProcessInput
-  retailerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutRetailerProcessInput
+  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
+  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateCreateOrConnectWithoutStepsInput = {
@@ -819,69 +537,87 @@ export type ProcessTemplateUpdateWithoutStepsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProcessTemplatesNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUpdateManyWithoutRetailerProcessNestedInput
+  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
+  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateUncheckedUpdateWithoutStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput
+  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
+  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
-export type ProcessTemplateCreateManyCompanyInput = {
+export type ProcessTemplateCreateWithoutQualityTestsInput = {
   id?: string
   name: string
   description?: string | null
   type: $Enums.OrganizationType
+  category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
+  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
 }
 
-export type ProcessTemplateUpdateWithoutCompanyInput = {
+export type ProcessTemplateUncheckedCreateWithoutQualityTestsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  type: $Enums.OrganizationType
+  category?: $Enums.Category | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
+  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
+}
+
+export type ProcessTemplateCreateOrConnectWithoutQualityTestsInput = {
+  where: Prisma.ProcessTemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
+}
+
+export type ProcessTemplateUpsertWithoutQualityTestsInput = {
+  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
+  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
+  where?: Prisma.ProcessTemplateWhereInput
+}
+
+export type ProcessTemplateUpdateToOneWithWhereWithoutQualityTestsInput = {
+  where?: Prisma.ProcessTemplateWhereInput
+  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
+}
+
+export type ProcessTemplateUpdateWithoutQualityTestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUpdateManyWithoutRetailerProcessNestedInput
+  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
 }
 
-export type ProcessTemplateUncheckedUpdateWithoutCompanyInput = {
+export type ProcessTemplateUncheckedUpdateWithoutQualityTestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutFarmerProcessNestedInput
-  shipperBatches?: Prisma.BatchUncheckedUpdateManyWithoutShipperProcessNestedInput
-  retailerBatches?: Prisma.BatchUncheckedUpdateManyWithoutRetailerProcessNestedInput
-}
-
-export type ProcessTemplateUncheckedUpdateManyWithoutCompanyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
 
@@ -892,15 +628,13 @@ export type ProcessTemplateUncheckedUpdateManyWithoutCompanyInput = {
 export type ProcessTemplateCountOutputType = {
   steps: number
   farmerBatches: number
-  shipperBatches: number
-  retailerBatches: number
+  qualityTests: number
 }
 
 export type ProcessTemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   steps?: boolean | ProcessTemplateCountOutputTypeCountStepsArgs
   farmerBatches?: boolean | ProcessTemplateCountOutputTypeCountFarmerBatchesArgs
-  shipperBatches?: boolean | ProcessTemplateCountOutputTypeCountShipperBatchesArgs
-  retailerBatches?: boolean | ProcessTemplateCountOutputTypeCountRetailerBatchesArgs
+  qualityTests?: boolean | ProcessTemplateCountOutputTypeCountQualityTestsArgs
 }
 
 /**
@@ -930,97 +664,78 @@ export type ProcessTemplateCountOutputTypeCountFarmerBatchesArgs<ExtArgs extends
 /**
  * ProcessTemplateCountOutputType without action
  */
-export type ProcessTemplateCountOutputTypeCountShipperBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BatchWhereInput
-}
-
-/**
- * ProcessTemplateCountOutputType without action
- */
-export type ProcessTemplateCountOutputTypeCountRetailerBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BatchWhereInput
+export type ProcessTemplateCountOutputTypeCountQualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QualityTestWhereInput
 }
 
 
 export type ProcessTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   name?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   steps?: boolean | Prisma.ProcessTemplate$stepsArgs<ExtArgs>
   farmerBatches?: boolean | Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>
-  shipperBatches?: boolean | Prisma.ProcessTemplate$shipperBatchesArgs<ExtArgs>
-  retailerBatches?: boolean | Prisma.ProcessTemplate$retailerBatchesArgs<ExtArgs>
+  qualityTests?: boolean | Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["processTemplate"]>
 
 export type ProcessTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   name?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["processTemplate"]>
 
 export type ProcessTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   name?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["processTemplate"]>
 
 export type ProcessTemplateSelectScalar = {
   id?: boolean
-  companyId?: boolean
   name?: boolean
   description?: boolean
   type?: boolean
+  category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProcessTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "description" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["processTemplate"]>
+export type ProcessTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "type" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["processTemplate"]>
 export type ProcessTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   steps?: boolean | Prisma.ProcessTemplate$stepsArgs<ExtArgs>
   farmerBatches?: boolean | Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>
-  shipperBatches?: boolean | Prisma.ProcessTemplate$shipperBatchesArgs<ExtArgs>
-  retailerBatches?: boolean | Prisma.ProcessTemplate$retailerBatchesArgs<ExtArgs>
+  qualityTests?: boolean | Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ProcessTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-}
-export type ProcessTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-}
+export type ProcessTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ProcessTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ProcessTemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ProcessTemplate"
   objects: {
-    company: Prisma.$CompanyPayload<ExtArgs>
     steps: Prisma.$StepTemplatePayload<ExtArgs>[]
     farmerBatches: Prisma.$BatchPayload<ExtArgs>[]
-    shipperBatches: Prisma.$BatchPayload<ExtArgs>[]
-    retailerBatches: Prisma.$BatchPayload<ExtArgs>[]
+    qualityTests: Prisma.$QualityTestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    companyId: string
     name: string
     description: string | null
     type: $Enums.OrganizationType
+    category: $Enums.Category | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["processTemplate"]>
@@ -1417,11 +1132,9 @@ readonly fields: ProcessTemplateFieldRefs;
  */
 export interface Prisma__ProcessTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   steps<T extends Prisma.ProcessTemplate$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   farmerBatches<T extends Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  shipperBatches<T extends Prisma.ProcessTemplate$shipperBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$shipperBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  retailerBatches<T extends Prisma.ProcessTemplate$retailerBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$retailerBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qualityTests<T extends Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualityTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1452,10 +1165,10 @@ export interface Prisma__ProcessTemplateClient<T, Null = never, ExtArgs extends 
  */
 export interface ProcessTemplateFieldRefs {
   readonly id: Prisma.FieldRef<"ProcessTemplate", 'String'>
-  readonly companyId: Prisma.FieldRef<"ProcessTemplate", 'String'>
   readonly name: Prisma.FieldRef<"ProcessTemplate", 'String'>
   readonly description: Prisma.FieldRef<"ProcessTemplate", 'String'>
   readonly type: Prisma.FieldRef<"ProcessTemplate", 'OrganizationType'>
+  readonly category: Prisma.FieldRef<"ProcessTemplate", 'Category'>
   readonly createdAt: Prisma.FieldRef<"ProcessTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ProcessTemplate", 'DateTime'>
 }
@@ -1712,10 +1425,6 @@ export type ProcessTemplateCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.ProcessTemplateCreateManyInput | Prisma.ProcessTemplateCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProcessTemplateIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1786,10 +1495,6 @@ export type ProcessTemplateUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many ProcessTemplates to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProcessTemplateIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1907,51 +1612,27 @@ export type ProcessTemplate$farmerBatchesArgs<ExtArgs extends runtime.Types.Exte
 }
 
 /**
- * ProcessTemplate.shipperBatches
+ * ProcessTemplate.qualityTests
  */
-export type ProcessTemplate$shipperBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ProcessTemplate$qualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Batch
+   * Select specific fields to fetch from the QualityTest
    */
-  select?: Prisma.BatchSelect<ExtArgs> | null
+  select?: Prisma.QualityTestSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Batch
+   * Omit specific fields from the QualityTest
    */
-  omit?: Prisma.BatchOmit<ExtArgs> | null
+  omit?: Prisma.QualityTestOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.BatchInclude<ExtArgs> | null
-  where?: Prisma.BatchWhereInput
-  orderBy?: Prisma.BatchOrderByWithRelationInput | Prisma.BatchOrderByWithRelationInput[]
-  cursor?: Prisma.BatchWhereUniqueInput
+  include?: Prisma.QualityTestInclude<ExtArgs> | null
+  where?: Prisma.QualityTestWhereInput
+  orderBy?: Prisma.QualityTestOrderByWithRelationInput | Prisma.QualityTestOrderByWithRelationInput[]
+  cursor?: Prisma.QualityTestWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.BatchScalarFieldEnum | Prisma.BatchScalarFieldEnum[]
-}
-
-/**
- * ProcessTemplate.retailerBatches
- */
-export type ProcessTemplate$retailerBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Batch
-   */
-  select?: Prisma.BatchSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Batch
-   */
-  omit?: Prisma.BatchOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BatchInclude<ExtArgs> | null
-  where?: Prisma.BatchWhereInput
-  orderBy?: Prisma.BatchOrderByWithRelationInput | Prisma.BatchOrderByWithRelationInput[]
-  cursor?: Prisma.BatchWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.BatchScalarFieldEnum | Prisma.BatchScalarFieldEnum[]
+  distinct?: Prisma.QualityTestScalarFieldEnum | Prisma.QualityTestScalarFieldEnum[]
 }
 
 /**
