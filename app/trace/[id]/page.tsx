@@ -212,7 +212,7 @@ export default function TracePage() {
           <DashboardOutlined className="text-green-600" />
           {t("Cold Chain Status")}
         </h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Card className="shadow-sm border-0 text-center rounded-xl">
             <p className="text-sm text-gray-400">{t("Average Temperature")}</p>
             <p className="text-xl font-bold text-blue-600">
@@ -223,16 +223,6 @@ export default function TracePage() {
             <p className="text-sm text-gray-400">{t("Average Humidity")}</p>
             <p className="text-xl font-bold text-blue-600">
               {`💧 ${transportSummary ? transportSummary.avgHumidity.toFixed(1) + "%" : "--"}`}
-            </p>
-          </Card>
-          <Card className="shadow-sm border-0 text-center rounded-xl">
-            <p className="text-sm text-gray-400">
-              {t("Overall Journey Status")}
-            </p>
-            <p
-              className={`text-base font-bold ${transportSummary?.isAllSafe ? "text-green-600" : "text-red-600"}`}
-            >
-              {`⚠️ ${transportSummary?.isAllSafe ? t("Safe") : t("Has Deviations")}`}
             </p>
           </Card>
         </div>
@@ -254,15 +244,15 @@ export default function TracePage() {
                     <span className="font-bold text-base text-gray-800">
                       1. {t("Seeding & Cultivation")}
                     </span>
-                    <Tooltip title={data.plantTxHash}>
+                    <Tooltip title={data?.plantTxHash}>
                       <Typography.Text copyable>
                         <Link
-                          href={`https://sepolia.etherscan.io/tx/${data.plantTxHash}`}
+                          href={`https://sepolia.etherscan.io/tx/${data?.plantTxHash}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {data.plantTxHash?.slice(0, 6)}...
-                          {data.plantTxHash?.slice(-4)}
+                          {data?.plantTxHash?.slice(0, 6)}...
+                          {data?.plantTxHash?.slice(-4)}
                         </Link>
                       </Typography.Text>
                     </Tooltip>
@@ -303,23 +293,21 @@ export default function TracePage() {
                     <span className="font-bold text-base text-gray-800">
                       2. {t("Harvest & Packaging")}
                     </span>
-                    {data.harvestTxHash && (
-                      <Tooltip title={data.harvestTxHash}>
-                        <Typography.Text copyable>
-                          <Link
-                            href={`https://sepolia.etherscan.io/tx/${data.harvestTxHash}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {data.harvestTxHash?.slice(0, 6)}...
-                            {data.harvestTxHash?.slice(-4)}
-                          </Link>
-                        </Typography.Text>
-                      </Tooltip>
-                    )}
+                    <Tooltip title={data?.harvestTxHash}>
+                      <Typography.Text copyable>
+                        <Link
+                          href={`https://sepolia.etherscan.io/tx/${data?.harvestTxHash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {data?.harvestTxHash?.slice(0, 6)}...
+                          {data?.harvestTxHash?.slice(-4)}
+                        </Link>
+                      </Typography.Text>
+                    </Tooltip>
                   </div>
                 ),
-                description: !data.harvestTxHash ? (
+                description: data?.harvestTxHash ? (
                   <div className="text-sm text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
                     <p className="font-semibold text-yellow-700">
                       ⚠ {t("No Activity Data Available")}
@@ -344,24 +332,24 @@ export default function TracePage() {
                     data.transits.map((transit) => (
                       <div className="text-sm text-gray-500 mt-1 space-y-1">
                         <div className="flex items-center gap-2">
-                          <Typography.Text>{`${t("Shipped By")}: ${transit.shipper.fullName}`}</Typography.Text>
-                          <Tooltip title={transit.txHash}>
+                          <Typography.Text className="font-semibold">{`${t("Shipped By")}: ${transit?.shipper?.fullName}`}</Typography.Text>
+                          <Tooltip title={transit?.txHash}>
                             <Typography.Text copyable>
                               <Link
-                                href={`https://sepolia.etherscan.io/tx/${transit.txHash}`}
+                                href={`https://sepolia.etherscan.io/tx/${transit?.txHash}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                {transit.txHash?.slice(0, 6)}...
-                                {transit.txHash?.slice(-4)}
+                                {transit?.txHash?.slice(0, 6)}...
+                                {transit?.txHash?.slice(-4)}
                               </Link>
                             </Typography.Text>
                           </Tooltip>
                         </div>
                         <ul className="list-disc list-inside mt-1 space-y-1">
-                          <li>{`${t("Vehicle")}: ${transit.vehicleNumber}`}</li>
-                          <li>{`${t("From Location")}: ${transit.fromLocation}`}</li>
-                          <li>{`${t("To Location")}: ${transit.toLocation}`}</li>
+                          <li>{`${t("Vehicle")}: ${transit?.vehicleNumber}`}</li>
+                          <li>{`${t("From Location")}: ${transit?.fromLocation}`}</li>
+                          <li>{`${t("To Location")}: ${transit?.toLocation}`}</li>
                         </ul>
                       </div>
                     ))
@@ -379,32 +367,35 @@ export default function TracePage() {
                     <span className="font-bold text-base text-gray-800">
                       4. {t("Quality Testing & Retail")}
                     </span>
-                    {data.qualityTest?.txHash && (
-                      <Tooltip title={data.qualityTest.txHash}>
-                        <Typography.Text copyable>
-                          <Link
-                            href={`https://sepolia.etherscan.io/tx/${data.qualityTest?.txHash}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {data.qualityTest?.txHash?.slice(0, 6)}...
-                            {data.qualityTest?.txHash?.slice(-4)}
-                          </Link>
-                        </Typography.Text>
-                      </Tooltip>
-                    )}
+                    <Tooltip title={data?.qualityTest?.txHash}>
+                      <Typography.Text copyable>
+                        <Link
+                          href={`https://sepolia.etherscan.io/tx/${data?.qualityTest?.txHash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {data?.qualityTest?.txHash?.slice(0, 6)}...
+                          {data?.qualityTest?.txHash?.slice(-4)}
+                        </Link>
+                      </Typography.Text>
+                    </Tooltip>
                   </div>
                 ),
-                description: data.qualityTest ? (
+                description: data?.qualityTest ? (
                   <div className="text-sm text-gray-500 mt-1 p-2.5 bg-green-50 rounded-lg border border-green-200">
-                    <p className="font-semibold text-green-700">
-                      ✓ {t("Result")}: {t("Meets Standards")}
-                    </p>
-                    <p className="mt-1">{`${t("Approved By")}: ${data.qualityTest.retailer.fullName}`}</p>
+                    {data?.qualityTest?.isPassed ? (
+                      <p className="font-semibold text-green-700">
+                        ✓ {t("Result")}: {t("Meets Standards")}
+                      </p>
+                    ) : (
+                      <p className="font-semibold text-red-700">
+                        ✗ {t("Result")}: {t("Does Not Meet Standards")}
+                      </p>
+                    )}
+                    <p className="mt-1">{`${t("Approved By")}: ${data?.qualityTest?.retailer?.fullName}`}</p>
                     <p className="italic text-gray-600">
-                      "{data.qualityTest.note}"
+                      "{data?.qualityTest?.note}"
                     </p>
-                    <p className="text-gray-400 font-mono text-[10px] mt-1">{`${t("Blockchain Tx")}: ${data.qualityTest.txHash}`}</p>
                   </div>
                 ) : (
                   <div className="text-sm text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
@@ -421,9 +412,6 @@ export default function TracePage() {
 
       {/* BLOCKCHAIN METADATA FOOTER */}
       <div className="px-4 mt-6 text-center">
-        <p className="text-gray-300 text-[9px] mt-1">
-          {t("Powered by Sepolia Testnet • For Demonstration Purposes Only")}
-        </p>
         <p className="text-gray-300 text-[9px] mt-4">
           Đỗ Minh Nhật & Nguyễn Thành Dương
         </p>
