@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { OrganizationType } from '@/generated/prisma/enums';
+import { BatchStatus, OrganizationType } from '@/generated/prisma/enums';
 
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get('query') || '';
 
     const company = await prisma.company.findUnique({
       where: { id },
@@ -29,8 +31,13 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       whereCondition.retailCompanyId = id;
     }
 
+    if (query && query.trim() !== '') {
+      whereCondition.status = query as BatchStatus;
+    }
+
     const batches = await prisma.batch.findMany({
       where: whereCondition,
+      orderBy: { updatedAt: 'desc' },
       include: {
         farmer: {
           select: {
@@ -38,8 +45,14 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
             company: { select: { companyName: true, location: true } }
           }
         },
+        transits: {
+          include: { shipper: true }
+        },
+        activity: {
+          include: { steps: true },
+        },
         qualityTest: {
-          include: { retailer: true },
+          include: { retailer: true, steps: true },
         },
         shipperCompany: {
           select: { companyName: true, location: true }
@@ -47,9 +60,6 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
         retailCompany: {
           select: { companyName: true, location: true }
         }
-      },
-      orderBy: {
-        updatedAt: 'desc'
       }
     });
 

@@ -6,7 +6,7 @@ import { withRole } from '@/lib/auth';
 
 // 1. Validate Schema bằng Zod cho dữ liệu đầu vào
 const confirmSchema = z.object({
-  harvestTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
+  retailTxHash: z.string().min(1, "Vui lòng nhập Transaction Hash!"),
 });
 
 export const POST = withRole(Role.FARMER, async (req, user, context) => {
@@ -46,7 +46,7 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    if (batch.harvestTxHash !== null) {
+    if (batch.retailTxHash !== null) {
       return NextResponse.json(
         { success: false, error: "This batch has already been harvested." },
         { status: 400 }
@@ -55,7 +55,10 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
 
     const txHash = await prisma.batch.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        status: BatchStatus.HARVESTED,
+      },
     });
 
     return NextResponse.json(

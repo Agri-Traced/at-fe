@@ -8,7 +8,12 @@ const prismaClientSingleton = () => {
     throw new Error("DATABASE_URL biến môi trường chưa được nạp!");
   }
 
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    max: 2,
+    idleTimeoutMillis: 10000,
+  });
+  
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter: adapter});
 };

@@ -307,6 +307,11 @@ export type CompanyScalarRelationFilter = {
   isNot?: Prisma.CompanyWhereInput
 }
 
+export type CompanyNullableScalarRelationFilter = {
+  is?: Prisma.CompanyWhereInput | null
+  isNot?: Prisma.CompanyWhereInput | null
+}
+
 export type CompanyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
@@ -331,11 +336,6 @@ export type CompanyMinOrderByAggregateInput = {
   protectedKey?: Prisma.SortOrder
 }
 
-export type CompanyNullableScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput | null
-  isNot?: Prisma.CompanyWhereInput | null
-}
-
 export type CompanyCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutMembersInput, Prisma.CompanyUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutMembersInput
@@ -348,10 +348,6 @@ export type CompanyUpdateOneRequiredWithoutMembersNestedInput = {
   upsert?: Prisma.CompanyUpsertWithoutMembersInput
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutMembersInput, Prisma.CompanyUpdateWithoutMembersInput>, Prisma.CompanyUncheckedUpdateWithoutMembersInput>
-}
-
-export type EnumOrganizationTypeFieldUpdateOperationsInput = {
-  set?: $Enums.OrganizationType
 }
 
 export type CompanyCreateNestedOneWithoutRetailedBatchesInput = {
@@ -384,6 +380,10 @@ export type CompanyUpdateOneWithoutShippedBatchesNestedInput = {
   delete?: Prisma.CompanyWhereInput | boolean
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutShippedBatchesInput, Prisma.CompanyUpdateWithoutShippedBatchesInput>, Prisma.CompanyUncheckedUpdateWithoutShippedBatchesInput>
+}
+
+export type EnumOrganizationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.OrganizationType
 }
 
 export type CompanyCreateWithoutMembersInput = {

@@ -29,6 +29,22 @@ export const POST = withRole('FARMER', async (req, user, context) => {
 
     const batch = await prisma.batch.create({ data });
 
+    const templateSteps = await prisma.processTemplate.findMany({
+      where: { category: data.category, type: 'FARMER' },
+      include: { steps: true }
+    });
+
+    await prisma.activity.create({
+      data: {
+        batchId: batch.id,
+        steps: {
+          create: templateSteps.flatMap((processTemplate) =>
+            processTemplate.steps.map(({ id, processTemplateId, ...step }) => (step))
+          ),
+        },
+      },
+    });
+
     return NextResponse.json({ success: true, data: batch }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'An error occurred' }, { status: 500 });

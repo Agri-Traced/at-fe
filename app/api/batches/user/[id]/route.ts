@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { BatchStatus } from '@/generated/prisma/enums';
+import { Prisma } from '@/generated/prisma/client';
 
 export async function GET(
   req: Request,
@@ -7,9 +9,21 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get('query') || '';
+
+    const whereClause: Prisma.BatchWhereInput = {
+      farmerId: id,
+      plantTxHash: { not: null },
+    };
+
+    // Nếu query truyền lên hợp lệ (không rỗng), mới filter theo status
+    if (query && query.trim() !== '') {
+      whereClause.status = query as BatchStatus; // Nhớ import enum BatchStatus từ @prisma/client
+    }
 
     const batch = await prisma.batch.findMany({
-      where: { farmerId: id, NOT: { plantTxHash: null } },
+      where: whereClause,
       orderBy: { updatedAt: 'desc' },
       include: {
         farmer: {
@@ -18,8 +32,14 @@ export async function GET(
             company: { select: { companyName: true, location: true } }
           }
         },
+        transits: {
+          include: { shipper: true }
+        },
+        activity: {
+          include: { steps: true },
+        },
         qualityTest: {
-          include: { retailer: true },
+          include: { retailer: true, steps: true },
         },
         shipperCompany: {
           select: { companyName: true, location: true }

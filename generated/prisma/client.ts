@@ -47,20 +47,30 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model Company
+ * Model Activity
  * 
  */
-export type Company = Prisma.CompanyModel
-/**
- * Model ActivityLog
- * 
- */
-export type ActivityLog = Prisma.ActivityLogModel
+export type Activity = Prisma.ActivityModel
 /**
  * Model Batch
  * 
  */
 export type Batch = Prisma.BatchModel
+/**
+ * Model Company
+ * 
+ */
+export type Company = Prisma.CompanyModel
+/**
+ * Model ProcessTemplate
+ * 
+ */
+export type ProcessTemplate = Prisma.ProcessTemplateModel
+/**
+ * Model StepTemplate
+ * 
+ */
+export type StepTemplate = Prisma.StepTemplateModel
 /**
  * Model StepTransit
  * 
@@ -71,3 +81,13 @@ export type StepTransit = Prisma.StepTransitModel
  * 
  */
 export type QualityTest = Prisma.QualityTestModel
+/**
+ * Model QualityStep
+ * 
+ */
+export type QualityStep = Prisma.QualityStepModel
+/**
+ * Model ActivityStep
+ * 
+ */
+export type ActivityStep = Prisma.ActivityStepModel

@@ -48,7 +48,7 @@ export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClos
         ]);
         confirm({
           id: data.id,
-          data: { harvestTxHash: String(txHash) },
+          data: { retailTxHash: String(txHash) },
         }, {
           onSuccess: async () => {
             modal.success({

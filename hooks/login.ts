@@ -19,15 +19,15 @@ export const useLogin = () => {
   const { account } = useAccount();
   return useMutation({
     mutationFn: async (address: string) => {
+      const currentUser = queryClient.getQueryData(["auth-user"]);
+      if (currentUser) return;
       const message = `${t("Verify access for your wallet to login")} - ${Date.now()}`;
       const signature = await signMessageAsync({ message });
-
       const res = await api.post<{ token: string }>("/user/login", {
         address,
         message,
         signature,
       });
-
       return res.data;
     },
     retry: false,

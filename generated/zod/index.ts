@@ -14,15 +14,23 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['id','walletAddress','fullName','email','phone','role','companyId','createdAt','updatedAt']);
 
+export const ActivityScalarFieldEnumSchema = z.enum(['id','batchId','txHash','createdAt','userId']);
+
+export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','retailTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+
 export const CompanyScalarFieldEnumSchema = z.enum(['id','type','companyName','location','protectedKey']);
 
-export const ActivityLogScalarFieldEnumSchema = z.enum(['id','batchId','description','timestamp']);
+export const ProcessTemplateScalarFieldEnumSchema = z.enum(['id','name','description','type','category','createdAt','updatedAt']);
 
-export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','harvestTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
+export const StepTemplateScalarFieldEnumSchema = z.enum(['id','processTemplateId','stepOrder','title','description','imageUrl','keyword','values','dayOffset','isRequired']);
 
 export const StepTransitScalarFieldEnumSchema = z.enum(['id','batchId','shipperId','txHash','fromLocation','toLocation','temperature','humidity','vehicleNumber','departureTime']);
 
-export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','txHash','isPassed','note','testedAt']);
+export const QualityTestScalarFieldEnumSchema = z.enum(['id','batchId','retailerId','txHash','isPassed','createdAt']);
+
+export const QualityStepScalarFieldEnumSchema = z.enum(['id','qualityTestId','stepOrder','title','description','imageUrl','keyword','values','note','dayOffset','isRequired','doAt']);
+
+export const ActivityStepScalarFieldEnumSchema = z.enum(['id','activityId','stepOrder','title','description','imageUrl','keyword','values','note','dayOffset','isRequired','doAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -34,17 +42,17 @@ export const RoleSchema = z.enum(['FARMER','SHIPPER','RETAILER','CONSUMER']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
 
-export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
-
-export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
-
-export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','TESTING','RETAILING','SOLD','ABORTED']);
+export const BatchStatusSchema = z.enum(['PLANTED','HARVESTED','IN_TRANSIT','RETAILING','ABORTED']);
 
 export type BatchStatusType = `${z.infer<typeof BatchStatusSchema>}`
 
 export const CategorySchema = z.enum(['VEGETABLE','FRUIT','GRAIN','BEAN','HERB','OTHER']);
 
 export type CategoryType = `${z.infer<typeof CategorySchema>}`
+
+export const OrganizationTypeSchema = z.enum(['FARMER','SHIPPER','RETAILER']);
+
+export type OrganizationTypeType = `${z.infer<typeof OrganizationTypeSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -69,31 +77,18 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>
 
 /////////////////////////////////////////
-// COMPANY SCHEMA
+// ACTIVITY SCHEMA
 /////////////////////////////////////////
 
-export const CompanySchema = z.object({
-  type: OrganizationTypeSchema,
-  id: z.uuid(),
-  companyName: z.string(),
-  location: z.string(),
-  protectedKey: z.string(),
-})
-
-export type Company = z.infer<typeof CompanySchema>
-
-/////////////////////////////////////////
-// ACTIVITY LOG SCHEMA
-/////////////////////////////////////////
-
-export const ActivityLogSchema = z.object({
+export const ActivitySchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
-  description: z.string(),
-  timestamp: z.coerce.date(),
+  txHash: z.string().nullable(),
+  createdAt: z.coerce.date().nullable(),
+  userId: z.string().nullable(),
 })
 
-export type ActivityLog = z.infer<typeof ActivityLogSchema>
+export type Activity = z.infer<typeof ActivitySchema>
 
 /////////////////////////////////////////
 // BATCH SCHEMA
@@ -105,7 +100,7 @@ export const BatchSchema = z.object({
   id: z.uuid(),
   blockchainId: z.string(),
   plantTxHash: z.string().nullable(),
-  harvestTxHash: z.string().nullable(),
+  retailTxHash: z.string().nullable(),
   shipTxHash: z.string().nullable(),
   productName: z.string(),
   productVariety: z.string(),
@@ -126,6 +121,55 @@ export const BatchSchema = z.object({
 })
 
 export type Batch = z.infer<typeof BatchSchema>
+
+/////////////////////////////////////////
+// COMPANY SCHEMA
+/////////////////////////////////////////
+
+export const CompanySchema = z.object({
+  type: OrganizationTypeSchema,
+  id: z.uuid(),
+  companyName: z.string(),
+  location: z.string(),
+  protectedKey: z.string(),
+})
+
+export type Company = z.infer<typeof CompanySchema>
+
+/////////////////////////////////////////
+// PROCESS TEMPLATE SCHEMA
+/////////////////////////////////////////
+
+export const ProcessTemplateSchema = z.object({
+  type: OrganizationTypeSchema,
+  category: CategorySchema.nullable(),
+  id: z.uuid(),
+  name: z.string(),
+  description: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ProcessTemplate = z.infer<typeof ProcessTemplateSchema>
+
+/////////////////////////////////////////
+// STEP TEMPLATE SCHEMA
+/////////////////////////////////////////
+
+export const StepTemplateSchema = z.object({
+  id: z.uuid(),
+  processTemplateId: z.string(),
+  stepOrder: z.number().int(),
+  title: z.string(),
+  description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  keyword: z.string().nullable(),
+  values: z.string().nullable(),
+  dayOffset: z.number().int(),
+  isRequired: z.boolean(),
+})
+
+export type StepTemplate = z.infer<typeof StepTemplateSchema>
 
 /////////////////////////////////////////
 // STEP TRANSIT SCHEMA
@@ -153,11 +197,52 @@ export type StepTransit = z.infer<typeof StepTransitSchema>
 export const QualityTestSchema = z.object({
   id: z.uuid(),
   batchId: z.string(),
-  retailerId: z.string(),
+  retailerId: z.string().nullable(),
   txHash: z.string().nullable(),
-  isPassed: z.boolean(),
-  note: z.string(),
-  testedAt: z.coerce.date(),
+  isPassed: z.boolean().nullable(),
+  createdAt: z.coerce.date().nullable(),
 })
 
 export type QualityTest = z.infer<typeof QualityTestSchema>
+
+/////////////////////////////////////////
+// QUALITY STEP SCHEMA
+/////////////////////////////////////////
+
+export const QualityStepSchema = z.object({
+  id: z.uuid(),
+  qualityTestId: z.string(),
+  stepOrder: z.number().int(),
+  title: z.string(),
+  description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  keyword: z.string().nullable(),
+  values: z.string().nullable(),
+  note: z.string().nullable(),
+  dayOffset: z.number().int(),
+  isRequired: z.boolean(),
+  doAt: z.coerce.date().nullable(),
+})
+
+export type QualityStep = z.infer<typeof QualityStepSchema>
+
+/////////////////////////////////////////
+// ACTIVITY STEP SCHEMA
+/////////////////////////////////////////
+
+export const ActivityStepSchema = z.object({
+  id: z.uuid(),
+  activityId: z.string(),
+  stepOrder: z.number().int(),
+  title: z.string(),
+  description: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  keyword: z.string().nullable(),
+  values: z.string().nullable(),
+  note: z.string().nullable(),
+  dayOffset: z.number().int(),
+  isRequired: z.boolean(),
+  doAt: z.coerce.date().nullable(),
+})
+
+export type ActivityStep = z.infer<typeof ActivityStepSchema>

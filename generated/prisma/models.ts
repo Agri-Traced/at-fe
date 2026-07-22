@@ -9,9 +9,13 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/Company'
-export type * from './models/ActivityLog'
+export type * from './models/Activity'
 export type * from './models/Batch'
+export type * from './models/Company'
+export type * from './models/ProcessTemplate'
+export type * from './models/StepTemplate'
 export type * from './models/StepTransit'
 export type * from './models/QualityTest'
+export type * from './models/QualityStep'
+export type * from './models/ActivityStep'
 export type * from './commonInputTypes'

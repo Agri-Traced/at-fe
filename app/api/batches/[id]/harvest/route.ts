@@ -13,10 +13,7 @@ const harvestSchema = z.object({
 
 export const POST = withRole(Role.FARMER, async (req, user, context) => {
   try {
-    // A. Lấy batchId từ URL params
     const { id } = await context.params;
-
-    // B. Đọc và validate dữ liệu body gửi lên
     const body = await req.json();
     const validation = harvestSchema.safeParse(body);
 
@@ -48,18 +45,33 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       );
     }
 
-    if (batch.harvestTxHash !== null) {
+    if (batch.retailTxHash !== null) {
       return NextResponse.json(
         { success: false, error: "This batch has already been harvested." },
         { status: 400 }
       );
     }
 
+    const templateSteps = await prisma.processTemplate.findMany({
+      where: { type: 'RETAILER' },
+      include: { steps: true }
+    });
+
+    await prisma.qualityTest.create({
+      data: {
+        batchId: batch.id,
+        steps: {
+          create: templateSteps.flatMap((processTemplate) =>
+            processTemplate.steps.map(({ id, processTemplateId, ...step }) => (step))
+          ),
+        },
+      },
+    });
+
     const harvest = await prisma.batch.update({
       where: { id },
       data: {
         ...data,
-        status: BatchStatus.HARVESTED,
         harvestDate: new Date(),
       }
     });

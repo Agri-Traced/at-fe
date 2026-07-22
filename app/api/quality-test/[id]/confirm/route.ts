@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { Role } from '@/generated/prisma/enums';
+import { BatchStatus, Role } from '@/generated/prisma/enums';
 import { withRole } from '@/lib/auth';
 
 const confirmSchema = z.object({
@@ -48,9 +48,30 @@ export const POST = withRole(Role.RETAILER, async (req, user, context) => {
       );
     }
 
+    const batch = await prisma.batch.findFirst({
+      where: {
+        qualityTest: {
+          id,
+        }
+      },
+      include: { qualityTest: true }
+    });
+
+    if (!batch) {
+      return NextResponse.json(
+        { success: false, error: "Cannot find batch with the provided ID." },
+        { status: 404 }
+      );
+    }
+
     const txHash = await prisma.qualityTest.update({
       where: { id },
-      data,
+      data: { ...data, createdAt: new Date() },
+    });
+
+    await prisma.batch.update({
+      where: { id: batch.id },
+      data: { status: BatchStatus.RETAILING }
     });
 
     return NextResponse.json(

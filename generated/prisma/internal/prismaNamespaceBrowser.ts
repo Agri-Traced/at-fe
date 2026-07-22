@@ -52,11 +52,15 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Company: 'Company',
-  ActivityLog: 'ActivityLog',
+  Activity: 'Activity',
   Batch: 'Batch',
+  Company: 'Company',
+  ProcessTemplate: 'ProcessTemplate',
+  StepTemplate: 'StepTemplate',
   StepTransit: 'StepTransit',
-  QualityTest: 'QualityTest'
+  QualityTest: 'QualityTest',
+  QualityStep: 'QualityStep',
+  ActivityStep: 'ActivityStep'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,32 +94,22 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const CompanyScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  companyName: 'companyName',
-  location: 'location',
-  protectedKey: 'protectedKey'
-} as const
-
-export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
-
-
-export const ActivityLogScalarFieldEnum = {
+export const ActivityScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
-  description: 'description',
-  timestamp: 'timestamp'
+  txHash: 'txHash',
+  createdAt: 'createdAt',
+  userId: 'userId'
 } as const
 
-export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
 export const BatchScalarFieldEnum = {
   id: 'id',
   blockchainId: 'blockchainId',
   plantTxHash: 'plantTxHash',
-  harvestTxHash: 'harvestTxHash',
+  retailTxHash: 'retailTxHash',
   shipTxHash: 'shipTxHash',
   productName: 'productName',
   productVariety: 'productVariety',
@@ -140,6 +134,46 @@ export const BatchScalarFieldEnum = {
 export type BatchScalarFieldEnum = (typeof BatchScalarFieldEnum)[keyof typeof BatchScalarFieldEnum]
 
 
+export const CompanyScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  companyName: 'companyName',
+  location: 'location',
+  protectedKey: 'protectedKey'
+} as const
+
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
+export const ProcessTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProcessTemplateScalarFieldEnum = (typeof ProcessTemplateScalarFieldEnum)[keyof typeof ProcessTemplateScalarFieldEnum]
+
+
+export const StepTemplateScalarFieldEnum = {
+  id: 'id',
+  processTemplateId: 'processTemplateId',
+  stepOrder: 'stepOrder',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  keyword: 'keyword',
+  values: 'values',
+  dayOffset: 'dayOffset',
+  isRequired: 'isRequired'
+} as const
+
+export type StepTemplateScalarFieldEnum = (typeof StepTemplateScalarFieldEnum)[keyof typeof StepTemplateScalarFieldEnum]
+
+
 export const StepTransitScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
@@ -162,11 +196,46 @@ export const QualityTestScalarFieldEnum = {
   retailerId: 'retailerId',
   txHash: 'txHash',
   isPassed: 'isPassed',
-  note: 'note',
-  testedAt: 'testedAt'
+  createdAt: 'createdAt'
 } as const
 
 export type QualityTestScalarFieldEnum = (typeof QualityTestScalarFieldEnum)[keyof typeof QualityTestScalarFieldEnum]
+
+
+export const QualityStepScalarFieldEnum = {
+  id: 'id',
+  qualityTestId: 'qualityTestId',
+  stepOrder: 'stepOrder',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  keyword: 'keyword',
+  values: 'values',
+  note: 'note',
+  dayOffset: 'dayOffset',
+  isRequired: 'isRequired',
+  doAt: 'doAt'
+} as const
+
+export type QualityStepScalarFieldEnum = (typeof QualityStepScalarFieldEnum)[keyof typeof QualityStepScalarFieldEnum]
+
+
+export const ActivityStepScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  stepOrder: 'stepOrder',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  keyword: 'keyword',
+  values: 'values',
+  note: 'note',
+  dayOffset: 'dayOffset',
+  isRequired: 'isRequired',
+  doAt: 'doAt'
+} as const
+
+export type ActivityStepScalarFieldEnum = (typeof ActivityStepScalarFieldEnum)[keyof typeof ActivityStepScalarFieldEnum]
 
 
 export const SortOrder = {

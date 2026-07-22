@@ -19,22 +19,11 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
-export const OrganizationType = {
-  FARMER: 'FARMER',
-  SHIPPER: 'SHIPPER',
-  RETAILER: 'RETAILER'
-} as const
-
-export type OrganizationType = (typeof OrganizationType)[keyof typeof OrganizationType]
-
-
 export const BatchStatus = {
   PLANTED: 'PLANTED',
   HARVESTED: 'HARVESTED',
   IN_TRANSIT: 'IN_TRANSIT',
-  TESTING: 'TESTING',
   RETAILING: 'RETAILING',
-  SOLD: 'SOLD',
   ABORTED: 'ABORTED'
 } as const
 
@@ -51,3 +40,12 @@ export const Category = {
 } as const
 
 export type Category = (typeof Category)[keyof typeof Category]
+
+
+export const OrganizationType = {
+  FARMER: 'FARMER',
+  SHIPPER: 'SHIPPER',
+  RETAILER: 'RETAILER'
+} as const
+
+export type OrganizationType = (typeof OrganizationType)[keyof typeof OrganizationType]
