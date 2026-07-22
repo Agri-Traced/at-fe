@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { HarvestForm } from "../components/HarvestForm";
 import { AssignForm } from "../components/AssignForm";
 import { QualityTestForm } from "../components/QualityTestForm";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function RetailerPage() {
   const searchParams = useSearchParams();

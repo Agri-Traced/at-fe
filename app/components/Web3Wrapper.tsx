@@ -9,7 +9,6 @@ import {
 import { createConfig, http, injected, WagmiProvider } from "wagmi";
 import { sepolia } from "wagmi/chains";
 import { useQueryClient } from "@tanstack/react-query";
-import { AuthProvider } from "@/contexts/auth";
 
 const config = createConfig({
   chains: [sepolia],
@@ -36,7 +35,7 @@ export default function Web3ProviderWrapper({
         wallets={[MetaMask(), TokenPocket({ group: "Popular" }), OkxWallet()]}
         queryClient={queryClient}
       >
-        <AuthProvider>{children}</AuthProvider>
+        {children}
       </WagmiWeb3ConfigProvider>
     </WagmiProvider>
   );

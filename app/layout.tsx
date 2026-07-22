@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Wrapper from "./components/Wrapper";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -49,11 +51,13 @@ export default async function RootLayout({
           >
             <I18nProvider>
               <ReactQueryProvider>
-                <App>
-                  <Mounting>
-                    {children}
-                  </Mounting>
-                </App>
+                <Wrapper>
+                  <App>
+                    <Mounting>
+                      {children}
+                    </Mounting>
+                  </App>
+                </Wrapper>
               </ReactQueryProvider>
             </I18nProvider>
           </ConfigProvider>

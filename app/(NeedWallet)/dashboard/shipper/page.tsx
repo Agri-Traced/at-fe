@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { HarvestForm } from "../components/HarvestForm";
 import { TransitDetail } from "../components/TransitDetail";
 import { TransitForm } from "../components/TransitForm";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function ShipperPage() {
   const searchParams = useSearchParams();

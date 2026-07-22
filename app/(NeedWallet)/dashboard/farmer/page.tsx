@@ -11,7 +11,7 @@ import { CarryOutFilled, PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { HarvestForm } from "../components/HarvestForm";
 import { Loading } from "@/app/components/Loading";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function FarmerPage() {
   const searchParams = useSearchParams();

@@ -29,7 +29,6 @@ export type ActivityMinAggregateOutputType = {
   batchId: string | null
   txHash: string | null
   createdAt: Date | null
-  userId: string | null
 }
 
 export type ActivityMaxAggregateOutputType = {
@@ -37,7 +36,6 @@ export type ActivityMaxAggregateOutputType = {
   batchId: string | null
   txHash: string | null
   createdAt: Date | null
-  userId: string | null
 }
 
 export type ActivityCountAggregateOutputType = {
@@ -45,7 +43,6 @@ export type ActivityCountAggregateOutputType = {
   batchId: number
   txHash: number
   createdAt: number
-  userId: number
   _all: number
 }
 
@@ -55,7 +52,6 @@ export type ActivityMinAggregateInputType = {
   batchId?: true
   txHash?: true
   createdAt?: true
-  userId?: true
 }
 
 export type ActivityMaxAggregateInputType = {
@@ -63,7 +59,6 @@ export type ActivityMaxAggregateInputType = {
   batchId?: true
   txHash?: true
   createdAt?: true
-  userId?: true
 }
 
 export type ActivityCountAggregateInputType = {
@@ -71,7 +66,6 @@ export type ActivityCountAggregateInputType = {
   batchId?: true
   txHash?: true
   createdAt?: true
-  userId?: true
   _all?: true
 }
 
@@ -152,7 +146,6 @@ export type ActivityGroupByOutputType = {
   batchId: string
   txHash: string | null
   createdAt: Date | null
-  userId: string | null
   _count: ActivityCountAggregateOutputType | null
   _min: ActivityMinAggregateOutputType | null
   _max: ActivityMaxAggregateOutputType | null
@@ -181,10 +174,8 @@ export type ActivityWhereInput = {
   batchId?: Prisma.StringFilter<"Activity"> | string
   txHash?: Prisma.StringNullableFilter<"Activity"> | string | null
   createdAt?: Prisma.DateTimeNullableFilter<"Activity"> | Date | string | null
-  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
   steps?: Prisma.ActivityStepListRelationFilter
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type ActivityOrderByWithRelationInput = {
@@ -192,10 +183,8 @@ export type ActivityOrderByWithRelationInput = {
   batchId?: Prisma.SortOrder
   txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   batch?: Prisma.BatchOrderByWithRelationInput
   steps?: Prisma.ActivityStepOrderByRelationAggregateInput
-  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ActivityWhereUniqueInput = Prisma.AtLeast<{
@@ -206,10 +195,8 @@ export type ActivityWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ActivityWhereInput | Prisma.ActivityWhereInput[]
   txHash?: Prisma.StringNullableFilter<"Activity"> | string | null
   createdAt?: Prisma.DateTimeNullableFilter<"Activity"> | Date | string | null
-  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
   steps?: Prisma.ActivityStepListRelationFilter
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "batchId">
 
 export type ActivityOrderByWithAggregationInput = {
@@ -217,7 +204,6 @@ export type ActivityOrderByWithAggregationInput = {
   batchId?: Prisma.SortOrder
   txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ActivityCountOrderByAggregateInput
   _max?: Prisma.ActivityMaxOrderByAggregateInput
   _min?: Prisma.ActivityMinOrderByAggregateInput
@@ -231,7 +217,6 @@ export type ActivityScalarWhereWithAggregatesInput = {
   batchId?: Prisma.StringWithAggregatesFilter<"Activity"> | string
   txHash?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Activity"> | Date | string | null
-  userId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
 }
 
 export type ActivityCreateInput = {
@@ -240,7 +225,6 @@ export type ActivityCreateInput = {
   createdAt?: Date | string | null
   batch: Prisma.BatchCreateNestedOneWithoutActivityInput
   steps?: Prisma.ActivityStepCreateNestedManyWithoutActivityInput
-  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
 }
 
 export type ActivityUncheckedCreateInput = {
@@ -248,7 +232,6 @@ export type ActivityUncheckedCreateInput = {
   batchId: string
   txHash?: string | null
   createdAt?: Date | string | null
-  userId?: string | null
   steps?: Prisma.ActivityStepUncheckedCreateNestedManyWithoutActivityInput
 }
 
@@ -258,7 +241,6 @@ export type ActivityUpdateInput = {
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   batch?: Prisma.BatchUpdateOneRequiredWithoutActivityNestedInput
   steps?: Prisma.ActivityStepUpdateManyWithoutActivityNestedInput
-  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
 }
 
 export type ActivityUncheckedUpdateInput = {
@@ -266,7 +248,6 @@ export type ActivityUncheckedUpdateInput = {
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steps?: Prisma.ActivityStepUncheckedUpdateManyWithoutActivityNestedInput
 }
 
@@ -275,7 +256,6 @@ export type ActivityCreateManyInput = {
   batchId: string
   txHash?: string | null
   createdAt?: Date | string | null
-  userId?: string | null
 }
 
 export type ActivityUpdateManyMutationInput = {
@@ -289,17 +269,6 @@ export type ActivityUncheckedUpdateManyInput = {
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type ActivityListRelationFilter = {
-  every?: Prisma.ActivityWhereInput
-  some?: Prisma.ActivityWhereInput
-  none?: Prisma.ActivityWhereInput
-}
-
-export type ActivityOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ActivityCountOrderByAggregateInput = {
@@ -307,7 +276,6 @@ export type ActivityCountOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type ActivityMaxOrderByAggregateInput = {
@@ -315,7 +283,6 @@ export type ActivityMaxOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type ActivityMinOrderByAggregateInput = {
@@ -323,7 +290,6 @@ export type ActivityMinOrderByAggregateInput = {
   batchId?: Prisma.SortOrder
   txHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type ActivityNullableScalarRelationFilter = {
@@ -334,48 +300,6 @@ export type ActivityNullableScalarRelationFilter = {
 export type ActivityScalarRelationFilter = {
   is?: Prisma.ActivityWhereInput
   isNot?: Prisma.ActivityWhereInput
-}
-
-export type ActivityCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput> | Prisma.ActivityCreateWithoutUserInput[] | Prisma.ActivityUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutUserInput | Prisma.ActivityCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ActivityCreateManyUserInputEnvelope
-  connect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-}
-
-export type ActivityUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput> | Prisma.ActivityCreateWithoutUserInput[] | Prisma.ActivityUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutUserInput | Prisma.ActivityCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ActivityCreateManyUserInputEnvelope
-  connect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-}
-
-export type ActivityUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput> | Prisma.ActivityCreateWithoutUserInput[] | Prisma.ActivityUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutUserInput | Prisma.ActivityCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ActivityUpsertWithWhereUniqueWithoutUserInput | Prisma.ActivityUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ActivityCreateManyUserInputEnvelope
-  set?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  disconnect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  delete?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  connect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  update?: Prisma.ActivityUpdateWithWhereUniqueWithoutUserInput | Prisma.ActivityUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ActivityUpdateManyWithWhereWithoutUserInput | Prisma.ActivityUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ActivityScalarWhereInput | Prisma.ActivityScalarWhereInput[]
-}
-
-export type ActivityUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput> | Prisma.ActivityCreateWithoutUserInput[] | Prisma.ActivityUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutUserInput | Prisma.ActivityCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ActivityUpsertWithWhereUniqueWithoutUserInput | Prisma.ActivityUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ActivityCreateManyUserInputEnvelope
-  set?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  disconnect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  delete?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  connect?: Prisma.ActivityWhereUniqueInput | Prisma.ActivityWhereUniqueInput[]
-  update?: Prisma.ActivityUpdateWithWhereUniqueWithoutUserInput | Prisma.ActivityUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ActivityUpdateManyWithWhereWithoutUserInput | Prisma.ActivityUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ActivityScalarWhereInput | Prisma.ActivityScalarWhereInput[]
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -428,72 +352,17 @@ export type ActivityUpdateOneRequiredWithoutStepsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ActivityUpdateToOneWithWhereWithoutStepsInput, Prisma.ActivityUpdateWithoutStepsInput>, Prisma.ActivityUncheckedUpdateWithoutStepsInput>
 }
 
-export type ActivityCreateWithoutUserInput = {
-  id?: string
-  txHash?: string | null
-  createdAt?: Date | string | null
-  batch: Prisma.BatchCreateNestedOneWithoutActivityInput
-  steps?: Prisma.ActivityStepCreateNestedManyWithoutActivityInput
-}
-
-export type ActivityUncheckedCreateWithoutUserInput = {
-  id?: string
-  batchId: string
-  txHash?: string | null
-  createdAt?: Date | string | null
-  steps?: Prisma.ActivityStepUncheckedCreateNestedManyWithoutActivityInput
-}
-
-export type ActivityCreateOrConnectWithoutUserInput = {
-  where: Prisma.ActivityWhereUniqueInput
-  create: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput>
-}
-
-export type ActivityCreateManyUserInputEnvelope = {
-  data: Prisma.ActivityCreateManyUserInput | Prisma.ActivityCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type ActivityUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ActivityWhereUniqueInput
-  update: Prisma.XOR<Prisma.ActivityUpdateWithoutUserInput, Prisma.ActivityUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.ActivityCreateWithoutUserInput, Prisma.ActivityUncheckedCreateWithoutUserInput>
-}
-
-export type ActivityUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ActivityWhereUniqueInput
-  data: Prisma.XOR<Prisma.ActivityUpdateWithoutUserInput, Prisma.ActivityUncheckedUpdateWithoutUserInput>
-}
-
-export type ActivityUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.ActivityScalarWhereInput
-  data: Prisma.XOR<Prisma.ActivityUpdateManyMutationInput, Prisma.ActivityUncheckedUpdateManyWithoutUserInput>
-}
-
-export type ActivityScalarWhereInput = {
-  AND?: Prisma.ActivityScalarWhereInput | Prisma.ActivityScalarWhereInput[]
-  OR?: Prisma.ActivityScalarWhereInput[]
-  NOT?: Prisma.ActivityScalarWhereInput | Prisma.ActivityScalarWhereInput[]
-  id?: Prisma.StringFilter<"Activity"> | string
-  batchId?: Prisma.StringFilter<"Activity"> | string
-  txHash?: Prisma.StringNullableFilter<"Activity"> | string | null
-  createdAt?: Prisma.DateTimeNullableFilter<"Activity"> | Date | string | null
-  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
-}
-
 export type ActivityCreateWithoutBatchInput = {
   id?: string
   txHash?: string | null
   createdAt?: Date | string | null
   steps?: Prisma.ActivityStepCreateNestedManyWithoutActivityInput
-  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
 }
 
 export type ActivityUncheckedCreateWithoutBatchInput = {
   id?: string
   txHash?: string | null
   createdAt?: Date | string | null
-  userId?: string | null
   steps?: Prisma.ActivityStepUncheckedCreateNestedManyWithoutActivityInput
 }
 
@@ -518,14 +387,12 @@ export type ActivityUpdateWithoutBatchInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   steps?: Prisma.ActivityStepUpdateManyWithoutActivityNestedInput
-  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
 }
 
 export type ActivityUncheckedUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steps?: Prisma.ActivityStepUncheckedUpdateManyWithoutActivityNestedInput
 }
 
@@ -534,7 +401,6 @@ export type ActivityCreateWithoutStepsInput = {
   txHash?: string | null
   createdAt?: Date | string | null
   batch: Prisma.BatchCreateNestedOneWithoutActivityInput
-  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
 }
 
 export type ActivityUncheckedCreateWithoutStepsInput = {
@@ -542,7 +408,6 @@ export type ActivityUncheckedCreateWithoutStepsInput = {
   batchId: string
   txHash?: string | null
   createdAt?: Date | string | null
-  userId?: string | null
 }
 
 export type ActivityCreateOrConnectWithoutStepsInput = {
@@ -566,41 +431,9 @@ export type ActivityUpdateWithoutStepsInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   batch?: Prisma.BatchUpdateOneRequiredWithoutActivityNestedInput
-  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
 }
 
 export type ActivityUncheckedUpdateWithoutStepsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type ActivityCreateManyUserInput = {
-  id?: string
-  batchId: string
-  txHash?: string | null
-  createdAt?: Date | string | null
-}
-
-export type ActivityUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  batch?: Prisma.BatchUpdateOneRequiredWithoutActivityNestedInput
-  steps?: Prisma.ActivityStepUpdateManyWithoutActivityNestedInput
-}
-
-export type ActivityUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  steps?: Prisma.ActivityStepUncheckedUpdateManyWithoutActivityNestedInput
-}
-
-export type ActivityUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -643,10 +476,8 @@ export type ActivitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   batchId?: boolean
   txHash?: boolean
   createdAt?: boolean
-  userId?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
   steps?: boolean | Prisma.Activity$stepsArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   _count?: boolean | Prisma.ActivityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["activity"]>
 
@@ -655,9 +486,7 @@ export type ActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   batchId?: boolean
   txHash?: boolean
   createdAt?: boolean
-  userId?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
 }, ExtArgs["result"]["activity"]>
 
 export type ActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -665,9 +494,7 @@ export type ActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   batchId?: boolean
   txHash?: boolean
   createdAt?: boolean
-  userId?: boolean
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
 }, ExtArgs["result"]["activity"]>
 
 export type ActivitySelectScalar = {
@@ -675,23 +502,19 @@ export type ActivitySelectScalar = {
   batchId?: boolean
   txHash?: boolean
   createdAt?: boolean
-  userId?: boolean
 }
 
-export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "batchId" | "txHash" | "createdAt" | "userId", ExtArgs["result"]["activity"]>
+export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "batchId" | "txHash" | "createdAt", ExtArgs["result"]["activity"]>
 export type ActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
   steps?: boolean | Prisma.Activity$stepsArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   _count?: boolean | Prisma.ActivityCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
 }
 export type ActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
 }
 
 export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -699,14 +522,12 @@ export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     batch: Prisma.$BatchPayload<ExtArgs>
     steps: Prisma.$ActivityStepPayload<ExtArgs>[]
-    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     batchId: string
     txHash: string | null
     createdAt: Date | null
-    userId: string | null
   }, ExtArgs["result"]["activity"]>
   composites: {}
 }
@@ -1103,7 +924,6 @@ export interface Prisma__ActivityClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   batch<T extends Prisma.BatchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BatchDefaultArgs<ExtArgs>>): Prisma.Prisma__BatchClient<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   steps<T extends Prisma.Activity$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  user<T extends Prisma.Activity$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1137,7 +957,6 @@ export interface ActivityFieldRefs {
   readonly batchId: Prisma.FieldRef<"Activity", 'String'>
   readonly txHash: Prisma.FieldRef<"Activity", 'String'>
   readonly createdAt: Prisma.FieldRef<"Activity", 'DateTime'>
-  readonly userId: Prisma.FieldRef<"Activity", 'String'>
 }
     
 
@@ -1560,25 +1379,6 @@ export type Activity$stepsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ActivityStepScalarFieldEnum | Prisma.ActivityStepScalarFieldEnum[]
-}
-
-/**
- * Activity.user
- */
-export type Activity$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
 }
 
 /**
