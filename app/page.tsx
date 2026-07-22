@@ -8,6 +8,7 @@ import {
   DeploymentUnitOutlined,
   BarChartOutlined
 } from '@ant-design/icons';
+import Link from 'next/link';
 
 export default function LandingPage() {
   const [visible, setVisible] = useState(false);
@@ -15,9 +16,7 @@ export default function LandingPage() {
   // Menu links chung cho cả desktop và mobile drawer
   const navLinks = (
     <Space direction={visible ? "vertical" : "horizontal"} size="large" className={visible ? "w-full" : ""}>
-      <a href="#features" className="text-gray-600 hover:text-green-600 font-medium">Tính năng</a>
-      <a href="#how-it-works" className="text-gray-600 hover:text-green-600 font-medium">Quy trình</a>
-      <a href="#about" className="text-gray-600 hover:text-green-600 font-medium">Về chúng tôi</a>
+      <Link href="#features" className="text-gray-600 hover:text-green-600 font-medium">Tính năng</Link>
     </Space>
   );
 
@@ -28,15 +27,18 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="text-xl font-bold text-green-700 flex items-center gap-2">
-            <DeploymentUnitOutlined /> AgriTrace
+            <img src="/icon.png" alt="AgriTrace Logo" className="h-8 w-8" />
+            AgriTrace
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks}
-            <Button type="primary" size="middle" className="bg-green-600 hover:bg-green-700 border-none rounded-md">
-              Vào Hệ Thống
-            </Button>
+            <Link href="/dashboard" className="hidden md:inline-block">
+              <Button type="primary" size="middle" className="bg-green-600 hover:bg-green-700 border-none rounded-md">
+                Vào Hệ Thống
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -52,9 +54,11 @@ export default function LandingPage() {
       <Drawer title="Menu" placement="right" onClose={() => setVisible(false)} open={visible}>
         <div className="flex flex-col gap-6">
           {navLinks}
-          <Button type="primary" block className="bg-green-600 border-none mt-4">
-            Vào Hệ Thống
-          </Button>
+          <Link href="/dashboard" className="hidden md:inline-block">
+            <Button type="primary" block className="bg-green-600 border-none mt-4">
+              Vào Hệ Thống
+            </Button>
+          </Link>
         </div>
       </Drawer>
 
@@ -69,20 +73,18 @@ export default function LandingPage() {
               Giải pháp tối ưu hóa chuỗi cung ứng, số hóa nhật ký canh tác của nông dân và xây dựng niềm tin tuyệt đối với người tiêu dùng qua từng mã QR định danh.
             </p>
             <Space size="middle" className="w-full sm:w-auto">
-              <Button type="primary" size="large" className="bg-green-600 hover:bg-green-700 border-none h-12 px-8 rounded-lg text-base">
-                Bắt đầu ngay
-              </Button>
-              <Button size="large" className="h-12 px-8 rounded-lg text-base text-gray-700">
-                Xem Demo
-              </Button>
+              <Link href="/dashboard">
+                <Button type="primary" size="large" className="bg-green-600 hover:bg-green-700 border-none h-12 px-8 rounded-lg text-base">
+                  Bắt đầu ngay
+                </Button>
+              </Link>
             </Space>
           </Col>
 
           {/* Hero Image / Graphic Slot */}
           <Col xs={24} md={12} className="flex justify-center">
-            <div className="w-full max-w-md md:max-w-full aspect-square bg-green-100 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center border border-green-200">
+            <div className="w-full max-w-md md:max-w-full aspect-square bg-[url('/login-background.png')] bg-cover rounded-3xl overflow-hidden shadow-inner flex items-center justify-center border border-green-200">
               {/* Đặt ảnh hoặc hình minh họa blockchain/farm tại đây */}
-              <span className="text-gray-400 font-medium">Dashboard Preview / Illustration</span>
             </div>
           </Col>
         </Row>

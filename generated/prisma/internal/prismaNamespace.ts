@@ -1211,8 +1211,7 @@ export const ActivityScalarFieldEnum = {
   id: 'id',
   batchId: 'batchId',
   txHash: 'txHash',
-  createdAt: 'createdAt',
-  userId: 'userId'
+  createdAt: 'createdAt'
 } as const
 
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]

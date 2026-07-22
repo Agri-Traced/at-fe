@@ -40,7 +40,7 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
       throw new Error(`Cannot add activity log to batch with status: ${batch.status}`);
     }
 
-    const log = await prisma.activityLog.create({
+    const log = await prisma.activity.create({
       data: {
         batchId: id,
         description,

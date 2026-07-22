@@ -10,11 +10,23 @@ import {
   DeploymentUnitOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { Badge, Steps, Card, Typography, Tooltip, Image, Button } from "antd";
+import { Badge, Steps, Card, Typography, Tooltip, Image, Button, Skeleton } from "antd";
 import { Loading } from "@/app/components/Loading";
 import { useTranslation } from "react-i18next";
-import { useBatch } from "@/hooks/batchs";
+import { BatchRelation, useBatch } from "@/hooks/batchs";
 import Link from "next/link";
+import { useIpfsFromTx } from "@/hooks/ipfs";
+
+type PlantTxData = {
+  category: string
+  maxHumidity: number
+  maxTemperature: number
+  minHumidity: number
+  minTemperature: number
+  productName: string
+  productVariety: string
+  unit: string
+}
 
 export default function TracePage() {
   const params = useParams();
@@ -26,6 +38,22 @@ export default function TracePage() {
 
   const { data, isLoading: loading } = useBatch(id);
 
+  const {
+    ipfsData: plantTxData,
+    isLoading: isPlantLoading
+  } = useIpfsFromTx<PlantTxData>((data?.plantTxHash || undefined) as `0x${string}`, "BatchCreated");
+  const {
+    ipfsData: shipTxData,
+    isLoading: isShipLoading
+  } = useIpfsFromTx<PlantTxData>((data?.shipTxHash || undefined) as `0x${string}`, "ShipAssigned");
+  const {
+    ipfsData: retailTxData,
+    isLoading: isRetailLoading
+  } = useIpfsFromTx<PlantTxData>((data?.retailTxHash || undefined) as `0x${string}`, "BatchHarvested");
+
+  console.log('retailTxData', retailTxData);
+  console.log('shipTxData', shipTxData);
+
   const transportSummary = useMemo(() => {
     if (!data || !data.transits || data.transits.length === 0) return null;
     const avgTemp =
@@ -34,12 +62,12 @@ export default function TracePage() {
     const avgHumidity =
       data.transits.reduce((acc, curr) => acc + (curr.humidity ?? 0), 0) /
       data.transits.length;
-    const isAllSafe = data.transits.every(
+    const isAllSafe = plantTxData?.minTemperature && plantTxData?.maxTemperature && plantTxData?.minHumidity && plantTxData?.maxHumidity && data.transits.every(
       (t) =>
-        (t.temperature ?? 0) >= data.maxTemperature &&
-        (t.temperature ?? 0) <= data.minTemperature &&
-        (t.humidity ?? 0) >= data.minHumidity &&
-        (t.humidity ?? 0) <= data.maxHumidity,
+        (t.temperature ?? 0) >= plantTxData?.minTemperature &&
+        (t.temperature ?? 0) <= plantTxData?.maxTemperature &&
+        (t.humidity ?? 0) >= plantTxData?.minHumidity &&
+        (t.humidity ?? 0) <= plantTxData?.maxHumidity,
     );
     return { avgTemp, avgHumidity, isAllSafe };
   }, [data?.transits]);
@@ -115,9 +143,11 @@ export default function TracePage() {
             </span>
             <Badge count="VietGAP" style={{ backgroundColor: "#1dad55" }} />
           </div>
-          <h2 className="text-xl font-bold text-gray-800">
-            {data.productName}
-          </h2>
+          <Skeleton loading={isPlantLoading} active paragraph={{ rows: 0 }}>
+            <h2 className="text-xl font-bold text-gray-800">
+              {plantTxData?.productName}
+            </h2>
+          </Skeleton>
           <Image
             src={data.imageUrl}
             alt={data.productName}
@@ -129,14 +159,14 @@ export default function TracePage() {
           <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100 text-base">
             <div>
               <p className="text-gray-400 text-sm">{t("Quantity")}</p>
-              <p className="font-semibold text-gray-700">
-                {data.quantity} {data.unit}
-              </p>
+                <p className="font-semibold text-gray-700">
+                  {data.quantity} {data?.unit}
+                </p>
             </div>
             <div>
               <p className="text-gray-400 text-sm">{t("Farmer")}</p>
               <p className="font-semibold text-gray-700 truncate">
-                {data.farmer.fullName}
+                {data?.farmer?.fullName}
               </p>
             </div>
             <div>
@@ -176,10 +206,10 @@ export default function TracePage() {
             className="shadow-sm border-0 text-center rounded-xl"
           >
             <p className="text-base font-bold ">
-              {data.farmer.company.companyName}
+              {data?.farmer?.company?.companyName}
             </p>
             <p className="text-sm text-gray-400">
-              {data.farmer.company.location}
+              {data?.farmer?.company?.location}
             </p>
           </Card>
           <Card
@@ -225,6 +255,12 @@ export default function TracePage() {
               {`💧 ${transportSummary ? transportSummary.avgHumidity.toFixed(1) + "%" : "--"}`}
             </p>
           </Card>
+          <Card className="shadow-sm border-0 text-center rounded-xl">
+            <p className="text-sm text-gray-400">{t("Average Humidity")}</p>
+            <p className={transportSummary?.isAllSafe ? "text-green-600" : "text-red-500"}>
+              {transportSummary?.isAllSafe ? "✅ " + t("All Transits Safe") : "⚠ " + t("Some Transits Exceeded Limits")}
+            </p>
+          </Card>
         </div>
       </div>
 
@@ -260,11 +296,15 @@ export default function TracePage() {
                 ),
                 description: (
                   <div className="text-sm text-gray-500 mt-1">
-                    <p className="font-semibold text-green-600">{`${data.farmer.fullName} - ${data.farmer.company.companyName}`}</p>
+                    <p className="font-semibold text-green-600">{`${data?.farmer?.fullName} - ${data?.farmer?.company?.companyName}`}</p>
                     <ul className="list-disc list-inside mt-1 space-y-1">
-                      <li>{`${t("Address")}: ${data.farmer.company.location}`}</li>
-                      <li>{`${t("Planting Date")}: ${new Date(data.createdAt).toLocaleDateString()}`}</li>
-                      <li>{`${t("Seed Variety")}: ${data.productVariety}`}</li>
+                      <li>{`${t("Address")}: ${data?.farmer?.company?.location}`}</li>
+                      <li>{`${t("Planting Date")}: ${data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "--"}`}</li>
+                      <li>{`${t("Seed Variety")}:`}
+                        <Skeleton loading={isPlantLoading} active paragraph={{ rows: 1 }}>
+                          {plantTxData?.productVariety}
+                        </Skeleton>
+                      </li>
                     </ul>
                     <div className="mt-4">
                       <p className="font-semibold text-gray-800 text-base mb-3">

@@ -14,7 +14,7 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['id','walletAddress','fullName','email','phone','role','companyId','createdAt','updatedAt']);
 
-export const ActivityScalarFieldEnumSchema = z.enum(['id','batchId','txHash','createdAt','userId']);
+export const ActivityScalarFieldEnumSchema = z.enum(['id','batchId','txHash','createdAt']);
 
 export const BatchScalarFieldEnumSchema = z.enum(['id','blockchainId','plantTxHash','retailTxHash','shipTxHash','productName','productVariety','category','quantity','unit','status','minTemperature','maxTemperature','minHumidity','maxHumidity','imageUrl','farmerId','harvestDate','expiryDate','createdAt','updatedAt','retailCompanyId','shipperCompanyId']);
 
@@ -85,7 +85,6 @@ export const ActivitySchema = z.object({
   batchId: z.string(),
   txHash: z.string().nullable(),
   createdAt: z.coerce.date().nullable(),
-  userId: z.string().nullable(),
 })
 
 export type Activity = z.infer<typeof ActivitySchema>
