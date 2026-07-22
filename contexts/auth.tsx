@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef } from "react";
-import type { User } from "../generated/zod";
+import type { Company, User } from "../generated/zod";
 import { Account, useAccount } from "@ant-design/web3";
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { useLogout } from "@/hooks/logout";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  user: User | null | undefined;
+  user: UserRelation | null | undefined;
   isLoading: boolean;
   account: Account | undefined;
 }
@@ -21,6 +21,10 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
+
+type UserRelation = User & {
+  company: Company;
+}
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { account } = useAccount();
@@ -34,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     queryKey: ["auth-user"],
     queryFn: async () => {
       try {
-        const res = await api.get<User, User>("/user/profile");
+        const res = await api.get<UserRelation, UserRelation>("/user/profile");
         return res;
       } catch (error: any) {
         const statusCode = error?.response?.status;

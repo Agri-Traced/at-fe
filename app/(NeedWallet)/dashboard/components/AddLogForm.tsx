@@ -1,16 +1,16 @@
 'use client';
 
 import { Button, Form, Input, Modal, Typography, Space, Result } from "antd"
-import { ActivityLog } from '@/generated/zod';
+import { Activity } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
 import { usePostBatchActivityLog } from "@/hooks/batchs";
 
 export const AddLogForm = ({ open, onClose, id }: { open: boolean; onClose: () => void; id: string | null }) => {
   if (!id) return null;
   const { t } = useTranslation();
-  const [form] = Form.useForm<ActivityLog>();
+  const [form] = Form.useForm<Activity>();
   const { mutate, isPending, isSuccess } = usePostBatchActivityLog();
-  const onFinish = async (values: ActivityLog) => {
+  const onFinish = async (values: Activity) => {
     mutate({
       id,
       data: values
