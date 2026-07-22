@@ -44,7 +44,6 @@ model User {
   batchesCreated Batch[]       @relation("FarmerBatches")
   transports     StepTransit[] @relation("ShipperTransports")
   qualityTests   QualityTest[] @relation("RetailerTests")
-  activities     Activity[]
 }
 
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
@@ -73,8 +72,6 @@ model Activity {
   steps     ActivityStep[]
   txHash    String? // Transaction Hash kiểm định bất biến trên blockchain
   createdAt DateTime?
-  user      User?          @relation(fields: [userId], references: [id])
-  userId    String?
 }
 
 model Batch {
