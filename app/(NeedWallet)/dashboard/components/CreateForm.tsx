@@ -36,6 +36,7 @@ export const CreateForm = ({
   const [loadingIPFS, setLoadingIPFS] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const UNIT_OPTIONS = [
+    { label: t("Piece"), value: "" },
     { label: t("Kilogram (kg)"), value: "kg" },
     { label: t("Gram (g)"), value: "g" },
     { label: t("Ton (t)"), value: "t" },
@@ -161,8 +162,11 @@ export const CreateForm = ({
         layout="vertical"
         onFinish={onFinish}
         initialValues={{
-          quantity: 1,
           unit: "kg",
+          minTemperature: 0,
+          maxTemperature: 30,
+          minHumidity: 0,
+          maxHumidity: 100,
         }}
       >
         <div className="grid grid-cols-2 gap-4">

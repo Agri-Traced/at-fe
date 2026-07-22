@@ -51,7 +51,7 @@ CREATE TABLE "Batch" (
     "id" TEXT NOT NULL,
     "blockchainId" TEXT NOT NULL,
     "plantTxHash" TEXT,
-    "harvestTxHash" TEXT,
+    "retailTxHash" TEXT,
     "shipTxHash" TEXT,
     "productName" TEXT NOT NULL,
     "productVariety" TEXT NOT NULL,

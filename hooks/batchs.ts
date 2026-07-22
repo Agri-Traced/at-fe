@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { Batch, User, StepTransit, ActivityLog, QualityTest, Company } from '@/generated/zod';
+import { Batch, User, StepTransit, Activity, QualityTest, Company, StepTemplate, ActivityStep, QualityStep } from '@/generated/zod';
 
 export type UserRelation = User & {
   company: Company
@@ -13,17 +13,18 @@ export type TransitsRelation = StepTransit & {
 export type QualityTestRelation = QualityTest & {
   batch: Batch;
   retailer: User;
+  steps: QualityStep[];
 }
 
-export type ActivityLogRelation = ActivityLog & {
+export type ActivityRelation = Activity & {
   batch: Batch;
-  user: User;
+  steps: ActivityStep[];
 }
 
 export type BatchRelation = Batch & {
   farmer: UserRelation;
   transits: TransitsRelation[];
-  activities: ActivityLogRelation[];
+  activity: ActivityRelation | null;
   qualityTest: QualityTestRelation | null;
   shipperCompany: Company | null;
   retailCompany: Company | null;
@@ -31,7 +32,33 @@ export type BatchRelation = Batch & {
 
 export type BatchHarvest = Pick<Batch, 'expiryDate' | 'retailCompanyId' | 'quantity'>
 
-export const usePostBatchAssignShipConfirm= () => {
+export const usePutQualitySteps = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ batchId, data }: { batchId: string; data: Omit<StepTemplate, 'processTemplateId'>[] }) => {
+      const res = await api.put<Batch>(`/batches/${batchId}/quality/steps`, { data });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+}
+
+export const usePutActivitySteps = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ batchId, data }: { batchId: string; data: Omit<StepTemplate, 'processTemplateId'>[] }) => {
+      const res = await api.put<Batch>(`/batches/${batchId}/activity/steps`, { data });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    }
+  });
+}
+
+export const usePostBatchAssignShipConfirm = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: { shipTxHash: string } }) => {
@@ -57,11 +84,13 @@ export const usePostBatchAssignShip = () => {
   });
 }
 
-export const useCompanyBatches = (id: string) => {
+export const useCompanyBatches = (id: string, query: string) => {
+  const params = new URLSearchParams();
+  if (query) params.append('query', query);
   return useQuery({
-    queryKey: ['batches', id],
+    queryKey: ['batches', id, query],
     queryFn: async () => {
-      const { data } = await api.get<BatchRelation[]>(`/company/${id}/batches`);
+      const { data } = await api.get<BatchRelation[]>(`/company/${id}/batches?${params.toString()}`);
       return data;
     }
   });
@@ -83,7 +112,7 @@ export const usePostBatchConfirm = () => {
 export const usePostBatchHarvestConfirm = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: { harvestTxHash: string } }) => {
+    mutationFn: async ({ id, data }: { id: string; data: { retailTxHash: string } }) => {
       const res = await api.post<Batch>(`/batches/${id}/harvest/confirm`, data);
       return res.data;
     },
@@ -109,8 +138,8 @@ export const usePostBatchHarvest = () => {
 export const usePostBatchActivityLog = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Omit<ActivityLog, 'id' | 'createdAt' | 'updatedAt'> }) => {
-      const res = await api.post<ActivityLog>(`/batches/${id}/log`, data);
+    mutationFn: async ({ id, data }: { id: string; data: Omit<Activity, 'id' | 'createdAt' | 'updatedAt'> }) => {
+      const res = await api.post<Activity>(`/batches/${id}/log`, data);
       return res.data;
     },
     onSuccess: () => {
@@ -131,15 +160,17 @@ export const useBatches = () => {
   });
 };
 
-const fetchBatchByUserId = async (id: string) => {
-  const { data } = await api.get<BatchRelation[]>(`/batches/user/${id}`);
+const fetchBatchByUserId = async (id: string, query: string) => {
+  const params = new URLSearchParams();
+  if (query) params.append('query', query);
+  const { data } = await api.get<BatchRelation[]>(`/batches/user/${id}?${params.toString()}`);
   return data;
 }
 
-export const useBatchesByUserId = (id: string) => {
+export const useBatchesByUserId = (id: string, query: string) => {
   return useQuery({
-    queryKey: ['batches'],
-    queryFn: () => fetchBatchByUserId(id),
+    queryKey: ['batches', query],
+    queryFn: () => fetchBatchByUserId(id, query),
   });
 }
 

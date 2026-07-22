@@ -220,7 +220,7 @@ export type StepTemplateGroupByOutputType = {
   title: string
   description: string | null
   imageUrl: string | null
-  keyword: string
+  keyword: string | null
   values: string | null
   dayOffset: number
   isRequired: boolean
@@ -256,7 +256,7 @@ export type StepTemplateWhereInput = {
   title?: Prisma.StringFilter<"StepTemplate"> | string
   description?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
-  keyword?: Prisma.StringFilter<"StepTemplate"> | string
+  keyword?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   values?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   dayOffset?: Prisma.IntFilter<"StepTemplate"> | number
   isRequired?: Prisma.BoolFilter<"StepTemplate"> | boolean
@@ -270,7 +270,7 @@ export type StepTemplateOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  keyword?: Prisma.SortOrder
+  keyword?: Prisma.SortOrderInput | Prisma.SortOrder
   values?: Prisma.SortOrderInput | Prisma.SortOrder
   dayOffset?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
@@ -287,7 +287,7 @@ export type StepTemplateWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"StepTemplate"> | string
   description?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
-  keyword?: Prisma.StringFilter<"StepTemplate"> | string
+  keyword?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   values?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   dayOffset?: Prisma.IntFilter<"StepTemplate"> | number
   isRequired?: Prisma.BoolFilter<"StepTemplate"> | boolean
@@ -301,7 +301,7 @@ export type StepTemplateOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  keyword?: Prisma.SortOrder
+  keyword?: Prisma.SortOrderInput | Prisma.SortOrder
   values?: Prisma.SortOrderInput | Prisma.SortOrder
   dayOffset?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
@@ -322,7 +322,7 @@ export type StepTemplateScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"StepTemplate"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"StepTemplate"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"StepTemplate"> | string | null
-  keyword?: Prisma.StringWithAggregatesFilter<"StepTemplate"> | string
+  keyword?: Prisma.StringNullableWithAggregatesFilter<"StepTemplate"> | string | null
   values?: Prisma.StringNullableWithAggregatesFilter<"StepTemplate"> | string | null
   dayOffset?: Prisma.IntWithAggregatesFilter<"StepTemplate"> | number
   isRequired?: Prisma.BoolWithAggregatesFilter<"StepTemplate"> | boolean
@@ -334,7 +334,7 @@ export type StepTemplateCreateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -348,7 +348,7 @@ export type StepTemplateUncheckedCreateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -360,7 +360,7 @@ export type StepTemplateUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -374,7 +374,7 @@ export type StepTemplateUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -387,7 +387,7 @@ export type StepTemplateCreateManyInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -399,7 +399,7 @@ export type StepTemplateUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -412,7 +412,7 @@ export type StepTemplateUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -537,7 +537,7 @@ export type StepTemplateCreateWithoutProcessTemplateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -549,7 +549,7 @@ export type StepTemplateUncheckedCreateWithoutProcessTemplateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -591,7 +591,7 @@ export type StepTemplateScalarWhereInput = {
   title?: Prisma.StringFilter<"StepTemplate"> | string
   description?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
-  keyword?: Prisma.StringFilter<"StepTemplate"> | string
+  keyword?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   values?: Prisma.StringNullableFilter<"StepTemplate"> | string | null
   dayOffset?: Prisma.IntFilter<"StepTemplate"> | number
   isRequired?: Prisma.BoolFilter<"StepTemplate"> | boolean
@@ -603,7 +603,7 @@ export type StepTemplateCreateManyProcessTemplateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
-  keyword: string
+  keyword?: string | null
   values?: string | null
   dayOffset: number
   isRequired?: boolean
@@ -615,7 +615,7 @@ export type StepTemplateUpdateWithoutProcessTemplateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -627,7 +627,7 @@ export type StepTemplateUncheckedUpdateWithoutProcessTemplateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -639,7 +639,7 @@ export type StepTemplateUncheckedUpdateManyWithoutProcessTemplateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  keyword?: Prisma.StringFieldUpdateOperationsInput | string
+  keyword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   values?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dayOffset?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -725,7 +725,7 @@ export type $StepTemplatePayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string
     description: string | null
     imageUrl: string | null
-    keyword: string
+    keyword: string | null
     values: string | null
     dayOffset: number
     isRequired: boolean

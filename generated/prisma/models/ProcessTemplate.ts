@@ -199,8 +199,6 @@ export type ProcessTemplateWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   steps?: Prisma.StepTemplateListRelationFilter
-  farmerBatches?: Prisma.BatchListRelationFilter
-  qualityTests?: Prisma.QualityTestListRelationFilter
 }
 
 export type ProcessTemplateOrderByWithRelationInput = {
@@ -212,8 +210,6 @@ export type ProcessTemplateOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   steps?: Prisma.StepTemplateOrderByRelationAggregateInput
-  farmerBatches?: Prisma.BatchOrderByRelationAggregateInput
-  qualityTests?: Prisma.QualityTestOrderByRelationAggregateInput
 }
 
 export type ProcessTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -228,8 +224,6 @@ export type ProcessTemplateWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProcessTemplate"> | Date | string
   steps?: Prisma.StepTemplateListRelationFilter
-  farmerBatches?: Prisma.BatchListRelationFilter
-  qualityTests?: Prisma.QualityTestListRelationFilter
 }, "id">
 
 export type ProcessTemplateOrderByWithAggregationInput = {
@@ -267,8 +261,6 @@ export type ProcessTemplateCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUncheckedCreateInput = {
@@ -280,8 +272,6 @@ export type ProcessTemplateUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUpdateInput = {
@@ -293,8 +283,6 @@ export type ProcessTemplateUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateUncheckedUpdateInput = {
@@ -306,8 +294,6 @@ export type ProcessTemplateUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateCreateManyInput = {
@@ -338,11 +324,6 @@ export type ProcessTemplateUncheckedUpdateManyInput = {
   category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProcessTemplateNullableScalarRelationFilter = {
-  is?: Prisma.ProcessTemplateWhereInput | null
-  isNot?: Prisma.ProcessTemplateWhereInput | null
 }
 
 export type ProcessTemplateCountOrderByAggregateInput = {
@@ -380,22 +361,6 @@ export type ProcessTemplateScalarRelationFilter = {
   isNot?: Prisma.ProcessTemplateWhereInput
 }
 
-export type ProcessTemplateCreateNestedOneWithoutFarmerBatchesInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutFarmerBatchesInput
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-}
-
-export type ProcessTemplateUpdateOneWithoutFarmerBatchesNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutFarmerBatchesInput
-  upsert?: Prisma.ProcessTemplateUpsertWithoutFarmerBatchesInput
-  disconnect?: Prisma.ProcessTemplateWhereInput | boolean
-  delete?: Prisma.ProcessTemplateWhereInput | boolean
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutFarmerBatchesInput, Prisma.ProcessTemplateUpdateWithoutFarmerBatchesInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput>
-}
-
 export type NullableEnumCategoryFieldUpdateOperationsInput = {
   set?: $Enums.Category | null
 }
@@ -414,84 +379,6 @@ export type ProcessTemplateUpdateOneRequiredWithoutStepsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutStepsInput, Prisma.ProcessTemplateUpdateWithoutStepsInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutStepsInput>
 }
 
-export type ProcessTemplateCreateNestedOneWithoutQualityTestsInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutQualityTestsInput
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-}
-
-export type ProcessTemplateUpdateOneRequiredWithoutQualityTestsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
-  connectOrCreate?: Prisma.ProcessTemplateCreateOrConnectWithoutQualityTestsInput
-  upsert?: Prisma.ProcessTemplateUpsertWithoutQualityTestsInput
-  connect?: Prisma.ProcessTemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessTemplateUpdateToOneWithWhereWithoutQualityTestsInput, Prisma.ProcessTemplateUpdateWithoutQualityTestsInput>, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
-}
-
-export type ProcessTemplateCreateWithoutFarmerBatchesInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  category?: $Enums.Category | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
-}
-
-export type ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  category?: $Enums.Category | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
-}
-
-export type ProcessTemplateCreateOrConnectWithoutFarmerBatchesInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
-}
-
-export type ProcessTemplateUpsertWithoutFarmerBatchesInput = {
-  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput>
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedCreateWithoutFarmerBatchesInput>
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-export type ProcessTemplateUpdateToOneWithWhereWithoutFarmerBatchesInput = {
-  where?: Prisma.ProcessTemplateWhereInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutFarmerBatchesInput, Prisma.ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput>
-}
-
-export type ProcessTemplateUpdateWithoutFarmerBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
-}
-
-export type ProcessTemplateUncheckedUpdateWithoutFarmerBatchesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
-}
-
 export type ProcessTemplateCreateWithoutStepsInput = {
   id?: string
   name: string
@@ -500,8 +387,6 @@ export type ProcessTemplateCreateWithoutStepsInput = {
   category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateUncheckedCreateWithoutStepsInput = {
@@ -512,8 +397,6 @@ export type ProcessTemplateUncheckedCreateWithoutStepsInput = {
   category?: $Enums.Category | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
-  qualityTests?: Prisma.QualityTestUncheckedCreateNestedManyWithoutProcessTemplateInput
 }
 
 export type ProcessTemplateCreateOrConnectWithoutStepsInput = {
@@ -540,8 +423,6 @@ export type ProcessTemplateUpdateWithoutStepsInput = {
   category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUpdateManyWithoutProcessTemplateNestedInput
 }
 
 export type ProcessTemplateUncheckedUpdateWithoutStepsInput = {
@@ -552,72 +433,6 @@ export type ProcessTemplateUncheckedUpdateWithoutStepsInput = {
   category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  qualityTests?: Prisma.QualityTestUncheckedUpdateManyWithoutProcessTemplateNestedInput
-}
-
-export type ProcessTemplateCreateWithoutQualityTestsInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  category?: $Enums.Category | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchCreateNestedManyWithoutProcessTemplateInput
-}
-
-export type ProcessTemplateUncheckedCreateWithoutQualityTestsInput = {
-  id?: string
-  name: string
-  description?: string | null
-  type: $Enums.OrganizationType
-  category?: $Enums.Category | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  steps?: Prisma.StepTemplateUncheckedCreateNestedManyWithoutProcessTemplateInput
-  farmerBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutProcessTemplateInput
-}
-
-export type ProcessTemplateCreateOrConnectWithoutQualityTestsInput = {
-  where: Prisma.ProcessTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
-}
-
-export type ProcessTemplateUpsertWithoutQualityTestsInput = {
-  update: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
-  create: Prisma.XOR<Prisma.ProcessTemplateCreateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedCreateWithoutQualityTestsInput>
-  where?: Prisma.ProcessTemplateWhereInput
-}
-
-export type ProcessTemplateUpdateToOneWithWhereWithoutQualityTestsInput = {
-  where?: Prisma.ProcessTemplateWhereInput
-  data: Prisma.XOR<Prisma.ProcessTemplateUpdateWithoutQualityTestsInput, Prisma.ProcessTemplateUncheckedUpdateWithoutQualityTestsInput>
-}
-
-export type ProcessTemplateUpdateWithoutQualityTestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUpdateManyWithoutProcessTemplateNestedInput
-}
-
-export type ProcessTemplateUncheckedUpdateWithoutQualityTestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.StepTemplateUncheckedUpdateManyWithoutProcessTemplateNestedInput
-  farmerBatches?: Prisma.BatchUncheckedUpdateManyWithoutProcessTemplateNestedInput
 }
 
 
@@ -627,14 +442,10 @@ export type ProcessTemplateUncheckedUpdateWithoutQualityTestsInput = {
 
 export type ProcessTemplateCountOutputType = {
   steps: number
-  farmerBatches: number
-  qualityTests: number
 }
 
 export type ProcessTemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   steps?: boolean | ProcessTemplateCountOutputTypeCountStepsArgs
-  farmerBatches?: boolean | ProcessTemplateCountOutputTypeCountFarmerBatchesArgs
-  qualityTests?: boolean | ProcessTemplateCountOutputTypeCountQualityTestsArgs
 }
 
 /**
@@ -654,20 +465,6 @@ export type ProcessTemplateCountOutputTypeCountStepsArgs<ExtArgs extends runtime
   where?: Prisma.StepTemplateWhereInput
 }
 
-/**
- * ProcessTemplateCountOutputType without action
- */
-export type ProcessTemplateCountOutputTypeCountFarmerBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BatchWhereInput
-}
-
-/**
- * ProcessTemplateCountOutputType without action
- */
-export type ProcessTemplateCountOutputTypeCountQualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.QualityTestWhereInput
-}
-
 
 export type ProcessTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -678,8 +475,6 @@ export type ProcessTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inter
   createdAt?: boolean
   updatedAt?: boolean
   steps?: boolean | Prisma.ProcessTemplate$stepsArgs<ExtArgs>
-  farmerBatches?: boolean | Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>
-  qualityTests?: boolean | Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["processTemplate"]>
 
@@ -716,8 +511,6 @@ export type ProcessTemplateSelectScalar = {
 export type ProcessTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "type" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["processTemplate"]>
 export type ProcessTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   steps?: boolean | Prisma.ProcessTemplate$stepsArgs<ExtArgs>
-  farmerBatches?: boolean | Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>
-  qualityTests?: boolean | Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProcessTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -727,8 +520,6 @@ export type $ProcessTemplatePayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "ProcessTemplate"
   objects: {
     steps: Prisma.$StepTemplatePayload<ExtArgs>[]
-    farmerBatches: Prisma.$BatchPayload<ExtArgs>[]
-    qualityTests: Prisma.$QualityTestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1133,8 +924,6 @@ readonly fields: ProcessTemplateFieldRefs;
 export interface Prisma__ProcessTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   steps<T extends Prisma.ProcessTemplate$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StepTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  farmerBatches<T extends Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$farmerBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  qualityTests<T extends Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcessTemplate$qualityTestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualityTestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1585,54 +1374,6 @@ export type ProcessTemplate$stepsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.StepTemplateScalarFieldEnum | Prisma.StepTemplateScalarFieldEnum[]
-}
-
-/**
- * ProcessTemplate.farmerBatches
- */
-export type ProcessTemplate$farmerBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Batch
-   */
-  select?: Prisma.BatchSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Batch
-   */
-  omit?: Prisma.BatchOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BatchInclude<ExtArgs> | null
-  where?: Prisma.BatchWhereInput
-  orderBy?: Prisma.BatchOrderByWithRelationInput | Prisma.BatchOrderByWithRelationInput[]
-  cursor?: Prisma.BatchWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.BatchScalarFieldEnum | Prisma.BatchScalarFieldEnum[]
-}
-
-/**
- * ProcessTemplate.qualityTests
- */
-export type ProcessTemplate$qualityTestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the QualityTest
-   */
-  select?: Prisma.QualityTestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the QualityTest
-   */
-  omit?: Prisma.QualityTestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QualityTestInclude<ExtArgs> | null
-  where?: Prisma.QualityTestWhereInput
-  orderBy?: Prisma.QualityTestOrderByWithRelationInput | Prisma.QualityTestOrderByWithRelationInput[]
-  cursor?: Prisma.QualityTestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.QualityTestScalarFieldEnum | Prisma.QualityTestScalarFieldEnum[]
 }
 
 /**

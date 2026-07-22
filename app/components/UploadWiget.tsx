@@ -5,7 +5,7 @@ import { CldUploadWidget } from 'next-cloudinary';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const UploadWidget = ({ imageUrl }: { imageUrl: (url: string) => void }) => {
+export const UploadWidget = ({ imageUrl, image }: { imageUrl: (url: string) => void, image?: string | null }) => {
   const [imgUrl, setImgUrl] = useState<string>('');
   const { t } = useTranslation();
 
@@ -40,7 +40,7 @@ export const UploadWidget = ({ imageUrl }: { imageUrl: (url: string) => void }) 
 
       {imgUrl && (
         <div className="mt-4 w-full">
-          <Image src={imgUrl} style={{ objectFit: 'contain' }} alt="Preview" className="!w-full h-auto rounded" />
+          <Image src={image || imgUrl} style={{ objectFit: 'contain' }} alt="Preview" className="!w-full h-auto rounded" />
         </div>
       )}
     </div>

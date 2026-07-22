@@ -23,9 +23,7 @@ export const BatchStatus = {
   PLANTED: 'PLANTED',
   HARVESTED: 'HARVESTED',
   IN_TRANSIT: 'IN_TRANSIT',
-  TESTING: 'TESTING',
   RETAILING: 'RETAILING',
-  SOLD: 'SOLD',
   ABORTED: 'ABORTED'
 } as const
 

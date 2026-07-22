@@ -4,7 +4,6 @@ import { Button, Form, Input, Modal, Select, Typography, App, Result } from "ant
 import { QualityTest } from '@/generated/zod';
 import { useTranslation } from "react-i18next";
 import { useContract } from "@/blockchain/useContract";
-import { useState } from "react";
 import { TransactionLoading } from "./TransactionLoading";
 import { useAuth } from "@/contexts/auth";
 import { usePostQualityTest, usePostQualityTestConfirm } from "@/hooks/quality";
@@ -29,7 +28,7 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
       onSuccess: async (data) => {
         const txHash = await executeWrite('verifyQuality', [
           BigInt(data.blockchainId),
-          data.isPassed,
+          data.isPassed ?? false,
         ]);
         confirm({
           id: data.id,
@@ -84,19 +83,6 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
         layout="vertical"
         onFinish={onFinish}
       >
-        <Form.Item
-          label={t('Notes')}
-          name="note"
-          rules={[
-            { required: false, message: t('Please enter notes') },
-            { max: 500, message: t('Description cannot exceed 500 characters') }
-          ]}
-        >
-          <Input.TextArea
-            rows={4}
-            placeholder={t('e.g. The batch has passed the quality test with no issues.')}
-          />
-        </Form.Item>
         <Form.Item
           label={t('Is Passed')}
           name="isPassed"

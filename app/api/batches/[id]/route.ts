@@ -17,8 +17,8 @@ export async function GET(
             }
           }
         },
-        activities: {
-          orderBy: { timestamp: 'asc' }
+        activity: {
+          include: { steps: true },
         },
         transits: {
           include: { shipper: true },

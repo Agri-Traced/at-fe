@@ -7,7 +7,6 @@ import { withRole } from '@/lib/auth';
 const qualityTestSchema = z.object({
   batchId: z.uuid("Batch ID not valid"),
   isPassed: z.boolean(),
-  note: z.string().min(1, "Missing test note"),
 });
 
 export const POST = withRole(Role.RETAILER, async (req, user, context) => {
@@ -57,11 +56,6 @@ export const POST = withRole(Role.RETAILER, async (req, user, context) => {
         { status: 403 }
       );
     }
-
-    await prisma.batch.update({
-      where: { id: data.batchId },
-      data: { status: BatchStatus.RETAILING }
-    });
 
     const qualityTest = await prisma.qualityTest.create({ data: { ...data, retailerId: user.id } });
 

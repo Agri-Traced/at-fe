@@ -44,6 +44,7 @@ model User {
   batchesCreated Batch[]       @relation("FarmerBatches")
   transports     StepTransit[] @relation("ShipperTransports")
   qualityTests   QualityTest[] @relation("RetailerTests")
+  activities     Activity[]
 }
 
 // 2. QUẢN LÝ LÔ HÀNG (BATCHES)
@@ -52,9 +53,7 @@ enum BatchStatus {
   PLANTED // Đã gieo trồng
   HARVESTED // Đã thu hoạch
   IN_TRANSIT // Đang trong quá trình vận chuyển
-  TESTING // Đang kiểm tra
   RETAILING // Đã đến nhà bán lẻ / Đang trên kệ hàng
-  SOLD // Đã bán cho người tiêu dùng
   ABORTED // Đã hủy
 }
 
@@ -67,36 +66,34 @@ enum Category {
   OTHER
 }
 
-model ActivityLog {
-  id          String   @id @default(uuid())
-  batchId     String
-  batch       Batch    @relation(fields: [batchId], references: [id])
-  description String // "Bón phân đợt 1"
-  timestamp   DateTime @default(now())
+model Activity {
+  id        String         @id @default(uuid())
+  batchId   String         @unique // 1 lô hàng chỉ có 1 kết quả kiểm định chính thức
+  batch     Batch          @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  steps     ActivityStep[]
+  txHash    String? // Transaction Hash kiểm định bất biến trên blockchain
+  createdAt DateTime?
+  user      User?          @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 model Batch {
-  id             String        @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
-  blockchainId   String        @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
+  id             String      @id @default(uuid()) // ID sinh tự động ở Hệ thống Off-chain
+  blockchainId   String      @unique // ID tương ứng lưu trên Smart Contract (Đồng bộ sau khi Tx hoàn tất)
   plantTxHash    String? // Transaction Hash lúc tạo lô hàng để đối chiếu e-etherscan
-  harvestTxHash  String? // Transaction Hash lúc thu hoạch để đối chiếu e-etherscan
+  retailTxHash   String? // Transaction Hash lúc thu hoạch để đối chiếu e-etherscan
   shipTxHash     String? // Transaction Hash lúc giao cho Shipper để đối chiếu e-etherscan
   productName    String
   productVariety String // Giống cây trồng
-  category       Category      @default(VEGETABLE)
+  category       Category    @default(VEGETABLE)
   quantity       Float? // Khối lượng / Số lượng lô hàng
   unit           String // Đơn vị tính (KG, Tấn, Thùng...)
-  status         BatchStatus   @default(PLANTED)
-  activities     ActivityLog[] // Lưu lịch sử canh tác
-
-  processTemplateId String?
-  processTemplate   ProcessTemplate? @relation("FarmerProcessBatches", fields: [processTemplateId], references: [id])
-
+  status         BatchStatus @default(PLANTED)
   minTemperature Float // Nhiệt độ bảo quản tối thiểu (°C)
   maxTemperature Float // Nhiệt độ bảo quản tối đa (°C)
   minHumidity    Float // Độ ẩm bảo quản tối thiểu (%)
   maxHumidity    Float // Độ ẩm bảo quản tối đa (%)
-  imageUrl       String @default("/logo.png")
+  imageUrl       String      @default("/logo.png")
 
   // Quan hệ tác nhân gieo trồng
   farmerId String
@@ -118,6 +115,7 @@ model Batch {
   // Mối quan hệ các chặng hành trình
   transits    StepTransit[]
   qualityTest QualityTest?
+  activity    Activity?
 }
 
 enum OrganizationType {
@@ -138,16 +136,14 @@ model Company {
 }
 
 model ProcessTemplate {
-  id            String           @id @default(uuid())
-  name          String // Tên quy trình
-  description   String?
-  type          OrganizationType // Thuộc về giai đoạn nào (FARMER, SHIPPER, RETAILER)
-  steps         StepTemplate[] // Các bước mẫu trong quy trình này
-  category      Category?        @default(VEGETABLE)
-  farmerBatches Batch[]          @relation("FarmerProcessBatches")
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  qualityTests  QualityTest[]    @relation("RetailerProcessQualityTests")
+  id          String           @id @default(uuid())
+  name        String // Tên quy trình
+  description String?
+  type        OrganizationType // Thuộc về giai đoạn nào (FARMER, SHIPPER, RETAILER)
+  steps       StepTemplate[] // Các bước mẫu trong quy trình này
+  category    Category?        @default(VEGETABLE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }
 
 model StepTemplate {
@@ -159,10 +155,10 @@ model StepTemplate {
   title       String // Tên bước (VD: "Kiểm tra nhiệt độ xe", "Phun phân bón đợt 1")
   description String?
   imageUrl    String? // Hình minh họa
-  keyword     String // VD: Bón phân, Phun thuốc, Tưới nước
+  keyword     String? // VD: Bón phân, Phun thuốc, Tưới nước
   values      String? // giá trị: phân bón, thuốc trừ sâu, nước tưới, nhiệt độ, độ ẩm...
   dayOffset   Int // Ngày thứ mấy kể từ khi bắt đầu
-  isRequired  Boolean @default(true)
+  isRequired  Boolean   @default(true)
 }
 
 // 3. CHI TIẾT HÀNH TRÌNH VẬN CHUYỂN (TRANSPORT LOGS)
@@ -189,14 +185,46 @@ model QualityTest {
   batchId String @unique // 1 lô hàng chỉ có 1 kết quả kiểm định chính thức
   batch   Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
 
-  retailerId String
-  retailer   User   @relation("RetailerTests", fields: [retailerId], references: [id])
+  retailerId String?
+  retailer   User?   @relation("RetailerTests", fields: [retailerId], references: [id])
 
-  processTemplateId String
-  processTemplate   ProcessTemplate @relation("RetailerProcessQualityTests", fields: [processTemplateId], references: [id])
+  steps QualityStep[]
 
-  txHash   String? // Transaction Hash kiểm định bất biến trên blockchain
-  isPassed Boolean
-  note     String // Ghi chú lý do Đạt/Không Đạt (Lưu off-chain)
-  testedAt DateTime @default(now())
+  txHash    String? // Transaction Hash kiểm định bất biến trên blockchain
+  isPassed  Boolean?
+  createdAt DateTime?
+}
+
+model QualityStep {
+  id            String      @id @default(uuid())
+  qualityTestId String
+  qualityTest   QualityTest @relation(fields: [qualityTestId], references: [id], onDelete: Cascade)
+
+  stepOrder   Int // Thứ tự bước (1, 2, 3...)
+  title       String // Tên bước (VD: "Kiểm tra nhiệt độ xe", "Phun phân bón đợt 1")
+  description String?
+  imageUrl    String? // Hình minh họa
+  keyword     String? // VD: Bón phân, Phun thuốc, Tưới nước
+  values      String? // giá trị: phân bón, thuốc trừ sâu, nước tưới, nhiệt độ, độ ẩm...
+  note        String? // Ghi chú của người kiểm định
+  dayOffset   Int // Ngày thứ mấy kể từ khi bắt đầu
+  isRequired  Boolean   @default(true)
+  doAt        DateTime? // Thời gian thực hiện bước này (nếu có)
+}
+
+model ActivityStep {
+  id         String   @id @default(uuid())
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  stepOrder   Int // Thứ tự bước (1, 2, 3...)
+  title       String // Tên bước (VD: "Kiểm tra nhiệt độ xe", "Phun phân bón đợt 1")
+  description String?
+  imageUrl    String? // Hình minh họa
+  keyword     String? // VD: Bón phân, Phun thuốc, Tưới nước
+  values      String? // giá trị: phân bón, thuốc trừ sâu, nước tưới, nhiệt độ, độ ẩm...
+  note        String? // Ghi chú của người kiểm định
+  dayOffset   Int // Ngày thứ mấy kể từ khi bắt đầu
+  isRequired  Boolean   @default(true)
+  doAt        DateTime? // Thời gian thực hiện bước này (nếu có)
 }
