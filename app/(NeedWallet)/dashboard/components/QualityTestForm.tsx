@@ -7,6 +7,8 @@ import { useContract } from "@/blockchain/useContract";
 import { TransactionLoading } from "./TransactionLoading";
 import { useAuth } from "@/contexts/auth";
 import { usePostQualityTest, usePostQualityTestConfirm } from "@/hooks/quality";
+import { createIPFSHash } from "@/lib/pinata";
+import { useState } from "react";
 
 export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose: () => void; id: string | null }) => {
   if (!id) return null;
@@ -17,6 +19,7 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
   const { executeWrite, loading, } = useContract();
   const { modal, notification } = App.useApp();
   const { user } = useAuth();
+  const [loadingIPFS, setLoadingIPFS] = useState(false);
   if (!user) {
     throw new Error('User not found');
   }
@@ -26,9 +29,13 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
       batchId: id,
     }, {
       onSuccess: async (data) => {
+        setLoadingIPFS(true);
+        const ipfsHash = await createIPFSHash(data);
+        setLoadingIPFS(false);
         const txHash = await executeWrite('verifyQuality', [
           BigInt(data.blockchainId),
           data.isPassed ?? false,
+          ipfsHash
         ]);
         confirm({
           id: data.id,
@@ -94,12 +101,12 @@ export const QualityTestForm = ({ open, onClose, id }: { open: boolean; onClose:
           </Select>
         </Form.Item>
         <Form.Item className="flex justify-center mt-6">
-          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || isConfirming}>
+          <Button type="primary" htmlType="submit" className="px-8" loading={isPending || loading || isConfirming || loadingIPFS}>
             {t('Submit')}
           </Button>
         </Form.Item>
       </Form>
-      <TransactionLoading loading={loading} isPending={isPending} isConfirming={isConfirming} />
+      <TransactionLoading loading={loading} isPending={isPending} isConfirming={isConfirming} loadingIPFS={loadingIPFS} />
     </Modal>
   )
 }

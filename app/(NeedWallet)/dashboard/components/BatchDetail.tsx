@@ -34,13 +34,15 @@ type Props = {
   type: OrganizationTypeType;
   onChangeSteps?: (updatedSteps: Step[]) => void;
   onReturn?: () => void; // Callback khi nhấn nút quay lại
+  isUpdatingStep?: boolean;
 };
 
 export const BatchDetail = ({
   batch,
   type,
   onChangeSteps,
-  onReturn
+  onReturn,
+  isUpdatingStep,
 }: Props) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<Step>();
@@ -108,8 +110,13 @@ export const BatchDetail = ({
       newList.splice(insertAtIndex, 0, updatedStepValue);
     }
 
-    onChangeSteps?.(reorderSteps(newList));
-    setIsModalOpen(false);
+    Promise.resolve(onChangeSteps?.(reorderSteps(newList)))
+      .then(() => {
+        setIsModalOpen(false); // Đóng modal khi thành công
+      })
+      .catch((err) => {
+        console.error("Lỗi API:", err); // Giữ modal nếu thất bại
+      });
   };
 
   return (
@@ -172,7 +179,7 @@ export const BatchDetail = ({
                         </div>
                       </div>
 
-                      <Space>
+                      <Space hidden={step.isRequired} onClick={(e) => e.stopPropagation()}>
                         <Popconfirm
                           title={t("Delete this step?")}
                           onConfirm={() => handleDeleteStep(index)}
@@ -238,6 +245,9 @@ export const BatchDetail = ({
         <Modal
           title={editingIndex !== null ? t("Edit Step") : t("Add Step")}
           open={isModalOpen}
+          confirmLoading={isUpdatingStep}
+          cancelButtonProps={{ disabled: isUpdatingStep }}
+          closable={!isUpdatingStep}
           onCancel={() => setIsModalOpen(false)}
           onOk={() => form.submit()}
           destroyOnHidden

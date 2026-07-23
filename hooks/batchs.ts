@@ -49,7 +49,7 @@ export const usePutActivitySteps = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ batchId, data }: { batchId: string; data: Omit<StepTemplate, 'processTemplateId'>[] }) => {
-      const res = await api.put<Batch>(`/batches/${batchId}/activity/steps`, { data });
+      const res = await api.put<Batch>(`/batches/${batchId}/activity`, { data });
       return res.data;
     },
     onSuccess: () => {
@@ -126,7 +126,7 @@ export const usePostBatchHarvest = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: BatchHarvest }) => {
-      const res = await api.post<Batch>(`/batches/${id}/harvest`, data);
+      const res = await api.post<BatchRelation>(`/batches/${id}/harvest`, data);
       return res.data;
     },
     onSuccess: () => {

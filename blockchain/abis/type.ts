@@ -1,4 +1,3 @@
-
 export const ABI = [
   {
     "inputs": [],
@@ -57,6 +56,12 @@ export const ABI = [
         "internalType": "bool",
         "name": "isPassed",
         "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
       }
     ],
     "name": "QualityVerified",
@@ -266,6 +271,11 @@ export const ABI = [
             "internalType": "bool",
             "name": "isPassed",
             "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "ipfsHash",
+            "type": "string"
           }
         ],
         "internalType": "struct AgriTrace.QualityTest",
@@ -398,6 +408,11 @@ export const ABI = [
         "internalType": "bool",
         "name": "_isPassed",
         "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "_ipfsHash",
+        "type": "string"
       }
     ],
     "name": "verifyQuality",

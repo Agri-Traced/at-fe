@@ -31,9 +31,9 @@ export default function FarmerPage() {
     }
   }, [user]);
   return (
-    batch ? (
+    batch && query === "PLANTED" ? (
       <>
-        <BatchDetail onReturn={() => setBatchId(null)} batch={batch} type="FARMER" onChangeSteps={(updatedSteps) => {
+        <BatchDetail onReturn={() => setBatchId(null)} batch={batch} type="FARMER" isUpdatingStep={isUpdatingSteps} onChangeSteps={(updatedSteps) => {
           updateSteps({ batchId: batch.id, data: updatedSteps });
         }} />
         <div className="flex justify-center">

@@ -196,32 +196,38 @@ export const TableList = ({
                   </div>
                 }
                 actions={[
-                  <Button
-                    type="text"
-                    key="detail"
-                    hidden={!bonusButton}
-                    icon={<TruckOutlined />}
-                    onClick={() => {
-                      bonusButton && bonusButton();
-                      getBatch(item.id)
-                    }}
-                    className="text-neutral-600 hover:text-blue-600!"
-                  >
-                    {t("Assign")}
-                  </Button>,
+                  bonusButton && (
+                    <Button
+                      type="text"
+                      key="detail"
+                      hidden={!bonusButton}
+                      icon={<TruckOutlined />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        bonusButton && bonusButton();
+                        getBatch(item.id)
+                      }}
+                      className="text-neutral-600 hover:text-blue-600!"
+                    >
+                      {t("Assign")}
+                    </Button>
+                  ),
                   <Button
                     type="text"
                     key="detail"
                     icon={<QrcodeOutlined />}
-                    onClick={() => modal.success({
-                      icon: null,
-                      content: <QRBlock id={item.id} />,
-                    })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      modal.success({
+                        icon: null,
+                        content: <QRBlock id={item.id} />,
+                      });
+                    }}
                     className="text-neutral-600 hover:text-blue-600!"
                   >
                     {t("QR")}
                   </Button>,
-                  <Link href={`/trace/${item.id}`} key="trace" className="w-full">
+                  <Link onClick={(e) => e.stopPropagation()} href={`/trace/${item.id}`} key="trace" className="w-full">
                     <Button
                       type="text"
                       icon={<LinkOutlined />}
@@ -230,7 +236,7 @@ export const TableList = ({
                       {t("Trace")}
                     </Button>
                   </Link>,
-                ]}
+                ].filter(Boolean)}
               >
                 <Card.Meta
                   title={
