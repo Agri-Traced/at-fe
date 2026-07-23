@@ -36,7 +36,7 @@ export default function RetailerPage() {
   const allowQuality = data
 
   return (
-    batch && allowQuality ? (
+    batch && allowQuality && !openAssignModal ? (
       <>
         <BatchDetail onReturn={() => setBatchId(null)} batch={batch} type="RETAILER" onChangeSteps={(updatedSteps) => {
           updateSteps({ batchId: batch.id, data: updatedSteps });
@@ -55,7 +55,7 @@ export default function RetailerPage() {
     ) : (
       <>
         <TableList getBatch={setBatchId} data={data} isLoading={isLoading} isError={isError} error={error} allowCreateBatch={allowCreateBatch} query={query} bonusButton={() => { setOpenAssignModal(true); }} />
-        <AssignForm id={batchId} open={openAssignModal} onClose={() => setOpenAssignModal(false)} />
+          <AssignForm id={batchId} open={openAssignModal} onClose={() => { setOpenAssignModal(false); setBatchId(null); }} />
       </>
     )
   )
