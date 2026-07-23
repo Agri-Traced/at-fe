@@ -62,19 +62,19 @@ export const HarvestForm = ({ open, onClose, id, unit }: { open: boolean; onClos
                 />
             });
             onClose();
-          }, onError: (error) => {
+          }, onError: (error: any) => {
             notification.error({
               title: t('Error'),
-              description: `${t('Action failed. Please try again.')} ${error.message}`,
+              description: `${t('Action failed. Please try again.')} ${error.status === 400 ? t('All required steps must be completed before harvesting.') : error.message}`,
               showProgress: true,
               placement: 'bottomRight',
             });
           }
         });
-      }, onError: (error) => {
+      }, onError: (error: any) => {
         notification.error({
           title: t('Error'),
-          description: `${t('Action failed. Please try again. ')} ${error.message}`,
+          description: `${t('Action failed. Please try again. ')} ${error.status === 400 ? t('All required steps must be completed before harvesting.') : error.message}`,
           showProgress: true,
           placement: 'bottomRight',
         });

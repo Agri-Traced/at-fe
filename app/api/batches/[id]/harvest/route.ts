@@ -26,7 +26,6 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
 
     const data = validation.data;
 
-    // Bước 1: Kiểm tra xem lô hàng (Batch) này có tồn tại hay không
     const batch = await prisma.batch.findUnique({
       where: { id }
     });
@@ -51,6 +50,41 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
         { status: 400 }
       );
     }
+
+    const activity = await prisma.activity.findFirst({
+      where: { batchId: batch.id },
+    });
+
+    if (!activity) {
+      return NextResponse.json(
+        { success: false, error: "Cannot find activity for this batch." },
+        { status: 404 }
+      );
+    }
+
+    const steps = await prisma.activityStep.findMany({
+      where: { activityId: activity.id },
+    });
+
+    if (steps.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "No steps found for this activity." },
+        { status: 404 }
+      );
+    }
+
+    if (steps.some(step => step.values === null || step.values === undefined && step.isRequired === true)) {
+      return NextResponse.json(
+        { success: false, error: "All required steps must be completed before harvesting." },
+        { status: 400 }
+      );
+    }
+
+    const activityDataAFter = await prisma.activity.findFirst({
+      where: { batchId: batch.id },
+      include: { steps: true }
+    });
+
 
     const templateSteps = await prisma.processTemplate.findMany({
       where: { type: 'RETAILER' },
@@ -79,7 +113,7 @@ export const POST = withRole(Role.FARMER, async (req, user, context) => {
     return NextResponse.json(
       {
         success: true,
-        data: harvest
+        data: { ...harvest, activity: activityDataAFter }
       },
       { status: 201 }
     );

@@ -13,7 +13,7 @@ import {
 import { Badge, Steps, Card, Typography, Tooltip, Image, Button, Skeleton } from "antd";
 import { Loading } from "@/app/components/Loading";
 import { useTranslation } from "react-i18next";
-import { BatchRelation, useBatch } from "@/hooks/batchs";
+import { ActivityRelation, BatchRelation, useBatch } from "@/hooks/batchs";
 import Link from "next/link";
 import { useIpfsFromTx } from "@/hooks/ipfs";
 
@@ -26,6 +26,13 @@ type PlantTxData = {
   productName: string
   productVariety: string
   unit: string
+}
+
+type RetailTxData = {
+  retailComapyId: string
+  quantity: number
+  expiryDate: string
+  activity: ActivityRelation
 }
 
 export default function TracePage() {
@@ -49,7 +56,7 @@ export default function TracePage() {
   const {
     ipfsData: retailTxData,
     isLoading: isRetailLoading
-  } = useIpfsFromTx<PlantTxData>((data?.retailTxHash || undefined) as `0x${string}`, "BatchHarvested");
+  } = useIpfsFromTx<RetailTxData>((data?.retailTxHash || undefined) as `0x${string}`, "BatchHarvested");
 
   console.log('retailTxData', retailTxData);
   console.log('shipTxData', shipTxData);
@@ -62,14 +69,7 @@ export default function TracePage() {
     const avgHumidity =
       data.transits.reduce((acc, curr) => acc + (curr.humidity ?? 0), 0) /
       data.transits.length;
-    const isAllSafe = plantTxData?.minTemperature && plantTxData?.maxTemperature && plantTxData?.minHumidity && plantTxData?.maxHumidity && data.transits.every(
-      (t) =>
-        (t.temperature ?? 0) >= plantTxData?.minTemperature &&
-        (t.temperature ?? 0) <= plantTxData?.maxTemperature &&
-        (t.humidity ?? 0) >= plantTxData?.minHumidity &&
-        (t.humidity ?? 0) <= plantTxData?.maxHumidity,
-    );
-    return { avgTemp, avgHumidity, isAllSafe };
+    return { avgTemp, avgHumidity };
   }, [data?.transits]);
 
   if (loading) {
@@ -159,9 +159,9 @@ export default function TracePage() {
           <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100 text-base">
             <div>
               <p className="text-gray-400 text-sm">{t("Quantity")}</p>
-                <p className="font-semibold text-gray-700">
-                  {data.quantity} {data?.unit}
-                </p>
+              <p className="font-semibold text-gray-700">
+                {data.quantity} {data?.unit}
+              </p>
             </div>
             <div>
               <p className="text-gray-400 text-sm">{t("Farmer")}</p>
@@ -255,12 +255,6 @@ export default function TracePage() {
               {`💧 ${transportSummary ? transportSummary.avgHumidity.toFixed(1) + "%" : "--"}`}
             </p>
           </Card>
-          <Card className="shadow-sm border-0 text-center rounded-xl">
-            <p className="text-sm text-gray-400">{t("Average Humidity")}</p>
-            <p className={transportSummary?.isAllSafe ? "text-green-600" : "text-red-500"}>
-              {transportSummary?.isAllSafe ? "✅ " + t("All Transits Safe") : "⚠ " + t("Some Transits Exceeded Limits")}
-            </p>
-          </Card>
         </div>
       </div>
 
@@ -312,7 +306,7 @@ export default function TracePage() {
                       </p>
 
                       {/* 🎯 SỬA LỖI LOGIC: Nếu KHÔNG CÓ activity hoặc mảng steps RỖNG thì mới báo "No Data" */}
-                      {!data?.activity || !data.activity.steps || data.activity.steps.length === 0 ? (
+                      {!retailTxData?.activity || !retailTxData.activity.steps || retailTxData.activity.steps.length === 0 ? (
                         <div className="text-sm text-gray-500 p-3 bg-yellow-50 rounded-lg border border-yellow-200 flex items-center gap-2">
                           <span className="text-yellow-600 font-bold">⚠</span>
                           <p className="font-medium text-yellow-700">
@@ -322,7 +316,7 @@ export default function TracePage() {
                       ) : (
                         /* 🚀 GIAO DIỆN LIỆT KÊ MỚI: TIMELINE CARDS */
                         <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-200">
-                          {data.activity.steps
+                            {retailTxData.activity.steps
                             .sort((a, b) => a.stepOrder - b.stepOrder) // Sắp xếp theo thứ tự bước
                             .map((act) => (
                               <div key={act.id} className="relative group">
@@ -363,17 +357,16 @@ export default function TracePage() {
                                   {act.description && (
                                     <p className="text-xs text-gray-600 mt-1">{act.description}</p>
                                   )}
-                                  {/* Thông số Tiêu chuẩn & Thực tế */}
                                   {(act.values || act.note) && (
                                     <div className="mt-2.5 pt-2 border-t border-gray-50 flex flex-col gap-1 text-xs">
                                       {act.values && (
                                         <div className="text-gray-500">
-                                          <span className="font-medium text-gray-700">Tiêu chuẩn:</span> {act.values}
+                                          <span className="font-medium text-gray-700">{act.keyword}</span> {act.values}
                                         </div>
                                       )}
                                       {act.note && (
                                         <div className="text-emerald-700 bg-emerald-50/50 p-1.5 rounded-md">
-                                          <span className="font-semibold">Ghi chú thực tế:</span> {act.note}
+                                          <span className="font-semibold">{t("Note")}</span> {act.note}
                                         </div>
                                       )}
                                     </div>
