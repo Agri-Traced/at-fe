@@ -58,8 +58,7 @@ export default function TracePage() {
     isLoading: isRetailLoading
   } = useIpfsFromTx<RetailTxData>((data?.retailTxHash || undefined) as `0x${string}`, "BatchHarvested");
 
-  console.log('retailTxData', retailTxData);
-  console.log('shipTxData', shipTxData);
+  console.log('plantData', plantTxData);
 
   const transportSummary = useMemo(() => {
     if (!data || !data.transits || data.transits.length === 0) return null;
@@ -92,6 +91,9 @@ export default function TracePage() {
           : data.status === "RETAILING"
             ? 4
             : 0;
+  
+  const shipdata = shipTxData;
+  const retaildata = retailTxData;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-green-50 to-white pb-12">
@@ -305,87 +307,89 @@ export default function TracePage() {
                         {t("Cultivation History")}:
                       </p>
 
-                      {/* 🎯 SỬA LỖI LOGIC: Nếu KHÔNG CÓ activity hoặc mảng steps RỖNG thì mới báo "No Data" */}
-                      {!retailTxData?.activity || !retailTxData.activity.steps || retailTxData.activity.steps.length === 0 ? (
-                        <div className="text-sm text-gray-500 p-3 bg-yellow-50 rounded-lg border border-yellow-200 flex items-center gap-2">
-                          <span className="text-yellow-600 font-bold">⚠</span>
-                          <p className="font-medium text-yellow-700">
-                            {t("No Activity Data Available")}
-                          </p>
-                        </div>
-                      ) : (
-                        /* 🚀 GIAO DIỆN LIỆT KÊ MỚI: TIMELINE CARDS */
-                        <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-200">
-                            {retailTxData.activity.steps
-                            .sort((a, b) => a.stepOrder - b.stepOrder) // Sắp xếp theo thứ tự bước
-                            .map((act) => (
-                              <div key={act.id} className="relative group">
-                                {/* Dot Timeline */}
-                                <div className="absolute -left-6 top-1.5 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white shadow-sm flex items-center justify-center text-[10px] text-white font-bold">
-                                  {act.stepOrder}
-                                </div>
-
-                                {/* Nội dung Bước */}
-                                <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                                  <div className="flex items-start justify-between gap-2">
-                                    <div>
-                                      {/* Badge Từ khóa */}
-                                      {act.keyword && (
-                                        <span className="inline-block px-2 py-0.5 text-[11px] font-medium bg-emerald-50 text-emerald-700 rounded-md mb-1">
-                                          {act.keyword}
-                                        </span>
-                                      )}
-                                      {/* Tiêu đề Bước */}
-                                      <h4 className="font-semibold text-gray-900 text-sm">
-                                        {act.title}
-                                      </h4>
-                                    </div>
-
-                                    {/* Thời gian thực hiện doAt */}
-                                    {act.doAt && (
-                                      <span className="text-[12px] text-gray-400 whitespace-nowrap">
-                                        {new Date(act.doAt).toLocaleDateString("vi-VN", {
-                                          day: "2-digit",
-                                          month: "2-digit",
-                                          year: "numeric",
-                                        })}
-                                      </span>
-                                    )}
+                      <Skeleton loading={isRetailLoading} active paragraph={{ rows: 5 }}>
+                        {/* 🎯 SỬA LỖI LOGIC: Nếu KHÔNG CÓ activity hoặc mảng steps RỖNG thì mới báo "No Data" */}
+                        {!data?.activity || !data.activity.steps || data.activity.steps.length === 0 ? (
+                          <div className="text-sm text-gray-500 p-3 bg-yellow-50 rounded-lg border border-yellow-200 flex items-center gap-2">
+                            <span className="text-yellow-600 font-bold">⚠</span>
+                            <p className="font-medium text-yellow-700">
+                              {t("No Activity Data Available")}
+                            </p>
+                          </div>
+                        ) : (
+                          /* 🚀 GIAO DIỆN LIỆT KÊ MỚI: TIMELINE CARDS */
+                          <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-200">
+                            {data.activity.steps
+                              .sort((a, b) => a.stepOrder - b.stepOrder) // Sắp xếp theo thứ tự bước
+                              .map((act) => (
+                                <div key={act.id} className="relative group">
+                                  {/* Dot Timeline */}
+                                  <div className="absolute -left-6 top-1.5 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white shadow-sm flex items-center justify-center text-[10px] text-white font-bold">
+                                    {act.stepOrder}
                                   </div>
 
-                                  {/* Mô tả chi tiết */}
-                                  {act.description && (
-                                    <p className="text-xs text-gray-600 mt-1">{act.description}</p>
-                                  )}
-                                  {(act.values || act.note) && (
-                                    <div className="mt-2.5 pt-2 border-t border-gray-50 flex flex-col gap-1 text-xs">
-                                      {act.values && (
-                                        <div className="text-gray-500">
-                                          <span className="font-medium text-gray-700">{act.keyword}</span> {act.values}
-                                        </div>
-                                      )}
-                                      {act.note && (
-                                        <div className="text-emerald-700 bg-emerald-50/50 p-1.5 rounded-md">
-                                          <span className="font-semibold">{t("Note")}</span> {act.note}
-                                        </div>
+                                  {/* Nội dung Bước */}
+                                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div>
+                                        {/* Badge Từ khóa */}
+                                        {act.keyword && (
+                                          <span className="inline-block px-2 py-0.5 text-[11px] font-medium bg-emerald-50 text-emerald-700 rounded-md mb-1">
+                                            {act.keyword}
+                                          </span>
+                                        )}
+                                        {/* Tiêu đề Bước */}
+                                        <h4 className="font-semibold text-gray-900 text-sm">
+                                          {act.title}
+                                        </h4>
+                                      </div>
+
+                                      {/* Thời gian thực hiện doAt */}
+                                      {act.doAt && (
+                                        <span className="text-[12px] text-gray-400 whitespace-nowrap">
+                                          {new Date(act.doAt).toLocaleDateString("vi-VN", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                          })}
+                                        </span>
                                       )}
                                     </div>
-                                  )}
-                                  {/* Ảnh chụp minh họa (nếu có) */}
-                                  {act.imageUrl && (
-                                    <div className="mt-2.5">
-                                      <img
-                                        src={act.imageUrl}
-                                        alt={act.title}
-                                        className="w-full h-32 object-cover rounded-lg border border-gray-100"
-                                      />
-                                    </div>
-                                  )}
+
+                                    {/* Mô tả chi tiết */}
+                                    {act.description && (
+                                      <p className="text-xs text-gray-600 mt-1">{act.description}</p>
+                                    )}
+                                    {(act.values || act.note) && (
+                                      <div className="mt-2.5 pt-2 border-t border-gray-50 flex flex-col gap-1 text-xs">
+                                        {act.values && (
+                                          <div className="text-gray-500">
+                                            <span className="font-medium text-gray-700">{act.keyword}</span> {act.values}
+                                          </div>
+                                        )}
+                                        {act.note && (
+                                          <div className="text-emerald-700 bg-emerald-50/50 p-1.5 rounded-md">
+                                            <span className="font-semibold">{t("Note")}</span> {act.note}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                    {/* Ảnh chụp minh họa (nếu có) */}
+                                    {act.imageUrl && (
+                                      <div className="mt-2.5">
+                                        <img
+                                          src={act.imageUrl}
+                                          alt={act.title}
+                                          className="w-full h-32 object-cover rounded-lg border border-gray-100"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
-                        </div>
-                      )}
+                              ))}
+                          </div>
+                        )}
+                      </Skeleton>
                     </div>
                   </div>
                 ),
@@ -410,19 +414,21 @@ export default function TracePage() {
                     </Tooltip>
                   </div>
                 ),
-                description: data?.retailTxHash ? (
+                description: <Skeleton loading={isRetailLoading} active paragraph={{ rows: 3 }}>
+                  data?.retailTxHash ? (
                   <div className="text-sm text-gray-500 mt-1">
                     <p>{`${t("Date")}: ${data.harvestDate ? new Date(data.harvestDate).toLocaleDateString() : "Chưa xác định"}`}</p>
                     <p>{`${t("Quantity")}: ${`${data.quantity ?? "Chưa xác định"} ${data.unit ?? ""}`}`}</p>
                     <p>{`${t("Expiry Date")}: ${data.expiryDate ? new Date(data.expiryDate).toLocaleDateString() : "Chưa xác định"}`}</p>
                   </div>
-                ) : (
+                  ) : (
                   <div className="text-sm text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
                     <p className="font-semibold text-yellow-700">
                       ⚠ {t("No Activity Data Available")}
                     </p>
                   </div>
-                ),
+                  ),
+                </Skeleton>
               },
               {
                 title: (
