@@ -91,7 +91,7 @@ export default function TracePage() {
           : data.status === "RETAILING"
             ? 4
             : 0;
-  
+
   const shipdata = shipTxData;
   const retaildata = retailTxData;
 
@@ -415,19 +415,19 @@ export default function TracePage() {
                   </div>
                 ),
                 description: <Skeleton loading={isRetailLoading} active paragraph={{ rows: 3 }}>
-                  data?.retailTxHash ? (
-                  <div className="text-sm text-gray-500 mt-1">
-                    <p>{`${t("Date")}: ${data.harvestDate ? new Date(data.harvestDate).toLocaleDateString() : "Chưa xác định"}`}</p>
-                    <p>{`${t("Quantity")}: ${`${data.quantity ?? "Chưa xác định"} ${data.unit ?? ""}`}`}</p>
-                    <p>{`${t("Expiry Date")}: ${data.expiryDate ? new Date(data.expiryDate).toLocaleDateString() : "Chưa xác định"}`}</p>
-                  </div>
+                  {data?.retailTxHash ? (
+                    <div className="text-sm text-gray-500 mt-1">
+                      <p>{`${t("Date")}: ${data.harvestDate ? new Date(data.harvestDate).toLocaleDateString() : "Chưa xác định"}`}</p>
+                      <p>{`${t("Quantity")}: ${`${data.quantity ?? "Chưa xác định"} ${data.unit ?? ""}`}`}</p>
+                      <p>{`${t("Expiry Date")}: ${data.expiryDate ? new Date(data.expiryDate).toLocaleDateString() : "Chưa xác định"}`}</p>
+                    </div>
                   ) : (
-                  <div className="text-sm text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <p className="font-semibold text-yellow-700">
-                      ⚠ {t("No Activity Data Available")}
-                    </p>
-                  </div>
-                  ),
+                    <div className="text-sm text-gray-500 mt-1 p-2.5 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <p className="font-semibold text-yellow-700">
+                        ⚠ {t("No Activity Data Available")}
+                      </p>
+                    </div>
+                  )}
                 </Skeleton>
               },
               {
